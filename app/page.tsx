@@ -50,7 +50,7 @@ export default function Home() {
           }
           step={0.5}
           value={vote}
-          onChange={setVote}
+          onChange={(e) => setVote(e)}
         />
         <button
           className="px-4 py-1 rounded-2xl bg-green-500 mt-4 mx-24"
