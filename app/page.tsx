@@ -6,7 +6,7 @@ import { FaRegAngry } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [vote, setVote] = useState(0);
+  const [vote, setVote] = useState<number | number[]>(0);
   const [average, setAverage] = useState(0);
 
   const reload = async () => {
