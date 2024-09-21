@@ -39,6 +39,7 @@ ChartJS.register(
 export default function Home({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [vote, setVote] = useState<number | number[]>(0);
+  const [note, setNote] = useState<string>("");
   const [average, setAverage] = useState(0);
   const [graphData, setGraphData] = useState<ChartData<"line">>({
     labels: [],
@@ -117,11 +118,13 @@ export default function Home({ params }: { params: { id: string } }) {
     setLoading(true);
     await fetch("/api/votes", {
       method: "POST",
-      body: JSON.stringify({ vote, person_id: params.id }),
+      body: JSON.stringify({ vote, person_id: params.id, note }),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    setVote(0);
+    setNote("");
     await reload();
   };
 
@@ -162,6 +165,12 @@ export default function Home({ params }: { params: { id: string } }) {
           step={0.5}
           value={vote}
           onChange={(e) => setVote(e)}
+        />
+        <textarea
+          className="mt-2 bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm"
+          placeholder="Write a note if you want"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
         />
         <button
           className="px-4 py-1 rounded-2xl bg-green-500 mt-4"

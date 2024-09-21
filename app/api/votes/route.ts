@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     if (!vote) throw new Error("Vote is mandatory");
     if (!body.person_id) throw new Error("Person ID is mandatory");
-    await sql`INSERT INTO records (vote, person_id) VALUES (${vote}, ${body.person_id})`;
+    await sql`INSERT INTO records (vote, person_id, note) VALUES (${vote}, ${body.person_id}, ${body.note || ""})`;
   } catch (error) {
     NextResponse.json({ error }, { status: 500 });
   }
