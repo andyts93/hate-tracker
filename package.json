@@ -15,6 +15,7 @@
 		"@nextui-org/kbd": "2.0.34",
 		"@nextui-org/link": "2.0.35",
 		"@nextui-org/listbox": "2.1.27",
+		"@nextui-org/modal": "^2.0.41",
 		"@nextui-org/navbar": "2.0.37",
 		"@nextui-org/slider": "^2.2.17",
 		"@nextui-org/snippet": "2.0.43",
@@ -34,12 +35,15 @@
 		"react": "18.3.1",
 		"react-chartjs-2": "^5.2.0",
 		"react-dom": "18.3.1",
-		"react-icons": "^5.3.0"
+		"react-hot-toast": "^2.4.1",
+		"react-icons": "^5.3.0",
+		"uuid": "^10.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.5.7",
 		"@types/react": "18.3.3",
 		"@types/react-dom": "18.3.0",
+		"@types/uuid": "^10.0.0",
 		"@typescript-eslint/eslint-plugin": "7.2.0",
 		"@typescript-eslint/parser": "7.2.0",
 		"autoprefixer": "10.4.19",

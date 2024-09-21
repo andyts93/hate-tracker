@@ -6,21 +6,40 @@ export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
   width,
   height,
+  fill,
   ...props
 }) => (
+  // <svg
+  //   fill="none"
+  //   height={size || height}
+  //   viewBox="0 0 32 32"
+  //   width={size || width}
+  //   {...props}
+  // >
+  //   <path
+  //     clipRule="evenodd"
+  //     d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
+  //     fill="currentColor"
+  //     fillRule="evenodd"
+  //   />
+  // </svg>
+
   <svg
-    fill="none"
+    fill={fill || "#ffffff"}
     height={size || height}
-    viewBox="0 0 32 32"
+    viewBox="0 0 16 16"
     width={size || width}
     {...props}
   >
-    <path
-      clipRule="evenodd"
-      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-      fill="currentColor"
-      fillRule="evenodd"
+    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+    <g
+      id="SVGRepo_tracerCarrier"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
+    <g id="SVGRepo_iconCarrier">
+      <path d="M11.8 9L10 3H9L7.158 9.64 5.99 4.69h-.97L3.85 9H1v.99h3.23l.49-.37.74-2.7L6.59 12h1.03l1.87-7.04 1.46 4.68.48.36H15V9h-3.2z" />
+    </g>
   </svg>
 );
 

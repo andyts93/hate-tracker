@@ -1,188 +1,128 @@
 "use client";
 
-import { Slider } from "@nextui-org/slider";
-import { TiHeartFullOutline } from "react-icons/ti";
-import { FaRegAngry } from "react-icons/fa";
-import { useEffect, useState } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  ChartOptions,
-  ChartData,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import dayjs from "dayjs";
-
-import { GraphPoint, Stats } from "@/types";
-import { StatPanel } from "@/components/stat-panel";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-);
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/modal";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Home() {
-  const [vote, setVote] = useState<number | number[]>(0);
-  const [average, setAverage] = useState(0);
-  const [graphData, setGraphData] = useState<ChartData<"line">>({
-    labels: [],
-    datasets: [],
-  });
-  const [stats, setStats] = useState<Stats>();
-  const [lastRecord, setLastRecord] = useState();
+  const [name, setName] = useState<string>("");
+  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const options: ChartOptions<"line"> = {
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    elements: {
-      line: {
-        tension: 0.3,
-        borderWidth: 2,
-        borderColor: "rgba(255,224,0,1)",
-        fill: "start",
-        backgroundColor: "rgba(255,224,0,0.3)",
-      },
-      point: {
-        radius: 0,
-        hitRadius: 0,
-      },
-    },
-    scales: {
-      x: {
-        display: false,
-      },
-      y: {
-        display: true,
-        max: 10,
-        min: -10,
-      },
-    },
-  };
-
-  const reload = async () => {
-    const response = await fetch("/api/votes");
-    const json = await response.json();
-
-    setAverage(json.avg);
-    setGraphData({
-      labels: json.graph.map((el: GraphPoint) =>
-        dayjs(el.created_at).format("DD-MM HH:mm"),
-      ),
-      datasets: [
-        {
-          data: json.graph.map((el: GraphPoint) => el.vote),
+  const createNew = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/person", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ],
-    });
-    setLastRecord(json.graph[json.graph.length - 1].created_at);
-    setStats({
-      hatePeak: json.hatePeak,
-      lovePeak: json.lovePeak,
-      hateHits: json.hateHits,
-      loveHits: json.loveHits,
-      loveHour: json.loveHour,
-      hateHour: json.hateHour,
-    });
-  };
-  const save = async () => {
-    await fetch("/api/votes", {
-      method: "POST",
-      body: JSON.stringify({ vote }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    await reload();
+        body: JSON.stringify({ name }),
+      });
+      const json = await response.json();
+
+      if (!response.ok) return toast.error(json.error);
+
+      router.push(`/${json.id}`);
+    } catch (err: any) {
+      alert(err.message);
+    }
   };
 
   useEffect(() => {
-    reload().then();
+    onOpen();
   }, []);
 
   return (
-    <div className="flex justify-center min-h-screen px-4">
-      <div className="flex flex-col">
-        <h1 className="text-3xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
-          You think you hate someone? Well, good for you! Track it here.
-        </h1>
-        <Slider
-          className="max-w-md mt-6"
-          color="warning"
-          defaultValue={0}
-          endContent={<FaRegAngry className="text-2xl text-orange-400" />}
-          fillOffset={0}
-          formatOptions={{ signDisplay: "always" }}
-          label="Hate level"
-          maxValue={10}
-          minValue={-10}
-          size="lg"
-          startContent={
-            <TiHeartFullOutline className="text-2xl text-red-500" />
-          }
-          step={0.5}
-          value={vote}
-          onChange={(e) => setVote(e)}
-        />
-        <button
-          className="px-4 py-1 rounded-2xl bg-green-500 mt-4 mx-24"
-          onClick={() => save()}
-        >
-          Save
-        </button>
-        <p className="text-center text-3xl font-black mt-6">
-          Average
-          <br />
-          {average || "-"}
-        </p>
-        <div className="mt-6 overflow-x-auto">
-          <Line data={graphData} options={options} />
+    <>
+      <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Hold on!</ModalHeader>
+              <ModalBody>
+                <p>
+                  If you are Elisa (and I think you are), I&apos;ve made quite
+                  some changes, I got pretty involved in this..
+                </p>
+                <p>
+                  Well, whatever, your link is now{" "}
+                  <Link
+                    className="text-orange-500 hover:underline"
+                    href={"/ef34be5c-156a-42bb-80bc-ca00a30fe56a"}
+                  >
+                    this.
+                  </Link>
+                </p>
+                <p>
+                  Mine,{" "}
+                  <em>
+                    if you care at least a little bit about how much I hate over
+                    time
+                  </em>
+                  , is{" "}
+                  <Link
+                    className="text-orange-500 hover:underline"
+                    href={"/ed039b79-3768-489b-ab1f-f5cfd32c9f82"}
+                  >
+                    this.
+                  </Link>
+                </p>
+                <p>
+                  In the menu you can find the <em>Last viewed</em> option, so
+                  you don&apos;t have to keep the links saved somewhere, as long
+                  as you use the same device.
+                </p>
+                <p>
+                  Have a great day! Remember to hate me a little less now (:
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <button onClick={onClose}>Close</button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <h1 className="text-3xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
+        It would be fun to track your beloved love/hate feeling over time,
+        right? Now you can
+      </h1>
+      <p className="mt-4 text-center">
+        Create a page for the person you want to track the mood of, and share
+        the link with them!
+      </p>
+      <p className="mt-1 underline text-center">
+        No registration required, don&apos;t lose your link!
+      </p>
+
+      <form className="mt-8" onSubmit={createNew}>
+        <div className="flex flex-col border border-gray-700 p-2 shadow-brutal-sm shadow-gray-600 rounded">
+          <label className="text-sm text-gray-400 mb-1" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
+            id="name"
+            placeholder="Insert name here"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
+            Create
+          </button>
         </div>
-        {lastRecord && (
-          <p className="text-center">
-            Last record: {dayjs(lastRecord).format("DD MMM HH:mm")}
-          </p>
-        )}
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          <StatPanel
-            stat={stats?.hatePeak}
-            statColor="#ef4444"
-            title="Hate peak"
-          />
-          <StatPanel
-            stat={stats?.lovePeak}
-            statColor="#84cc16"
-            title="Love peak"
-          />
-          <StatPanel stat={stats?.hateHits} statColor="" title="Hate hits" />
-          <StatPanel stat={stats?.loveHits} statColor="" title="Love hits" />
-          <StatPanel
-            stat={stats?.hateHour}
-            statColor=""
-            title="Most hated hour"
-          />
-          <StatPanel
-            stat={stats?.loveHour}
-            statColor=""
-            title="Most loved hour"
-          />
-        </div>
-      </div>
-    </div>
+      </form>
+    </>
   );
 }

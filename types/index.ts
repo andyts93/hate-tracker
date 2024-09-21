@@ -17,3 +17,8 @@ export type Stats = {
   loveHour: GraphPoint;
   hateHour: GraphPoint;
 };
+
+export type Person = {
+  id: string;
+  name: string;
+};
