@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   const { rows: avg } =
     await sql`SELECT ROUND(AVG(vote), 2) avg FROM records WHERE person_id = ${searchParams.get("person_id")}`;
   const { rows: graph } =
-    await sql`SELECT created_at, vote, note FROM records WHERE person_id = ${searchParams.get("person_id")} ORDER BY created_at DESC`;
+    await sql`SELECT * FROM records WHERE person_id = ${searchParams.get("person_id")} ORDER BY created_at DESC`;
   const { rows: hatePeak } =
     await sql`SELECT created_at, vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote > 0 ORDER BY vote DESC LIMIT 1`;
   const { rows: lovePeak } =
@@ -38,13 +38,13 @@ export async function GET(request: NextRequest) {
   const { rows: people } =
     await sql`SELECT * FROM people WHERE id = ${searchParams.get("person_id")}`;
 
-  const hash = crypto.createHash("sha256");
-
   return NextResponse.json(
     {
       avg: avg[0].avg,
       graph: graph.reverse().map((el) => {
         if (el.note) {
+          const hash = crypto.createHash("sha256");
+
           hash.update(el.note);
           el.note = hash.digest("hex");
           // Insert random spaces in string
