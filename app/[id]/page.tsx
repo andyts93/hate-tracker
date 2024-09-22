@@ -133,7 +133,6 @@ export default function Home({ params }: { params: { id: string } }) {
       list.push(json.person);
       localStorage.setItem("last-viewed", JSON.stringify(list));
     }
-    onOpen();
   };
   const save = async () => {
     setLoading(true);
@@ -147,6 +146,7 @@ export default function Home({ params }: { params: { id: string } }) {
     currentVote.current = vote as number;
     setVote(0);
     setNote("");
+    onOpen();
     await reload();
   };
 
