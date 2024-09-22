@@ -3,7 +3,7 @@
 import { Slider } from "@nextui-org/slider";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaRegAngry } from "react-icons/fa";
-import { IoLockClosed } from "react-icons/io5";
+import { IoLockClosed, IoShareOutline, IoQrCodeOutline } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import {
   Chart as ChartJS,
@@ -33,9 +33,12 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
 import { PiConfettiDuotone } from "react-icons/pi";
+import { useQRCode } from "next-qrcode";
+import toast from "react-hot-toast";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
@@ -66,7 +69,14 @@ export default function Home({ params }: { params: { id: string } }) {
   const [person, setPerson] = useState<Person | undefined>();
   const [records, setRecords] = useState<Vote[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const currentVote = useRef<number>(-4);
+  const {
+    isOpen: isQrOpen,
+    onOpen: onQrOpen,
+    onOpenChange: onQrOpenChange,
+  } = useDisclosure();
+  const currentVote = useRef<number>(0);
+
+  const { Canvas } = useQRCode();
 
   const options: ChartOptions<"line"> = {
     plugins: {
@@ -156,13 +166,18 @@ export default function Home({ params }: { params: { id: string } }) {
     return list[Math.floor(Math.random() * list.length)];
   };
 
+  const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success("Link copied!");
+  };
+
   useEffect(() => {
     reload().then();
   }, []);
 
   return (
     <div className="flex justify-center min-h-screen px-4">
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalBody>
             <h3 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent flex items-center gap-2 justify-center">
@@ -192,6 +207,17 @@ export default function Home({ params }: { params: { id: string } }) {
           </ModalBody>
         </ModalContent>
       </Modal>
+      <Modal isOpen={isQrOpen} placement="center" onOpenChange={onQrOpenChange}>
+        <ModalContent>
+          <ModalHeader>Share QR code</ModalHeader>
+          <ModalBody className="flex items-center pb-4">
+            <Canvas
+              options={{ margin: 2, scale: 10 }}
+              text={window.location.href}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       {loading && <FullPageLoader />}
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
@@ -206,8 +232,24 @@ export default function Home({ params }: { params: { id: string } }) {
           </Link>
           .
         </p>
+        <div className="flex justify-center gap-4 mt-2">
+          <button
+            className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
+            onClick={copyUrl}
+          >
+            <IoShareOutline />
+            <span>Share link</span>
+          </button>
+          <button
+            className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
+            onClick={onQrOpen}
+          >
+            <IoQrCodeOutline />
+            <span>Show QR code</span>
+          </button>
+        </div>
         <Slider
-          className="max-w-md mt-6"
+          className="max-w-md mt-4"
           color="warning"
           defaultValue={0}
           endContent={<FaRegAngry className="text-2xl text-orange-400" />}
