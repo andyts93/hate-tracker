@@ -105,7 +105,6 @@ export default function Home({ params }: { params: { id: string } }) {
     const json = await response.json();
 
     setAverage(json.avg);
-    setRecords(json.graph.reverse());
     setGraphData({
       labels: json.graph.map((el: GraphPoint) =>
         dayjs(el.created_at).format("DD-MM HH:mm"),
@@ -117,6 +116,7 @@ export default function Home({ params }: { params: { id: string } }) {
       ],
     });
     setLastRecord(json.graph[json.graph.length - 1]?.created_at);
+    setRecords(json.graph.reverse());
     setStats({
       hatePeak: json.hatePeak,
       lovePeak: json.lovePeak,
