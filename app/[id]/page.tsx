@@ -3,7 +3,8 @@
 import { Slider } from "@nextui-org/slider";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaRegAngry } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { IoLockClosed } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +12,6 @@ import {
   PointElement,
   LineElement,
   Title,
-  Tooltip,
   Legend,
   Filler,
   ChartOptions,
@@ -20,10 +20,27 @@ import {
 import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/table";
+import { Tooltip } from "@nextui-org/tooltip";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { PiConfettiDuotone } from "react-icons/pi";
 
 import { StatPanel } from "@/components/stat-panel";
-import { GraphPoint, Person, Stats } from "@/types";
+import { GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
+import { sentences } from "@/config/sentences";
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +48,6 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
   Legend,
   Filler,
 );
@@ -48,6 +64,9 @@ export default function Home({ params }: { params: { id: string } }) {
   const [stats, setStats] = useState<Stats>();
   const [lastRecord, setLastRecord] = useState();
   const [person, setPerson] = useState<Person | undefined>();
+  const [records, setRecords] = useState<Vote[]>([]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const currentVote = useRef<number>(-4);
 
   const options: ChartOptions<"line"> = {
     plugins: {
@@ -86,6 +105,7 @@ export default function Home({ params }: { params: { id: string } }) {
     const json = await response.json();
 
     setAverage(json.avg);
+    setRecords(json.graph.reverse());
     setGraphData({
       labels: json.graph.map((el: GraphPoint) =>
         dayjs(el.created_at).format("DD-MM HH:mm"),
@@ -113,6 +133,7 @@ export default function Home({ params }: { params: { id: string } }) {
       list.push(json.person);
       localStorage.setItem("last-viewed", JSON.stringify(list));
     }
+    onOpen();
   };
   const save = async () => {
     setLoading(true);
@@ -123,9 +144,16 @@ export default function Home({ params }: { params: { id: string } }) {
         "Content-Type": "application/json",
       },
     });
+    currentVote.current = vote as number;
     setVote(0);
     setNote("");
     await reload();
+  };
+
+  const getRandomSentence = () => {
+    const list = sentences[currentVote.current < 0 ? "love" : "hate"];
+
+    return list[Math.floor(Math.random() * list.length)];
   };
 
   useEffect(() => {
@@ -134,6 +162,36 @@ export default function Home({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex justify-center min-h-screen px-4">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          <ModalBody>
+            <h3 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent flex items-center gap-2 justify-center">
+              <PiConfettiDuotone className="text-pink-400" /> Congrats!
+            </h3>
+            <p className="mb-2">
+              You have just expressed your feelings, it feels much better now,
+              right?
+            </p>
+            <div className="bg-gray-800 p-4 mb-2 rounded shadow-brutal-sm shadow-gray-700">
+              <p
+                className="text-7xl text-center font-black mb-2"
+                style={{
+                  color:
+                    currentVote.current < 0
+                      ? "rgb(132, 204, 22)"
+                      : "rgb(239, 68, 68)",
+                }}
+              >
+                {currentVote.current > 0 && <span>+</span>}
+                {currentVote.current}
+              </p>
+              <p className="text-center italic text-sm">
+                {getRandomSentence()}
+              </p>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       {loading && <FullPageLoader />}
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
@@ -214,6 +272,51 @@ export default function Home({ params }: { params: { id: string } }) {
             statColor=""
             title="Most loved hour"
           />
+        </div>
+        <div className="mt-6">
+          <Table className="w-full">
+            <TableHeader>
+              <TableColumn>Date</TableColumn>
+              <TableColumn>Vote</TableColumn>
+              <TableColumn>Notes</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {records.map((r: Vote) => (
+                <TableRow key={r.id}>
+                  <TableCell>
+                    {dayjs(r.created_at).format("DD MMM HH:mm")}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      style={{
+                        color:
+                          r.vote < 0 ? "rgb(132, 204, 22)" : "rgb(239, 68, 68)",
+                      }}
+                    >
+                      {r.vote}
+                    </span>
+                  </TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    <span className="blur-sm">{r.note}</span>
+                    {r.note && (
+                      <div className="relative">
+                        <Tooltip
+                          color="warning"
+                          content="This feature is locked"
+                          placement="top"
+                          showArrow={true}
+                        >
+                          <button>
+                            <IoLockClosed />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
