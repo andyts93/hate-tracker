@@ -42,17 +42,17 @@ export async function GET(request: NextRequest) {
     {
       avg: avg[0].avg,
       graph: graph.reverse().map((el) => {
-        if (el.note) {
-          const hash = crypto.createHash("sha256");
+        // if (el.note) {
+        //   const hash = crypto.createHash("sha256");
 
-          hash.update(el.note);
-          el.note = hash.digest("hex");
-          // Insert random spaces in string
-          el.note = el.note
-            .split("")
-            .map((c: string) => c + (Math.random() < 0.3 ? " " : ""))
-            .join("");
-        }
+        //   hash.update(el.note);
+        //   el.note = hash.digest("hex");
+        //   // Insert random spaces in string
+        //   el.note = el.note
+        //     .split("")
+        //     .map((c: string) => c + (Math.random() < 0.3 ? " " : ""))
+        //     .join("");
+        // }
 
         return el;
       }),

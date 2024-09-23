@@ -10,13 +10,13 @@ import {
 } from "@nextui-org/modal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Home() {
   const [name, setName] = useState<string>("");
   const router = useRouter();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpenChange } = useDisclosure();
 
   const createNew = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,10 +37,6 @@ export default function Home() {
       alert(err.message);
     }
   };
-
-  useEffect(() => {
-    onOpen();
-  }, []);
 
   return (
     <>
