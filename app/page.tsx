@@ -12,11 +12,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Home() {
   const [name, setName] = useState<string>("");
   const router = useRouter();
   const { isOpen, onOpenChange } = useDisclosure();
+  const { data: session } = useSession();
 
   const createNew = async (e: FormEvent) => {
     e.preventDefault();
@@ -62,8 +64,8 @@ export default function Home() {
                 <p>
                   Mine,{" "}
                   <em>
-                    if you care at least a little bit about how much I hate you over
-                    time
+                    if you care at least a little bit about how much I hate you
+                    over time
                   </em>
                   , is{" "}
                   <Link
@@ -97,28 +99,31 @@ export default function Home() {
         Create a page for the person you want to track the mood of, and share
         the link with them!
       </p>
-      <p className="mt-1 underline text-center">
-        No registration required, don&apos;t lose your link!
-      </p>
 
-      <form className="mt-8" onSubmit={createNew}>
-        <div className="flex flex-col border border-gray-700 p-2 shadow-brutal-sm shadow-gray-600 rounded">
-          <label className="text-sm text-gray-400 mb-1" htmlFor="name">
-            Name
-          </label>
-          <input
-            className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
-            id="name"
-            placeholder="Insert name here"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
-            Create
-          </button>
-        </div>
-      </form>
+      {!session ? (
+        <button type="submit" onClick={() => signIn()}>
+          Sign in
+        </button>
+      ) : (
+        <form className="mt-8" onSubmit={createNew}>
+          <div className="flex flex-col border border-gray-700 p-2 shadow-brutal-sm shadow-gray-600 rounded">
+            <label className="text-sm text-gray-400 mb-1" htmlFor="name">
+              Name
+            </label>
+            <input
+              className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
+              id="name"
+              placeholder="Insert name here"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
+              Create
+            </button>
+          </div>
+        </form>
+      )}
     </>
   );
 }
