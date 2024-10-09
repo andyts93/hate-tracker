@@ -15,7 +15,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { HeartFilledIcon, Logo } from "@/components/icons";
@@ -108,9 +108,45 @@ export const Navbar = () => {
       <NavbarMenu>
         {/* {searchInput} */}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          <div className="flex">
-            {session?.user?.name}
-          </div>
+          {session ? (
+            <>
+              <div className="flex items-center gap-2 pb-3 border-b border-gray-700">
+                <img
+                  alt="Profile"
+                  className="rounded-full w-8"
+                  src={session?.user?.image || undefined}
+                />
+                {session?.user?.name}
+              </div>
+              <NavbarMenuItem>
+                <Link
+                  color="foreground"
+                  href="#"
+                  size="lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signOut();
+                  }}
+                >
+                  Sign Out
+                </Link>
+              </NavbarMenuItem>
+            </>
+          ) : (
+            <NavbarMenuItem>
+              <Link
+                color="foreground"
+                href="#"
+                size="lg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  signIn("google");
+                }}
+              >
+                Sign In
+              </Link>
+            </NavbarMenuItem>
+          )}
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
