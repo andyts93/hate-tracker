@@ -9,6 +9,8 @@ export type Vote = {
   created_at: string;
   vote: number;
   note: string;
+  note_visible: boolean;
+  ttv: string;
 };
 
 export type GraphPoint = {

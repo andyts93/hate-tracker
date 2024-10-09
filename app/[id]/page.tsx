@@ -29,7 +29,6 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { Tooltip } from "@nextui-org/tooltip";
 import {
   Modal,
   ModalBody,
@@ -41,6 +40,11 @@ import { PiConfettiDuotone } from "react-icons/pi";
 import { useQRCode } from "next-qrcode";
 import toast from "react-hot-toast";
 import { getCookie, setCookie } from "cookies-next";
+import { Switch } from "@nextui-org/switch";
+import { BsIncognito } from "react-icons/bs";
+import { IoMdEye } from "react-icons/io";
+import { DatePicker } from "@nextui-org/date-picker";
+import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
@@ -80,6 +84,8 @@ export default function Home({ params }: { params: { id: string } }) {
   const [hasPassword, setHasPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string | undefined>("");
   const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [showNote, setShowNote] = useState<boolean>(false);
+  const [showOn, setShowOn] = useState<any>(now(getLocalTimeZone()));
 
   const { Canvas } = useQRCode();
 
@@ -154,7 +160,13 @@ export default function Home({ params }: { params: { id: string } }) {
     setLoading(true);
     await fetch("/api/votes", {
       method: "POST",
-      body: JSON.stringify({ vote, person_id: params.id, note }),
+      body: JSON.stringify({
+        vote,
+        person_id: params.id,
+        note,
+        showOn: showNote ? showOn?.toDate(getLocalTimeZone()) : null,
+        showNote,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -162,6 +174,8 @@ export default function Home({ params }: { params: { id: string } }) {
     currentVote.current = vote as number;
     setVote(0);
     setNote("");
+    setShowNote(false);
+    setShowOn(now(getLocalTimeZone()));
     onOpen();
     await reload();
   };
@@ -374,13 +388,43 @@ export default function Home({ params }: { params: { id: string } }) {
                   value={vote}
                   onChange={(e) => setVote(e)}
                 />
-                <textarea
-                  className="mt-2 bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm disabed:opacity-70"
-                  disabled={!authenticated}
-                  placeholder="Write a note if you want"
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                />
+                <div className="bg-gray-900 w-full p-2 mt-2 rounded-md">
+                  <h3 className="font-semibold mb-2">Note</h3>
+                  <textarea
+                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm disabed:opacity-70"
+                    disabled={!authenticated}
+                    placeholder="Write an optional note"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+                  <div className="flex w-full mt-4 justify-between gap-4 items-center">
+                    <Switch
+                      disabled={!authenticated}
+                      isSelected={showNote}
+                      thumbIcon={({ isSelected, className }) =>
+                        isSelected ? (
+                          <IoMdEye className={className} />
+                        ) : (
+                          <BsIncognito className={className} />
+                        )
+                      }
+                      onValueChange={(value) => setShowNote(value)}
+                    >
+                      Show?
+                    </Switch>
+                    <DatePicker
+                      hideTimeZone
+                      description="When you want the note to be visible"
+                      isDisabled={!showNote}
+                      label="Show on"
+                      maxValue={today(getLocalTimeZone()).add({ months: 1 })}
+                      minValue={today(getLocalTimeZone())}
+                      value={showOn}
+                      variant="flat"
+                      onChange={(value: any) => setShowOn(value)}
+                    />
+                  </div>
+                </div>
                 <button
                   className="px-4 py-1 rounded-2xl bg-green-500 mt-4 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
                   disabled={!authenticated}
@@ -442,6 +486,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   <TableColumn>Date</TableColumn>
                   <TableColumn>Vote</TableColumn>
                   <TableColumn>Notes</TableColumn>
+                  <TableColumn>Visible on</TableColumn>
                 </TableHeader>
                 <TableBody>
                   {records.map((r: Vote) => (
@@ -462,23 +507,23 @@ export default function Home({ params }: { params: { id: string } }) {
                         </span>
                       </TableCell>
                       <TableCell className="flex items-center gap-2">
-                        <span className={authenticated ? "" : "blur-sm"}>
+                        <span
+                          className={
+                            authenticated ||
+                            (r.note_visible && dayjs(r.ttv).isBefore(dayjs()))
+                              ? ""
+                              : "blur-sm"
+                          }
+                        >
                           {r.note}
                         </span>
-                        {r.note && (
-                          <div className="relative">
-                            <Tooltip
-                              color="warning"
-                              content="This feature is locked"
-                              placement="top"
-                              showArrow={true}
-                            >
-                              <button>
-                                <IoLockClosed />
-                              </button>
-                            </Tooltip>
-                          </div>
-                        )}
+                      </TableCell>
+                      <TableCell>
+                        {r.note_visible && dayjs(r.ttv).isAfter(dayjs()) ? (
+                          <span>{dayjs(r.ttv).format("DD MMM HH:mm")}</span>
+                        ) : !r.note_visible ? (
+                          <BsIncognito />
+                        ) : null}
                       </TableCell>
                     </TableRow>
                   ))}
