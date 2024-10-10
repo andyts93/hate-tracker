@@ -237,6 +237,13 @@ export default function Home({ params }: { params: { id: string } }) {
   useEffect(() => {
     reload().then();
     setAuthenticated(getCookie("auth") === params.id);
+    fetch(`/api/visit`, {
+      method: "POST",
+      body: JSON.stringify({
+        person_id: params.id,
+        auth_cookie: getCookie("auth"),
+      }),
+    }).then();
   }, []);
 
   return (
