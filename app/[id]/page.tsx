@@ -50,6 +50,7 @@ import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
+import { PiMusicNotesFill } from "react-icons/pi";
 
 ChartJS.register(
   CategoryScale,
@@ -86,6 +87,8 @@ export default function Home({ params }: { params: { id: string } }) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [showOn, setShowOn] = useState<any>(now(getLocalTimeZone()));
+  const [spotifyToken, setSpotifyToken] = useState<string | undefined>("");
+  const [spotifyTracks, setSpotifyTracks] = useState<any[]>([]);
 
   const { Canvas } = useQRCode();
 
@@ -234,9 +237,65 @@ export default function Home({ params }: { params: { id: string } }) {
     }
   };
 
+  const spotifyLogin = () => {
+    window.location.href = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}&scope=user-library-read,user-top-read&state=${window.location.href}`;
+  };
+
+  const getSpotifySuggestions = async () => {
+    if (!getCookie("spotify_token") && getCookie("spotify_refresh_token")) {
+      try {
+        const response = await fetch(
+          `https://accounts.spotify.com/api/token?grant_type=refresh_token&refresh_token=${getCookie("spotify_refresh_token")}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Basic ${Buffer.from(
+                `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
+              ).toString("base64")}`,
+            },
+          },
+        );
+        const json = await response.json();
+
+        setCookie("spotify_token", json.access_token, {
+          maxAge: json.expires_in,
+        });
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    } else if (
+      !getCookie("spotify_token") &&
+      !getCookie("spotify_refresh_token")
+    ) {
+      return;
+    }
+
+    try {
+      const genres = currentVote.current > 0 ? ["sad"] : ["happy", "romance"];
+      const extraAttributes =
+        currentVote.current < 0 ? "&min_danceability=0.8" : "&max_energy=0.2";
+
+      const trackResponse = await fetch(
+        `https://api.spotify.com/v1/recommendations?seed_genres=${genres.join(",")}&limit=6&${extraAttributes}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookie("spotify_token")}`,
+          },
+        },
+      );
+      const trackJson = await trackResponse.json();
+
+      setSpotifyTracks(trackJson.tracks);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
     reload().then();
     setAuthenticated(getCookie("auth") === params.id);
+    setSpotifyToken(getCookie("spotify_token"));
     fetch(`/api/visit`, {
       method: "POST",
       body: JSON.stringify({
@@ -244,6 +303,7 @@ export default function Home({ params }: { params: { id: string } }) {
         auth_cookie: getCookie("auth"),
       }),
     }).then();
+    getSpotifySuggestions().then();
   }, []);
 
   return (
@@ -275,6 +335,29 @@ export default function Home({ params }: { params: { id: string } }) {
                 {getRandomSentence()}
               </p>
             </div>
+            {spotifyTracks.length > 0 && (
+              <div className="grid grid-cols-3 md:grid-col-6 gap-2">
+                {spotifyTracks.map((track: any) => (
+                  <Link
+                    key={track.id}
+                    className="bg-gray-800 rounded-md mt-2 overflow-hidden"
+                    href={track.external_urls.spotify}
+                    target="_blank"
+                  >
+                    <img
+                      alt={track.album.name}
+                      src={track.album.images[0].url}
+                    />
+                    <div className="px-2 py-1">
+                      <h3 className="text-sm font-bold mb-1">{track.name}</h3>
+                      <p className="text-xs">
+                        {track.artists.map((a: any) => a.name).join(", ")}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -433,13 +516,19 @@ export default function Home({ params }: { params: { id: string } }) {
                   </div>
                 </div>
                 <button
-                  className="px-4 py-1 rounded-2xl bg-green-500 mt-4 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
+                  className="px-4 py-1 rounded-2xl bg-green-600 mt-4 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
                   disabled={!authenticated}
                   onClick={() => save()}
                 >
                   {!authenticated && <IoLockClosed />}
                   Save
                 </button>
+                {!spotifyToken && (
+                  <div className="bg-gray-900 rounded-md p-2 w-full mt-4">
+                    <p className="text-sm"><PiMusicNotesFill className="inline"/> Want some music suggestions based on your mood? Login with your Spotify account below</p>
+                    <button className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2" onClick={spotifyLogin}>Spotify login</button>
+                  </div>
+                )}
               </>
             )}
             <p className="text-center text-3xl font-black mt-6">
