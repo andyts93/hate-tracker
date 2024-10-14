@@ -4,11 +4,9 @@ import { cookies } from "next/headers";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const body = new URLSearchParams({
-    grant_type: "authorization_code",
-    code: searchParams.get("code"),
-    redirect_uri: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI,
-  });
+  const body = new URLSearchParams(
+    `grant_type=authorization_code&code=${searchParams.get("code")}&redirect_uri=${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}`,
+  );
   const basicAuth = Buffer.from(
     `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
   ).toString("base64");
