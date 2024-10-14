@@ -5,12 +5,14 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export type Vote = {
-  id: number;
-  created_at: string;
+  id?: number;
+  created_at?: string;
   vote: number;
   note: string;
   note_visible: boolean;
-  ttv: string;
+  ttv?: string | null;
+  image?: string | null;
+  person_id?: string;
 };
 
 export type GraphPoint = {

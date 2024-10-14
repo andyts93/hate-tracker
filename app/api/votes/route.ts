@@ -1,16 +1,45 @@
-import crypto from "crypto";
+import { extname } from "path";
 
 import { sql } from "@vercel/postgres";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { NextRequest, NextResponse } from "next/server";
+import { put } from "@vercel/blob";
+import { v4 as uuidv4 } from "uuid";
+import { Vote } from "@/types";
+
+dayjs.extend(utc);
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const vote = body.vote;
+  const body = await request.formData();
+
+  const data: Vote = {
+    vote: Number(body.get("vote")),
+    person_id: String(body.get("person_id")),
+    note: String(body.get("note") || ""),
+    note_visible: Boolean(body.get("showNote") === "true"),
+    ttv:
+      body.get("showOn") !== "null"
+        ? dayjs(String(body.get("showOn")))
+            .utc()
+            .format("YYYY-MM-DD HH:mm:ss")
+        : null,
+    image: "",
+  };
+
+  if (body.get("image")) {
+    const file = body.get("image") as File;
+    const blob = await put(`${uuidv4()}.${extname(file.name)}`, file, {
+      access: "public",
+    });
+
+    data.image = blob.url;
+  }
 
   try {
-    if (!vote) throw new Error("Vote is mandatory");
-    if (!body.person_id) throw new Error("Person ID is mandatory");
-    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv) VALUES (${vote}, ${body.person_id}, ${body.note || ""}, ${Boolean(body.showNote)}, ${body.showOn})`;
+    if (!data.vote) throw new Error("Vote is mandatory");
+    if (!data.person_id) throw new Error("Person ID is mandatory");
+    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv, image) VALUES (${data.vote}, ${data.person_id}, ${data.note}, ${data.note_visible}, ${data.ttv}, ${data.image})`;
   } catch (error) {
     NextResponse.json({ error }, { status: 500 });
   }

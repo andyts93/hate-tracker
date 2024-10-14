@@ -45,12 +45,13 @@ import { BsIncognito } from "react-icons/bs";
 import { IoMdEye } from "react-icons/io";
 import { DatePicker } from "@nextui-org/date-picker";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
+import { PiMusicNotesFill } from "react-icons/pi";
+import { BsImage } from "react-icons/bs";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
-import { PiMusicNotesFill } from "react-icons/pi";
 
 ChartJS.register(
   CategoryScale,
@@ -89,6 +90,13 @@ export default function Home({ params }: { params: { id: string } }) {
   const [showOn, setShowOn] = useState<any>(now(getLocalTimeZone()));
   const [spotifyToken, setSpotifyToken] = useState<string | undefined>("");
   const [spotifyTracks, setSpotifyTracks] = useState<any[]>([]);
+  const voteImagesRef = useRef<HTMLInputElement>(null);
+  const {
+    isOpen: isImageModalOpen,
+    onOpen: onImageModalOpen,
+    onOpenChange: onImageModalOpenChange,
+  } = useDisclosure();
+  const [modalCurrentVote, setModalCurrentVote] = useState<Vote>();
 
   const { Canvas } = useQRCode();
 
@@ -161,19 +169,46 @@ export default function Home({ params }: { params: { id: string } }) {
   };
   const save = async () => {
     setLoading(true);
+    const formData = new FormData();
+
+    formData.append("vote", vote.toString());
+    formData.append("person_id", params.id);
+    formData.append("note", note);
+    formData.append(
+      "showOn",
+      showNote ? showOn?.toDate(getLocalTimeZone()) : null,
+    );
+    formData.append("showNote", showNote.toString());
+    if (voteImagesRef.current?.files && voteImagesRef.current.files[0]) {
+      formData.append("image", voteImagesRef.current.files[0]);
+    }
+
     await fetch("/api/votes", {
       method: "POST",
-      body: JSON.stringify({
-        vote,
-        person_id: params.id,
-        note,
-        showOn: showNote ? showOn?.toDate(getLocalTimeZone()) : null,
-        showNote,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData,
     });
+    // if (voteImagesRef.current?.files) {
+    //   const file = voteImagesRef.current.files[0];
+    //   const newBlob = await upload(file.name, file, {
+    //     access: "public",
+    //     handleUploadUrl: "api/upload",
+    //   });
+
+    //   setBlob(newBlob);
+    // }
+    // await fetch("/api/votes", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     vote,
+    //     person_id: params.id,
+    //     note,
+    //     showOn: showNote ? showOn?.toDate(getLocalTimeZone()) : null,
+    //     showNote,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
     currentVote.current = vote as number;
     setVote(0);
     setNote("");
@@ -306,8 +341,29 @@ export default function Home({ params }: { params: { id: string } }) {
     getSpotifySuggestions().then();
   }, []);
 
+  const showImage = (vote: Vote) => {
+    setModalCurrentVote(vote);
+    onImageModalOpen();
+  };
+
   return (
     <div className="flex justify-center min-h-screen px-4">
+      <Modal
+        isOpen={isImageModalOpen}
+        placement="center"
+        onOpenChange={onImageModalOpenChange}
+      >
+        <ModalContent>
+          <ModalBody>
+            {modalCurrentVote && (
+              <>
+                <img alt="Note" src={String(modalCurrentVote.image)} />
+                <p className="text-xs">{modalCurrentVote.note}</p>
+              </>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalBody>
@@ -487,6 +543,12 @@ export default function Home({ params }: { params: { id: string } }) {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
+                  <input
+                    ref={voteImagesRef}
+                    accept="image/*"
+                    multiple={false}
+                    type="file"
+                  />
                   <div className="flex w-full mt-4 justify-between gap-4 items-center">
                     <Switch
                       disabled={!authenticated}
@@ -525,8 +587,17 @@ export default function Home({ params }: { params: { id: string } }) {
                 </button>
                 {!spotifyToken && (
                   <div className="bg-gray-900 rounded-md p-2 w-full mt-4">
-                    <p className="text-sm"><PiMusicNotesFill className="inline"/> Want some music suggestions based on your mood? Login with your Spotify account below</p>
-                    <button className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2" onClick={spotifyLogin}>Spotify login</button>
+                    <p className="text-sm">
+                      <PiMusicNotesFill className="inline" /> Want some music
+                      suggestions based on your mood? Login with your Spotify
+                      account below
+                    </p>
+                    <button
+                      className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
+                      onClick={spotifyLogin}
+                    >
+                      Spotify login
+                    </button>
                   </div>
                 )}
               </>
@@ -612,6 +683,12 @@ export default function Home({ params }: { params: { id: string } }) {
                           }
                         >
                           {r.note}
+                          {r.image &&
+                            (authenticated ||
+                              (r.note_visible &&
+                                dayjs(r.ttv).isBefore(dayjs()))) && (
+                              <BsImage onClick={() => showImage(r)} />
+                            )}
                         </span>
                       </TableCell>
                       <TableCell>
