@@ -47,6 +47,7 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 import { PiMusicNotesFill } from "react-icons/pi";
 import { BsImage } from "react-icons/bs";
+import { v4 as uuid4 } from "uuid";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
@@ -91,12 +92,14 @@ export default function Home({ params }: { params: { id: string } }) {
   const [spotifyToken, setSpotifyToken] = useState<string | undefined>("");
   const [spotifyTracks, setSpotifyTracks] = useState<any[]>([]);
   const voteImagesRef = useRef<HTMLInputElement>(null);
+  const [voteImageKey, setVoteImageKey] = useState<string>(uuid4());
   const {
     isOpen: isImageModalOpen,
     onOpen: onImageModalOpen,
     onOpenChange: onImageModalOpenChange,
   } = useDisclosure();
   const [modalCurrentVote, setModalCurrentVote] = useState<Vote>();
+  const [randomSentence, setRandomSentence] = useState<string>("");
 
   const { Canvas } = useQRCode();
 
@@ -187,41 +190,21 @@ export default function Home({ params }: { params: { id: string } }) {
       method: "POST",
       body: formData,
     });
-    // if (voteImagesRef.current?.files) {
-    //   const file = voteImagesRef.current.files[0];
-    //   const newBlob = await upload(file.name, file, {
-    //     access: "public",
-    //     handleUploadUrl: "api/upload",
-    //   });
-
-    //   setBlob(newBlob);
-    // }
-    // await fetch("/api/votes", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     vote,
-    //     person_id: params.id,
-    //     note,
-    //     showOn: showNote ? showOn?.toDate(getLocalTimeZone()) : null,
-    //     showNote,
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
     currentVote.current = vote as number;
     setVote(0);
     setNote("");
     setShowNote(false);
     setShowOn(now(getLocalTimeZone()));
     onOpen();
+    setVoteImageKey(uuid4());
+    getRandomSentence();
     await reload();
   };
 
   const getRandomSentence = () => {
     const list = sentences[currentVote.current < 0 ? "love" : "hate"];
 
-    return list[Math.floor(Math.random() * list.length)];
+    setRandomSentence(list[Math.floor(Math.random() * list.length)]);
   };
 
   const copyUrl = () => {
@@ -387,9 +370,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 {currentVote.current > 0 && <span>+</span>}
                 {currentVote.current}
               </p>
-              <p className="text-center italic text-sm">
-                {getRandomSentence()}
-              </p>
+              <p className="text-center italic text-sm">{randomSentence}</p>
             </div>
             {spotifyTracks.length > 0 && (
               <div className="grid grid-cols-3 md:grid-col-6 gap-2">
@@ -544,8 +525,10 @@ export default function Home({ params }: { params: { id: string } }) {
                     onChange={(e) => setNote(e.target.value)}
                   />
                   <input
+                    key={voteImageKey}
                     ref={voteImagesRef}
                     accept="image/*"
+                    className="text-xs"
                     multiple={false}
                     type="file"
                   />
