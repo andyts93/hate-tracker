@@ -62,8 +62,8 @@ export default function Home() {
                 <p>
                   Mine,{" "}
                   <em>
-                    if you care at least a little bit about how much I hate you over
-                    time
+                    if you care at least a little bit about how much I hate you
+                    over time
                   </em>
                   , is{" "}
                   <Link
