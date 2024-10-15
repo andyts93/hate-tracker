@@ -25,3 +25,10 @@ animation: l5 3s infinite;
 64%,86%  {background-position:35% 65%}
 88%,100% {background-position:35% 35%}
 }
+.leaflet-geosearch-button form {
+    max-width: 300px!important;
+    padding: 0!important;
+}
+.leaflet-control-geosearch .results {
+    color: #000!important;
+}

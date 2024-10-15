@@ -33,6 +33,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
@@ -48,11 +49,14 @@ import { now, getLocalTimeZone, today } from "@internationalized/date";
 import { PiMusicNotesFill } from "react-icons/pi";
 import { BsImage } from "react-icons/bs";
 import { v4 as uuid4 } from "uuid";
+import { LatLngTuple } from "leaflet";
+import { RiMapPin5Fill } from "react-icons/ri";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
+import { LocationPicker } from "@/components/location-picker";
 
 ChartJS.register(
   CategoryScale,
@@ -100,6 +104,12 @@ export default function Home({ params }: { params: { id: string } }) {
   } = useDisclosure();
   const [modalCurrentVote, setModalCurrentVote] = useState<Vote>();
   const [randomSentence, setRandomSentence] = useState<string>("");
+  const {
+    isOpen: isMapModalOpen,
+    onOpen: onMapModalOpen,
+    onOpenChange: onMapModalOpenChange,
+  } = useDisclosure();
+  const [location, setLocation] = useState<LatLngTuple | null>(null);
 
   const { Canvas } = useQRCode();
 
@@ -185,6 +195,10 @@ export default function Home({ params }: { params: { id: string } }) {
     if (voteImagesRef.current?.files && voteImagesRef.current.files[0]) {
       formData.append("image", voteImagesRef.current.files[0]);
     }
+    if (location) {
+      formData.append("latitude", location[0].toString());
+      formData.append("longitude", location[1].toString());
+    }
 
     await fetch("/api/votes", {
       method: "POST",
@@ -198,6 +212,7 @@ export default function Home({ params }: { params: { id: string } }) {
     onOpen();
     setVoteImageKey(uuid4());
     getRandomSentence();
+    setLocation(null);
     await reload();
   };
 
@@ -329,8 +344,47 @@ export default function Home({ params }: { params: { id: string } }) {
     onImageModalOpen();
   };
 
+  const handleLocationSelect = (lat: number, long: number) => {
+    setLocation([lat, long]);
+  };
+
   return (
     <div className="flex justify-center min-h-screen px-4">
+      <Modal
+        hideCloseButton={true}
+        isOpen={isMapModalOpen}
+        placement="center"
+        size="full"
+        onOpenChange={onMapModalOpenChange}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Set location</ModalHeader>
+              <ModalBody>
+                <LocationPicker onLocationSelect={handleLocationSelect} />
+              </ModalBody>
+              <ModalFooter>
+                <button
+                  className="px-4 py-1 rounded-2xl bg-red-600"
+                  onClick={() => {
+                    setLocation(null);
+                    onClose();
+                  }}
+                >
+                  Reset & Close
+                </button>
+                <button
+                  className="px-4 py-1 rounded-2xl bg-green-600"
+                  onClick={onClose}
+                >
+                  Save position
+                </button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <Modal
         isOpen={isImageModalOpen}
         placement="center"
@@ -524,14 +578,23 @@ export default function Home({ params }: { params: { id: string } }) {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
-                  <input
-                    key={voteImageKey}
-                    ref={voteImagesRef}
-                    accept="image/*"
-                    className="text-xs"
-                    multiple={false}
-                    type="file"
-                  />
+                  <div className="flex justify w-full mt-2">
+                    <input
+                      key={voteImageKey}
+                      ref={voteImagesRef}
+                      accept="image/*"
+                      className="text-xs"
+                      multiple={false}
+                      type="file"
+                    />
+                    <button
+                      className="flex gap-2 items-center text-xs"
+                      onClick={onMapModalOpen}
+                    >
+                      <RiMapPin5Fill />
+                      <span>{location ? "Edit location" : "Add location"}</span>
+                    </button>
+                  </div>
                   <div className="flex w-full mt-4 justify-between gap-4 items-center">
                     <Switch
                       disabled={!authenticated}

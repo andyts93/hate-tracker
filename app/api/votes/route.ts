@@ -25,6 +25,8 @@ export async function POST(request: Request) {
             .format("YYYY-MM-DD HH:mm:ss")
         : null,
     image: "",
+    latitude: Number(body.get("latitude")),
+    longitude: Number(body.get("longitude")),
   };
 
   if (body.get("image")) {
@@ -39,7 +41,7 @@ export async function POST(request: Request) {
   try {
     if (!data.vote) throw new Error("Vote is mandatory");
     if (!data.person_id) throw new Error("Person ID is mandatory");
-    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv, image) VALUES (${data.vote}, ${data.person_id}, ${data.note}, ${data.note_visible}, ${data.ttv}, ${data.image})`;
+    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv, image, latitude, longitude) VALUES (${data.vote}, ${data.person_id}, ${data.note}, ${data.note_visible}, ${data.ttv}, ${data.image}, ${data.latitude}, ${data.longitude})`;
   } catch (error) {
     NextResponse.json({ error }, { status: 500 });
   }

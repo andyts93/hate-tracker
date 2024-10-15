@@ -1,4 +1,6 @@
+import "leaflet-geosearch/dist/geosearch.css";
 import "@/styles/globals.css";
+import "leaflet/dist/leaflet.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
