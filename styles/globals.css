@@ -32,3 +32,6 @@ animation: l5 3s infinite;
 .leaflet-control-geosearch .results {
     color: #000!important;
 }
+.reactions-container > div {
+    box-shadow: none!important;
+}

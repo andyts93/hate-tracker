@@ -22,14 +22,6 @@ import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 import Link from "next/link";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@nextui-org/table";
-import {
   Modal,
   ModalBody,
   ModalContent,
@@ -47,16 +39,23 @@ import { IoMdEye } from "react-icons/io";
 import { DatePicker } from "@nextui-org/date-picker";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 import { PiMusicNotesFill } from "react-icons/pi";
-import { BsImage } from "react-icons/bs";
 import { v4 as uuid4 } from "uuid";
 import { LatLngTuple } from "leaflet";
 import { RiMapPin5Fill } from "react-icons/ri";
+import { MdLockClock } from "react-icons/md";
+import { MdImageNotSupported } from "react-icons/md";
+import {
+  Reaction,
+  ReactionBarSelector,
+  ReactionCounter,
+} from "@charkour/react-reactions";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
+import Heatmap from "@/components/heatmap";
 
 ChartJS.register(
   CategoryScale,
@@ -110,6 +109,35 @@ export default function Home({ params }: { params: { id: string } }) {
     onOpenChange: onMapModalOpenChange,
   } = useDisclosure();
   const [location, setLocation] = useState<LatLngTuple | null>(null);
+  const [positions, setPositions] = useState<LatLngTuple[]>([]);
+
+  const reactions: Reaction[] = [
+    {
+      label: "thumbs-up",
+      node: <div>👍</div>,
+      key: "thumbs-up",
+    },
+    {
+      label: "peeking-eyes",
+      node: <div>🫣</div>,
+      key: "peeking-eyes",
+    },
+    {
+      label: "xD",
+      node: <div>🤣</div>,
+      key: "xD",
+    },
+    {
+      label: "open-mouth",
+      node: <div>😮</div>,
+      key: "open-mouth",
+    },
+    {
+      label: "heart",
+      node: <div>❤️</div>,
+      key: "heart",
+    },
+  ];
 
   const { Canvas } = useQRCode();
 
@@ -161,7 +189,23 @@ export default function Home({ params }: { params: { id: string } }) {
       ],
     });
     setLastRecord(json.graph[json.graph.length - 1]?.created_at);
-    setRecords(json.graph.reverse());
+    setRecords(
+      json.graph.reverse().map((el: Vote) => {
+        el.show_note =
+          authenticated || (el.note_visible && dayjs(el.ttv).isBefore(dayjs()));
+        const foundReaction = reactions.find((r) => r.key === el.reaction);
+
+        if (foundReaction) {
+          el.reactionObject = {
+            node: foundReaction.node as JSX.Element,
+            label: foundReaction.label,
+            by: "Anonymous",
+          };
+        }
+
+        return el;
+      }),
+    );
     setStats({
       hatePeak: json.hatePeak,
       lovePeak: json.lovePeak,
@@ -179,7 +223,14 @@ export default function Home({ params }: { params: { id: string } }) {
       list.push(json.person);
       localStorage.setItem("last-viewed", JSON.stringify(list));
     }
+
+    setPositions(
+      json.graph
+        .filter((el: Vote) => el.latitude && el.longitude)
+        .map((el: Vote) => [Number(el.latitude), Number(el.longitude)]),
+    );
   };
+
   const save = async () => {
     setLoading(true);
     const formData = new FormData();
@@ -346,6 +397,21 @@ export default function Home({ params }: { params: { id: string } }) {
 
   const handleLocationSelect = (lat: number, long: number) => {
     setLocation([lat, long]);
+  };
+
+  const reactVote = async (vote: Vote, key: string) => {
+    try {
+      await fetch(`/api/votes/${vote.id}/react`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key }),
+      });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+    await reload();
   };
 
   return (
@@ -578,7 +644,7 @@ export default function Home({ params }: { params: { id: string } }) {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
-                  <div className="flex justify w-full mt-2">
+                  <div className="flex justify-between w-full mt-2 items-center gap-4">
                     <input
                       key={voteImageKey}
                       ref={voteImagesRef}
@@ -588,10 +654,10 @@ export default function Home({ params }: { params: { id: string } }) {
                       type="file"
                     />
                     <button
-                      className="flex gap-2 items-center text-xs"
+                      className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
                       onClick={onMapModalOpen}
                     >
-                      <RiMapPin5Fill />
+                      <RiMapPin5Fill className="w-5 h-5" />
                       <span>{location ? "Edit location" : "Add location"}</span>
                     </button>
                   </div>
@@ -693,7 +759,80 @@ export default function Home({ params }: { params: { id: string } }) {
                 title="Most loved hour"
               />
             </div>
-            <div className="mt-6">
+            {positions.length > 0 && <Heatmap coords={positions} />}
+            <div className="flex flex-col w-full gap-2 mt-4">
+              {records.map((r: Vote) => (
+                <div
+                  key={r.id}
+                  className="bg-gray-800 p-3 rounded-lg w-full flex justify-between gap-4 items-center"
+                >
+                  <div className="flex flex-col items-center">
+                    {r.image ? (
+                      <button onClick={() => showImage(r)}>
+                        <img
+                          alt={r.note}
+                          className="w-10 rounded"
+                          src={String(r.image)}
+                        />
+                      </button>
+                    ) : (
+                      <MdImageNotSupported className="w-10 h-10 text-gray-400" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs mb-1 text-gray-400 font-light">
+                      {dayjs(r.created_at).format("DD MMM HH:mm")}
+                    </p>
+                    {r.show_note ? (
+                      <p className="text-sm mb-2">{r.note}</p>
+                    ) : dayjs(r.ttv).isAfter(dayjs()) ? (
+                      <div className="flex items-center gap-2">
+                        <MdLockClock className="w-6 h-6 text-orange-400" />
+                        <p className="text-xs italic">
+                          Unlocks on{" "}
+                          <b>{dayjs(r.ttv).format("DD MMM HH:mm")}</b>
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <p className="text-sm blur-sm">{r.note}</p>
+                        <BsIncognito className="absolute top-[50%] left-[50%] -mt-5 -ml-5 w-10 h-10 text-white" />
+                      </div>
+                    )}
+                    {r.reactionObject && (
+                      <ReactionCounter
+                        className="reactions-container"
+                        iconSize={24}
+                        reactions={[r.reactionObject]}
+                        showReactsOnly={true}
+                      />
+                    )}
+                    {!r.reactionObject && r.show_note && !authenticated && (
+                      <ReactionBarSelector
+                        iconSize={16}
+                        reactions={reactions}
+                        style={{
+                          backgroundColor: "black",
+                          paddingLeft: 5,
+                          paddingRight: 10,
+                        }}
+                        onSelect={(key: string) => reactVote(r, key)}
+                      />
+                    )}
+                  </div>
+                  <h3
+                    className="text-2xl font-black"
+                    style={{
+                      color:
+                        r.vote < 0 ? "rgb(132, 204, 22)" : "rgb(239, 68, 68)",
+                    }}
+                  >
+                    {r.vote}
+                  </h3>
+                </div>
+              ))}
+            </div>
+            {/* <div className="mt-6 w-full">
               <Table className="w-full">
                 <TableHeader>
                   <TableColumn>Date</TableColumn>
@@ -748,7 +887,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   ))}
                 </TableBody>
               </Table>
-            </div>
+            </div> */}
           </>
         )}
       </div>

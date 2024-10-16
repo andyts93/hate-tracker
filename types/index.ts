@@ -1,3 +1,4 @@
+import { ReactionCounterObject } from "@charkour/react-reactions";
 import { SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
@@ -15,6 +16,9 @@ export type Vote = {
   person_id?: string;
   latitude?: number;
   longitude?: number;
+  show_note?: boolean;
+  reaction?: string;
+  reactionObject?: ReactionCounterObject;
 };
 
 export type GraphPoint = {
