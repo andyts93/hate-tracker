@@ -49,6 +49,7 @@ import {
   ReactionBarSelector,
   ReactionCounter,
 } from "@charkour/react-reactions";
+import { BsCloudUploadFill } from "react-icons/bs";
 
 import { StatPanel } from "@/components/stat-panel";
 import { GraphPoint, Person, Stats, Vote } from "@/types";
@@ -110,6 +111,7 @@ export default function Home({ params }: { params: { id: string } }) {
   } = useDisclosure();
   const [location, setLocation] = useState<LatLngTuple | null>(null);
   const [positions, setPositions] = useState<LatLngTuple[]>([]);
+  const [fileName, setFileName] = useState<string>("Upload image");
 
   const reactions: Reaction[] = [
     {
@@ -414,6 +416,18 @@ export default function Home({ params }: { params: { id: string } }) {
     await reload();
   };
 
+  const handleFileChange = () => {
+    const file = voteImagesRef.current?.files
+      ? voteImagesRef.current?.files[0]
+      : null;
+
+    if (file) {
+      setFileName(file.name);
+    } else {
+      setFileName("Upload image");
+    }
+  };
+
   return (
     <div className="flex justify-center min-h-screen px-4">
       <Modal
@@ -649,15 +663,24 @@ export default function Home({ params }: { params: { id: string } }) {
                       key={voteImageKey}
                       ref={voteImagesRef}
                       accept="image/*"
-                      className="text-xs"
+                      className="hidden"
+                      id="note-image"
                       multiple={false}
                       type="file"
+                      onChange={handleFileChange}
                     />
+                    <label
+                      className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
+                      htmlFor="note-image"
+                    >
+                      <BsCloudUploadFill />
+                      <span>{fileName}</span>
+                    </label>
                     <button
                       className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
                       onClick={onMapModalOpen}
                     >
-                      <RiMapPin5Fill className="w-5 h-5" />
+                      <RiMapPin5Fill />
                       <span>{location ? "Edit location" : "Add location"}</span>
                     </button>
                   </div>
@@ -760,11 +783,11 @@ export default function Home({ params }: { params: { id: string } }) {
               />
             </div>
             {positions.length > 0 && <Heatmap coords={positions} />}
-            <div className="flex flex-col w-full gap-2 mt-4">
+            <div className="flex flex-col w-full gap-4 mt-4">
               {records.map((r: Vote) => (
                 <div
                   key={r.id}
-                  className="bg-gray-800 p-3 rounded-lg w-full flex justify-between gap-4 items-center"
+                  className="bg-gray-800 p-3 rounded w-full flex justify-between gap-4 items-center shadow-brutal-sm shadow-gray-600"
                 >
                   <div className="flex flex-col items-center">
                     {r.image ? (
