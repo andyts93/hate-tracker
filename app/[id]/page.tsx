@@ -57,6 +57,8 @@ import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
 import Heatmap from "@/components/heatmap";
+import VoiceRecorder from "@/components/voice-recorder";
+import AudioPlayer from "@/components/audio-player";
 
 ChartJS.register(
   CategoryScale,
@@ -112,6 +114,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const [location, setLocation] = useState<LatLngTuple | null>(null);
   const [positions, setPositions] = useState<LatLngTuple[]>([]);
   const [fileName, setFileName] = useState<string>("Upload image");
+  const [audioUrl, setAudioUrl] = useState<string | undefined>();
 
   const reactions: Reaction[] = [
     {
@@ -251,6 +254,19 @@ export default function Home({ params }: { params: { id: string } }) {
     if (location) {
       formData.append("latitude", location[0].toString());
       formData.append("longitude", location[1].toString());
+    }
+    if (audioUrl) {
+      try {
+        const response = await fetch(audioUrl);
+        const audioBlob = await response.blob();
+        const audioFile = new File([audioBlob], "audio.webm", {
+          type: "audio/webm",
+        });
+
+        formData.append("audio", audioFile);
+      } catch (err: any) {
+        toast.error("Unable to upload audio");
+      }
     }
 
     await fetch("/api/votes", {
@@ -658,6 +674,12 @@ export default function Home({ params }: { params: { id: string } }) {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
+                  <VoiceRecorder
+                    className="bg-gray-800 rounded p-2"
+                    onRecorded={(audioUrl: string | undefined) => {
+                      setAudioUrl(audioUrl);
+                    }}
+                  />
                   <div className="flex justify-between w-full mt-2 items-center gap-4">
                     <input
                       key={voteImageKey}
@@ -807,7 +829,10 @@ export default function Home({ params }: { params: { id: string } }) {
                       {dayjs(r.created_at).format("DD MMM HH:mm")}
                     </p>
                     {r.show_note ? (
-                      <p className="text-sm mb-2">{r.note}</p>
+                      <>
+                        <p className="text-sm mb-2">{r.note}</p>
+                        {r.audio_file && <AudioPlayer src={r.audio_file} />}
+                      </>
                     ) : dayjs(r.ttv).isAfter(dayjs()) ? (
                       <div className="flex items-center gap-2">
                         <MdLockClock className="w-6 h-6 text-orange-400" />

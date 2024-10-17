@@ -28,6 +28,7 @@ export async function POST(request: Request) {
     image: "",
     latitude: Number(body.get("latitude")),
     longitude: Number(body.get("longitude")),
+    audio_file: "",
   };
 
   if (body.get("image")) {
@@ -39,10 +40,19 @@ export async function POST(request: Request) {
     data.image = blob.url;
   }
 
+  if (body.get("audio")) {
+    const file = body.get("audio") as File;
+    const blob = await put(`${uuidv4()}.webm`, file, {
+      access: "public",
+    });
+
+    data.audio_file = blob.url;
+  }
+
   try {
     if (!data.vote) throw new Error("Vote is mandatory");
     if (!data.person_id) throw new Error("Person ID is mandatory");
-    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv, image, latitude, longitude) VALUES (${data.vote}, ${data.person_id}, ${data.note}, ${data.note_visible}, ${data.ttv}, ${data.image}, ${data.latitude}, ${data.longitude})`;
+    await sql`INSERT INTO records (vote, person_id, note, note_visible, ttv, image, latitude, longitude, audio_file) VALUES (${data.vote}, ${data.person_id}, ${data.note}, ${data.note_visible}, ${data.ttv}, ${data.image}, ${data.latitude}, ${data.longitude}, ${data.audio_file})`;
   } catch (error) {
     NextResponse.json({ error }, { status: 500 });
   }

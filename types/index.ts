@@ -19,6 +19,7 @@ export type Vote = {
   show_note?: boolean;
   reaction?: string;
   reactionObject?: ReactionCounterObject;
+  audio_file?: string;
 };
 
 export type GraphPoint = {
