@@ -251,7 +251,7 @@ export default function Home({ params }: { params: { id: string } }) {
     if (voteImagesRef.current?.files && voteImagesRef.current.files[0]) {
       formData.append("image", voteImagesRef.current.files[0]);
     }
-    if (location) {
+    if (location && location[0] > 0 && location[1] > 0) {
       formData.append("latitude", location[0].toString());
       formData.append("longitude", location[1].toString());
     }
