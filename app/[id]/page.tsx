@@ -42,13 +42,6 @@ import { PiMusicNotesFill } from "react-icons/pi";
 import { v4 as uuid4 } from "uuid";
 import { LatLngTuple } from "leaflet";
 import { RiMapPin5Fill } from "react-icons/ri";
-import { MdLockClock } from "react-icons/md";
-import { MdImageNotSupported } from "react-icons/md";
-import {
-  Reaction,
-  ReactionBarSelector,
-  ReactionCounter,
-} from "@charkour/react-reactions";
 import { BsCloudUploadFill } from "react-icons/bs";
 
 import { StatPanel } from "@/components/stat-panel";
@@ -58,7 +51,8 @@ import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
 import Heatmap from "@/components/heatmap";
 import VoiceRecorder from "@/components/voice-recorder";
-import AudioPlayer from "@/components/audio-player";
+import { reactions } from "@/components/reactions";
+import Post from "@/components/post";
 
 ChartJS.register(
   CategoryScale,
@@ -99,12 +93,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const [spotifyTracks, setSpotifyTracks] = useState<any[]>([]);
   const voteImagesRef = useRef<HTMLInputElement>(null);
   const [voteImageKey, setVoteImageKey] = useState<string>(uuid4());
-  const {
-    isOpen: isImageModalOpen,
-    onOpen: onImageModalOpen,
-    onOpenChange: onImageModalOpenChange,
-  } = useDisclosure();
-  const [modalCurrentVote, setModalCurrentVote] = useState<Vote>();
+
   const [randomSentence, setRandomSentence] = useState<string>("");
   const {
     isOpen: isMapModalOpen,
@@ -115,34 +104,6 @@ export default function Home({ params }: { params: { id: string } }) {
   const [positions, setPositions] = useState<LatLngTuple[]>([]);
   const [fileName, setFileName] = useState<string>("Upload image");
   const [audioUrl, setAudioUrl] = useState<string | undefined>();
-
-  const reactions: Reaction[] = [
-    {
-      label: "thumbs-up",
-      node: <div>👍</div>,
-      key: "thumbs-up",
-    },
-    {
-      label: "peeking-eyes",
-      node: <div>🫣</div>,
-      key: "peeking-eyes",
-    },
-    {
-      label: "xD",
-      node: <div>🤣</div>,
-      key: "xD",
-    },
-    {
-      label: "open-mouth",
-      node: <div>😮</div>,
-      key: "open-mouth",
-    },
-    {
-      label: "heart",
-      node: <div>❤️</div>,
-      key: "heart",
-    },
-  ];
 
   const { Canvas } = useQRCode();
 
@@ -408,28 +369,8 @@ export default function Home({ params }: { params: { id: string } }) {
     getSpotifySuggestions().then();
   }, []);
 
-  const showImage = (vote: Vote) => {
-    setModalCurrentVote(vote);
-    onImageModalOpen();
-  };
-
   const handleLocationSelect = (lat: number, long: number) => {
     setLocation([lat, long]);
-  };
-
-  const reactVote = async (vote: Vote, key: string) => {
-    try {
-      await fetch(`/api/votes/${vote.id}/react`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ key }),
-      });
-    } catch (err: any) {
-      toast.error(err.message);
-    }
-    await reload();
   };
 
   const handleFileChange = () => {
@@ -445,7 +386,7 @@ export default function Home({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="flex justify-center min-h-screen px-4">
+    <div className="flex justify-center min-h-screen">
       <Modal
         hideCloseButton={true}
         isOpen={isMapModalOpen}
@@ -481,22 +422,7 @@ export default function Home({ params }: { params: { id: string } }) {
           )}
         </ModalContent>
       </Modal>
-      <Modal
-        isOpen={isImageModalOpen}
-        placement="center"
-        onOpenChange={onImageModalOpenChange}
-      >
-        <ModalContent>
-          <ModalBody>
-            {modalCurrentVote && (
-              <>
-                <img alt="Note" src={String(modalCurrentVote.image)} />
-                <p className="text-xs">{modalCurrentVote.note}</p>
-              </>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+
       <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalBody>
@@ -805,137 +731,16 @@ export default function Home({ params }: { params: { id: string } }) {
               />
             </div>
             {positions.length > 0 && <Heatmap coords={positions} />}
-            <div className="flex flex-col w-full gap-4 mt-4">
+            <div className="flex flex-col w-full mt-4 divide-y divide-gray-800">
               {records.map((r: Vote) => (
-                <div
+                <Post
                   key={r.id}
-                  className="bg-gray-800 p-3 rounded w-full flex justify-between gap-4 items-center shadow-brutal-sm shadow-gray-600"
-                >
-                  <div className="flex flex-col items-center">
-                    {r.image ? (
-                      <button onClick={() => showImage(r)}>
-                        <img
-                          alt={r.note}
-                          className="w-10 rounded"
-                          src={String(r.image)}
-                        />
-                      </button>
-                    ) : (
-                      <MdImageNotSupported className="w-10 h-10 text-gray-400" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs mb-1 text-gray-400 font-light">
-                      {dayjs(r.created_at).format("DD MMM HH:mm")}
-                    </p>
-                    {r.show_note ? (
-                      <>
-                        <p className="text-sm mb-2">{r.note}</p>
-                        {r.audio_file && <AudioPlayer src={r.audio_file} />}
-                      </>
-                    ) : dayjs(r.ttv).isAfter(dayjs()) ? (
-                      <div className="flex items-center gap-2">
-                        <MdLockClock className="w-6 h-6 text-orange-400" />
-                        <p className="text-xs italic">
-                          Unlocks on{" "}
-                          <b>{dayjs(r.ttv).format("DD MMM HH:mm")}</b>
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="relative">
-                        <p className="text-sm blur-sm">{r.note}</p>
-                        <BsIncognito className="absolute top-[50%] left-[50%] -mt-5 -ml-5 w-10 h-10 text-white" />
-                      </div>
-                    )}
-                    {r.reactionObject && (
-                      <ReactionCounter
-                        className="reactions-container"
-                        iconSize={24}
-                        reactions={[r.reactionObject]}
-                        showReactsOnly={true}
-                      />
-                    )}
-                    {!r.reactionObject && r.show_note && !authenticated && (
-                      <ReactionBarSelector
-                        iconSize={16}
-                        reactions={reactions}
-                        style={{
-                          backgroundColor: "black",
-                          paddingLeft: 5,
-                          paddingRight: 10,
-                        }}
-                        onSelect={(key: string) => reactVote(r, key)}
-                      />
-                    )}
-                  </div>
-                  <h3
-                    className="text-2xl font-black"
-                    style={{
-                      color:
-                        r.vote < 0 ? "rgb(132, 204, 22)" : "rgb(239, 68, 68)",
-                    }}
-                  >
-                    {r.vote}
-                  </h3>
-                </div>
+                  authenticated={authenticated}
+                  r={r}
+                  onReact={() => reload()}
+                />
               ))}
             </div>
-            {/* <div className="mt-6 w-full">
-              <Table className="w-full">
-                <TableHeader>
-                  <TableColumn>Date</TableColumn>
-                  <TableColumn>Vote</TableColumn>
-                  <TableColumn>Notes</TableColumn>
-                  <TableColumn>Visible on</TableColumn>
-                </TableHeader>
-                <TableBody>
-                  {records.map((r: Vote) => (
-                    <TableRow key={r.id}>
-                      <TableCell>
-                        {dayjs(r.created_at).format("DD MMM HH:mm")}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            color:
-                              r.vote < 0
-                                ? "rgb(132, 204, 22)"
-                                : "rgb(239, 68, 68)",
-                          }}
-                        >
-                          {r.vote}
-                        </span>
-                      </TableCell>
-                      <TableCell className="flex items-center gap-2">
-                        <span
-                          className={
-                            authenticated ||
-                            (r.note_visible && dayjs(r.ttv).isBefore(dayjs()))
-                              ? ""
-                              : "blur-sm"
-                          }
-                        >
-                          {r.note}
-                          {r.image &&
-                            (authenticated ||
-                              (r.note_visible &&
-                                dayjs(r.ttv).isBefore(dayjs()))) && (
-                              <BsImage onClick={() => showImage(r)} />
-                            )}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {r.note_visible && dayjs(r.ttv).isAfter(dayjs()) ? (
-                          <span>{dayjs(r.ttv).format("DD MMM HH:mm")}</span>
-                        ) : !r.note_visible ? (
-                          <BsIncognito />
-                        ) : null}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div> */}
           </>
         )}
       </div>

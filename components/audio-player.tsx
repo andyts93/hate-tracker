@@ -52,7 +52,7 @@ export default function AudioPlayer({ src, blobDuration }: AudioPlayerProps) {
   };
 
   return (
-    <div className="flex items-start space-x-2 h-full">
+    <div className="flex items-start space-x-2">
       <button onClick={togglePlay}>
         {isPlaying ? <IoStopSharp /> : <IoPlaySharp />}
       </button>
