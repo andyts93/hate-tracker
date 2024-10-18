@@ -100,6 +100,15 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
                 </button>
               )}
               {r.audio_file && <AudioPlayer src={r.audio_file} />}
+              {dayjs(r.ttv).isAfter(dayjs()) && (
+                <div className="flex items-center gap-2">
+                  <MdLockClock className="text-orange-400" />
+                  <p className="text-xs italic">
+                    Unlocks on <b>{dayjs(r.ttv).format("DD MMM HH:mm")}</b>
+                  </p>
+                </div>
+              )}
+              {!r.note_visible && <BsIncognito />}
             </>
           ) : dayjs(r.ttv).isAfter(dayjs()) ? (
             <div className="flex items-center gap-2">
