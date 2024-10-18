@@ -122,7 +122,7 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
               showReactsOnly={true}
             />
           )}
-          {!r.reactionObject && r.show_note && (
+          {!r.reactionObject && r.show_note && !authenticated && (
             <ReactionBarSelector
               iconSize={16}
               reactions={reactions}
