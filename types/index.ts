@@ -20,6 +20,7 @@ export type Vote = {
   reaction?: string;
   reactionObject?: ReactionCounterObject;
   audio_file?: string;
+  gif_reaction?: string;
 };
 
 export type GraphPoint = {

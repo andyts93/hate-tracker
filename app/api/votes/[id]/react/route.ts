@@ -8,8 +8,12 @@ export async function POST(
   const body = await request.json();
 
   try {
-    if (!body.key) throw new Error("Reaction is required");
-    await sql`UPDATE records SET reaction = ${body.key} WHERE id = ${params.id}`;
+    if (!body.key && !body.gif) throw new Error("Reaction is required");
+    if (body.key) {
+      await sql`UPDATE records SET reaction = ${body.key} WHERE id = ${params.id}`;
+    } else {
+      await sql`UPDATE records SET gif_reaction = ${body.gif} WHERE id = ${params.id}`;
+    }
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

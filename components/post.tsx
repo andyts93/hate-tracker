@@ -13,16 +13,19 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { useState } from "react";
+import GifPicker, { TenorImage, Theme } from "gif-picker-react";
 
 import AudioPlayer from "./audio-player";
 import { reactions } from "./reactions";
+import { RiSearchLine } from "react-icons/ri";
+
 
 import { Vote } from "@/types";
 
 interface PostProps {
   r: Vote;
   authenticated: boolean;
-  onReact?: (vote: Vote, key: string) => void;
+  onReact?: (vote: Vote) => void;
 }
 
 export default function Post({ r, authenticated, onReact }: PostProps) {
@@ -32,6 +35,7 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
     onOpenChange: onImageModalOpenChange,
   } = useDisclosure();
   const [modalCurrentVote, setModalCurrentVote] = useState<Vote>();
+  const [showTenorPicker, setShowTenorPicker] = useState<boolean>(false);
 
   const showImage = (vote: Vote) => {
     setModalCurrentVote(vote);
@@ -50,7 +54,22 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
     } catch (err: any) {
       toast.error(err.message);
     }
-    onReact?.(vote, key);
+    onReact?.(vote);
+  };
+
+  const reactGif = async (vote: Vote, gif: TenorImage) => {
+    try {
+      await fetch(`/api/votes/${vote.id}/react`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gif: gif.url }),
+      });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+    onReact?.(vote);
   };
 
   return (
@@ -131,18 +150,47 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
               showReactsOnly={true}
             />
           )}
-          {!r.reactionObject && r.show_note && !authenticated && (
-            <ReactionBarSelector
-              iconSize={16}
-              reactions={reactions}
-              style={{
-                backgroundColor: "black",
-                paddingLeft: 5,
-                paddingRight: 10,
-              }}
-              onSelect={(key: string) => reactVote(r, key)}
+          {r.gif_reaction && (
+            <img
+              alt="GIF Reaction"
+              className="rounded-md"
+              src={r.gif_reaction}
             />
           )}
+          {!r.reactionObject &&
+            r.show_note &&
+            !authenticated &&
+            !r.gif_reaction && (
+              <>
+                <div className="flex items-center">
+                  <ReactionBarSelector
+                    iconSize={16}
+                    reactions={reactions}
+                    style={{
+                      backgroundColor: "black",
+                      paddingLeft: 5,
+                      paddingRight: 10,
+                    }}
+                    onSelect={(key: string) => reactVote(r, key)}
+                  />
+                  <button
+                    className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700 my-1"
+                    onClick={() => setShowTenorPicker(!showTenorPicker)}
+                  >
+                    <RiSearchLine /> GIF
+                  </button>
+                </div>
+                {showTenorPicker && (
+                  <GifPicker
+                    autoFocusSearch={false}
+                    tenorApiKey={String(process.env.NEXT_PUBLIC_TENOR_API_KEY)}
+                    theme={Theme.DARK}
+                    width={"100%"}
+                    onGifClick={(gif: TenorImage) => reactGif(r, gif)}
+                  />
+                )}
+              </>
+            )}
         </div>
       </div>
     </>

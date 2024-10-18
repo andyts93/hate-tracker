@@ -590,7 +590,9 @@ export default function Home({ params }: { params: { id: string } }) {
                     <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
                       &ldquo;{bottleMessage.text}&ldquo;
                     </p>
-                    <p className="text-xs text-gray-700 text-right">{dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}</p>
+                    <p className="text-xs text-gray-700 text-right">
+                      {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
+                    </p>
                   </div>
                 )}
                 <Slider
