@@ -40,3 +40,10 @@ export type Person = {
   id: string;
   name: string;
 };
+
+export type BottleMessage = {
+  id: number;
+  text: string;
+  person_id: string;
+  created_at: string;
+};

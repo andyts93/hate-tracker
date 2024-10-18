@@ -45,7 +45,7 @@ import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
 
 import { StatPanel } from "@/components/stat-panel";
-import { GraphPoint, Person, Stats, Vote } from "@/types";
+import { BottleMessage, GraphPoint, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
@@ -53,6 +53,7 @@ import Heatmap from "@/components/heatmap";
 import VoiceRecorder from "@/components/voice-recorder";
 import { reactions } from "@/components/reactions";
 import Post from "@/components/post";
+import BottleMessageForm from "@/components/bottle-message";
 
 ChartJS.register(
   CategoryScale,
@@ -104,6 +105,9 @@ export default function Home({ params }: { params: { id: string } }) {
   const [positions, setPositions] = useState<LatLngTuple[]>([]);
   const [fileName, setFileName] = useState<string>("Upload image");
   const [audioUrl, setAudioUrl] = useState<string | undefined>();
+  const [bottleMessage, setBottleMessage] = useState<
+    BottleMessage | undefined
+  >();
 
   const { Canvas } = useQRCode();
 
@@ -195,6 +199,8 @@ export default function Home({ params }: { params: { id: string } }) {
         .filter((el: Vote) => el.latitude && el.longitude)
         .map((el: Vote) => [Number(el.latitude), Number(el.longitude)]),
     );
+
+    setBottleMessage(json.message);
   };
 
   const save = async () => {
@@ -553,24 +559,40 @@ export default function Home({ params }: { params: { id: string } }) {
         ) : (
           <>
             {!authenticated ? (
-              <div className="bg-blue-400 py-2 px-4 rounded shadow-brutal shadow-blue-600 mt-4 w-full">
-                <p className="mb-2">To vote please insert your password</p>
-                <form className="flex flex-col" onSubmit={login}>
-                  <input
-                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
-                    id="password"
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button className="px-2 py-1 rounded bg-blue-600 mt-2 text-sm">
-                    Login
-                  </button>
-                </form>
-              </div>
+              <>
+                <div className="bg-blue-400 py-2 px-4 rounded shadow-brutal shadow-blue-600 mt-4 w-full">
+                  <p className="mb-2 text-sm">
+                    To vote please insert your password
+                  </p>
+                  <form className="flex flex-col" onSubmit={login}>
+                    <input
+                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm"
+                      id="password"
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button className="px-2 py-1 rounded bg-blue-600 mt-2 text-sm">
+                      Login
+                    </button>
+                  </form>
+                </div>
+                <BottleMessageForm person={person} />
+              </>
             ) : (
               <>
+                {bottleMessage && (
+                  <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
+                    <p className="mb-2 text-sm">
+                      Someone left a message for you, check it out!
+                    </p>
+                    <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
+                      &ldquo;{bottleMessage.text}&ldquo;
+                    </p>
+                    <p className="text-xs text-gray-700 text-right">{dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}</p>
+                  </div>
+                )}
                 <Slider
                   className="max-w-md mt-4"
                   color="warning"

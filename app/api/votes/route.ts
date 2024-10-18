@@ -79,25 +79,13 @@ export async function GET(request: NextRequest) {
     await sql`SELECT CONCAT(TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24'), ':00') AS vote FROM records WHERE person_id = ${searchParams.get("person_id")} GROUP BY TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24') ORDER BY AVG(vote)`;
   const { rows: people } =
     await sql`SELECT * FROM people WHERE id = ${searchParams.get("person_id")}`;
+  const { rows: messages } =
+    await sql`SELECT * FROM messages WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
 
   return NextResponse.json(
     {
       avg: avg[0].avg,
-      graph: graph.reverse().map((el) => {
-        // if (el.note) {
-        //   const hash = crypto.createHash("sha256");
-
-        //   hash.update(el.note);
-        //   el.note = hash.digest("hex");
-        //   // Insert random spaces in string
-        //   el.note = el.note
-        //     .split("")
-        //     .map((c: string) => c + (Math.random() < 0.3 ? " " : ""))
-        //     .join("");
-        // }
-
-        return el;
-      }),
+      graph: graph.reverse(),
       hatePeak: hatePeak[0],
       lovePeak: lovePeak[0],
       hateHits: hateHits[0],
@@ -105,6 +93,7 @@ export async function GET(request: NextRequest) {
       loveHour: hours[0],
       hateHour: hours[hours.length - 1],
       person: people[0],
+      message: messages[0],
     },
     { status: 200 },
   );
