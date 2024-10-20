@@ -558,6 +558,19 @@ export default function Home({ params }: { params: { id: string } }) {
           </>
         ) : (
           <>
+            {bottleMessage && (
+              <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
+                <p className="mb-2 text-sm">
+                  Someone left a message for you, check it out!
+                </p>
+                <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
+                  &ldquo;{bottleMessage.text}&ldquo;
+                </p>
+                <p className="text-xs text-gray-700 text-right">
+                  {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
+                </p>
+              </div>
+            )}
             {!authenticated ? (
               <>
                 <div className="bg-blue-400 py-2 px-4 rounded shadow-brutal shadow-blue-600 mt-4 w-full">
@@ -582,19 +595,6 @@ export default function Home({ params }: { params: { id: string } }) {
               </>
             ) : (
               <>
-                {bottleMessage && (
-                  <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
-                    <p className="mb-2 text-sm">
-                      Someone left a message for you, check it out!
-                    </p>
-                    <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
-                      &ldquo;{bottleMessage.text}&ldquo;
-                    </p>
-                    <p className="text-xs text-gray-700 text-right">
-                      {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
-                    </p>
-                  </div>
-                )}
                 <Slider
                   className="max-w-md mt-4"
                   color="warning"
