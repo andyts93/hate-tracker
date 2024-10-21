@@ -1,0 +1,73 @@
+{
+    "Home": {
+        "title": "Sarebbe divertente tracciare l'amore/odio dei tuoi cari, vero? Ora puoi",
+        "subtitle": "Crea una pagina per la persona di cui vuoi tracciare lo stato d'animo, e condividi il link con loro!",
+        "disclaimer": "Nessuna registrazione richiesta, non perdere il tuo link!"
+    },
+    "Forms": {
+        "name": "Nome",
+        "namePlaceholder": "Inserisci il nome qui",
+        "create": "Crea",
+        "save": "Salva",
+        "uploadImage": "Carica foto",
+        "addLocation": "Aggiungi posizione",
+        "editLocation": "Modifica posizione",
+        "showOnDescription": "Quando vuoi rendere visibile la nota",
+        "showOnLabel": "Mostra il"
+    },
+    "LastViewed": {
+        "title": "Ultime pagine viste"
+    },
+    "Page": {
+        "title": "Hey {name}!",
+        "subtitle": "Qualcuno crede che lo odi (oppure no?). Beh, buon per te! Traccialo qui.",
+        "wantTrack": "Vuoi tracciare lo stato d'animo di qualcuno? Clicca ",
+        "shareLink": "Condividi link",
+        "showQr": "Mostra QR code",
+        "setPassword": {
+            "start": "Per iniziare, {name} deve impostare una password. Questo gli permetterà di aggiornare il suo punteggio e gestire le proprie note.",
+            "send": "Invia questo link e permettigli di impostare la loro password in autonomia, non fare il coglione!",
+            "set": "Password impostata!",
+            "insert": "Inserisci la tua password per votare"
+        },
+        "bottleMessage": {
+            "message": "Qualcuno ti ha lasciato un messaggio!",
+            "sent": "Messaggio inviato!",
+            "modal": {
+                "title": "Lascia un messaggio",
+                "description": "Puoi lasciare un messaggio qui per {name}. Puoi lasciare un solo messaggio alla volta e durerà per sole 24 ore."
+            },
+            "title": "Lascia un messaggio per {name}",
+            "messagePlaceholder": "Messaggio",
+            "send": "Lancia la bottiglia"
+        },
+        "hateLabel": "Livello di odio",
+        "noteLabel": "Nota",
+        "notePlaceholder": "Scrivi una nota opzionale",
+        "showNote": "Mostra?",
+        "spotifyLogin": "Vuoi dei suggerimenti musicali basati sul tuo stato d'animo? Entra con il tuo account Spotify",
+        "average": "Media",
+        "hatePeak": "Picco odio",
+        "lovePeak": "Picco amore",
+        "hateHits": "Voti odio",
+        "loveHits": "Voti amore",
+        "mostHatedHour": "Ora più odiata",
+        "mostLovedHour": "Ora più amata",
+        "lastRecord": "Ultimo aggiornamento: {hour}"
+    },
+    "Common": {
+        "here": "qui"
+    },
+    "API": {
+        "Person": {
+            "errorCreate": "Errore durante la creazione, per favore riprovare",
+            "passwordRequired": "Password obbligatoria",
+            "errorPassword": "Errore impostazione password, per favore riprovare",
+            "incorrectPassword": "Password errata"
+        }
+    },
+    "Menu": {
+        "home": "Home",
+        "lastViewed": "Ultimi visti"
+    }
+}

@@ -1,9 +1,12 @@
 import "leaflet-geosearch/dist/geosearch.css";
 import "@/styles/globals.css";
 import "leaflet/dist/leaflet.css";
+
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
+import { getLocale, getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 import { Providers } from "./providers";
 
@@ -32,13 +35,17 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+
+  const messages = await getMessages();
+
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang={locale}>
       <head />
       <body
         className={clsx(
@@ -47,13 +54,15 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
-              <Toaster position="top-center" />
-              {children}
-            </main>
-          </div>
+          <NextIntlClientProvider messages={messages}>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
+                <Toaster position="top-center" />
+                {children}
+              </main>
+            </div>
+          </NextIntlClientProvider>
         </Providers>
       </body>
     </html>

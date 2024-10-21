@@ -27,7 +27,7 @@ export default function Heatmap({ coords }: { coords: LatLngTuple[] }) {
       return () => {
         map.removeLayer(heatLayer);
       };
-    });
+    }, []);
 
     return null;
   };

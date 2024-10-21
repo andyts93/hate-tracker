@@ -43,6 +43,7 @@ import { v4 as uuid4 } from "uuid";
 import { LatLngTuple } from "leaflet";
 import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
+import { useTranslations } from "next-intl";
 
 import { StatPanel } from "@/components/stat-panel";
 import { BottleMessage, GraphPoint, Person, Stats, Vote } from "@/types";
@@ -50,7 +51,6 @@ import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
 import Heatmap from "@/components/heatmap";
-import VoiceRecorder from "@/components/voice-recorder";
 import { reactions } from "@/components/reactions";
 import Post from "@/components/post";
 import BottleMessageForm from "@/components/bottle-message";
@@ -103,11 +103,12 @@ export default function Home({ params }: { params: { id: string } }) {
   } = useDisclosure();
   const [location, setLocation] = useState<LatLngTuple | null>(null);
   const [positions, setPositions] = useState<LatLngTuple[]>([]);
-  const [fileName, setFileName] = useState<string>("Upload image");
   const [audioUrl, setAudioUrl] = useState<string | undefined>();
   const [bottleMessage, setBottleMessage] = useState<
     BottleMessage | undefined
   >();
+  const t = useTranslations();
+  const [fileName, setFileName] = useState<string>(t("Forms.uploadImage"));
 
   const { Canvas } = useQRCode();
 
@@ -277,7 +278,7 @@ export default function Home({ params }: { params: { id: string } }) {
 
       if (!response.ok) return toast.error(json.error);
       setPassword("");
-      toast.success("Password set!");
+      toast.success(t("Page.setPassword.set"));
       setHasPassword(true);
     } catch (err: any) {
       toast.error(err.message);
@@ -500,14 +501,14 @@ export default function Home({ params }: { params: { id: string } }) {
       {loading && <FullPageLoader />}
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
-          Hey {person?.name || "friend"}!<br />
-          Someone thinks you hate them (or not?). Well, good for you! Track it
-          here.
+          {t("Page.title", { name: person?.name || "friend" })}
+          <br />
+          {t("Page.subtitle")}
         </h1>
         <p className="text-sm text-gray-400 mt-1">
-          Want to track someone&apos;s mood? Click{" "}
+          {t("Page.wantTrack")}
           <Link className="text-orange-500 hover:underline" href={"/"}>
-            here
+            {t("Common.here")}
           </Link>
           .
         </p>
@@ -517,14 +518,14 @@ export default function Home({ params }: { params: { id: string } }) {
             onClick={copyUrl}
           >
             <IoShareOutline />
-            <span>Share link</span>
+            <span>{t("Page.shareLink")}</span>
           </button>
           <button
             className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
             onClick={onQrOpen}
           >
             <IoQrCodeOutline />
-            <span>Show QR code</span>
+            <span>{t("Page.showQr")}</span>
           </button>
         </div>
         {!hasPassword && !loading ? (
@@ -532,13 +533,11 @@ export default function Home({ params }: { params: { id: string } }) {
             <div className="mt-6 bg-orange-500 p-2 rounded shadow-brutal shadow-orange-700">
               <RiAlarmWarningLine className="mx-auto text-6xl mb-2" />
               <p className="mb-2">
-                To start tracking, {person?.name} must set a password. This will
-                permit just them to update their scores and see their notes.
+                {t("Page.setPassword.start", {
+                  name: person?.name || "friend",
+                })}
               </p>
-              <p>
-                Send this link to them and let them set their password by
-                themselves, don&apos;t be a dick!
-              </p>
+              <p>{t("Page.setPassword.send")}</p>
             </div>
             <form className="flex flex-col mt-4" onSubmit={savePassword}>
               <label className="text-sm text-gray-400 mb-1" htmlFor="password">
@@ -552,7 +551,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
-                Save
+                {t("Forms.save")}
               </button>
             </form>
           </>
@@ -561,7 +560,7 @@ export default function Home({ params }: { params: { id: string } }) {
             {bottleMessage && (
               <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
                 <p className="mb-2 text-sm">
-                  Someone left a message for you, check it out!
+                  {t("Page.bottleMessage.message")}
                 </p>
                 <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
                   &ldquo;{bottleMessage.text}&ldquo;
@@ -574,19 +573,17 @@ export default function Home({ params }: { params: { id: string } }) {
             {!authenticated ? (
               <>
                 <div className="bg-blue-400 py-2 px-4 rounded shadow-brutal shadow-blue-600 mt-4 w-full">
-                  <p className="mb-2 text-sm">
-                    To vote please insert your password
-                  </p>
-                  <form className="flex flex-col" onSubmit={login}>
+                  <p className="mb-2 text-sm">{t("Page.setPassword.insert")}</p>
+                  <form className="flex gap-2" onSubmit={login}>
                     <input
-                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm"
+                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm flex-1"
                       id="password"
                       placeholder="Password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button className="px-2 py-1 rounded bg-blue-600 mt-2 text-sm">
+                    <button className="px-6 py-1 rounded bg-blue-600 text-sm">
                       Login
                     </button>
                   </form>
@@ -604,7 +601,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   }
                   fillOffset={0}
                   formatOptions={{ signDisplay: "always" }}
-                  label="Hate level"
+                  label={t("Page.hateLabel")}
                   maxValue={10}
                   minValue={-10}
                   size="lg"
@@ -616,20 +613,20 @@ export default function Home({ params }: { params: { id: string } }) {
                   onChange={(e) => setVote(e)}
                 />
                 <div className="bg-gray-900 w-full p-2 mt-2 rounded-md">
-                  <h3 className="font-semibold mb-2">Note</h3>
+                  <h3 className="font-semibold mb-2">{t("Page.noteLabel")}</h3>
                   <textarea
                     className="bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm disabed:opacity-70"
                     disabled={!authenticated}
-                    placeholder="Write an optional note"
+                    placeholder={t("Page.notePlaceholder")}
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                   />
-                  <VoiceRecorder
+                  {/* <VoiceRecorder
                     className="bg-gray-800 rounded p-2"
                     onRecorded={(audioUrl: string | undefined) => {
                       setAudioUrl(audioUrl);
                     }}
-                  />
+                  /> */}
                   <div className="flex justify-between w-full mt-2 items-center gap-4">
                     <input
                       key={voteImageKey}
@@ -653,7 +650,11 @@ export default function Home({ params }: { params: { id: string } }) {
                       onClick={onMapModalOpen}
                     >
                       <RiMapPin5Fill />
-                      <span>{location ? "Edit location" : "Add location"}</span>
+                      <span>
+                        {location
+                          ? t("Forms.editLocation")
+                          : t("Forms.addLocation")}
+                      </span>
                     </button>
                   </div>
                   <div className="flex w-full mt-4 justify-between gap-4 items-center">
@@ -669,13 +670,13 @@ export default function Home({ params }: { params: { id: string } }) {
                       }
                       onValueChange={(value) => setShowNote(value)}
                     >
-                      Show?
+                      {t("Page.showNote")}
                     </Switch>
                     <DatePicker
                       hideTimeZone
-                      description="When you want the note to be visible"
+                      description={t("Forms.showOnDescription")}
                       isDisabled={!showNote}
-                      label="Show on"
+                      label={t("Forms.showOnLabel")}
                       maxValue={today(getLocalTimeZone()).add({ months: 1 })}
                       minValue={today(getLocalTimeZone())}
                       value={showOn}
@@ -690,14 +691,13 @@ export default function Home({ params }: { params: { id: string } }) {
                   onClick={() => save()}
                 >
                   {!authenticated && <IoLockClosed />}
-                  Save
+                  {t("Forms.save")}
                 </button>
                 {!spotifyToken && (
                   <div className="bg-gray-900 rounded-md p-2 w-full mt-4">
                     <p className="text-sm">
-                      <PiMusicNotesFill className="inline" /> Want some music
-                      suggestions based on your mood? Login with your Spotify
-                      account below
+                      <PiMusicNotesFill className="inline" />{" "}
+                      {t("Page.spotifyLogin")}
                     </p>
                     <button
                       className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
@@ -710,7 +710,7 @@ export default function Home({ params }: { params: { id: string } }) {
               </>
             )}
             <p className="text-center text-3xl font-black mt-6">
-              Average
+              {t("Page.average")}
               <br />
               {average || "-"}
             </p>
@@ -719,39 +719,41 @@ export default function Home({ params }: { params: { id: string } }) {
             </div>
             {lastRecord && (
               <p className="text-center">
-                Last record: {dayjs(lastRecord).format("DD MMM HH:mm")}
+                {t("Page.lastRecord", {
+                  hour: dayjs(lastRecord).format("DD MMM HH:mm"),
+                })}
               </p>
             )}
             <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
               <StatPanel
                 stat={stats?.hatePeak}
                 statColor="#ef4444"
-                title="Hate peak"
+                title={t("Page.hatePeak")}
               />
               <StatPanel
                 stat={stats?.lovePeak}
                 statColor="#84cc16"
-                title="Love peak"
+                title={t("Page.lovePeak")}
               />
               <StatPanel
                 stat={stats?.hateHits}
                 statColor=""
-                title="Hate hits"
+                title={t("Page.hateHits")}
               />
               <StatPanel
                 stat={stats?.loveHits}
                 statColor=""
-                title="Love hits"
+                title={t("Page.loveHits")}
               />
               <StatPanel
                 stat={stats?.hateHour}
                 statColor=""
-                title="Most hated hour"
+                title={t("Page.mostHatedHour")}
               />
               <StatPanel
                 stat={stats?.loveHour}
                 statColor=""
-                title="Most loved hour"
+                title={t("Page.mostLovedHour")}
               />
             </div>
             {positions.length > 0 && <Heatmap coords={positions} />}

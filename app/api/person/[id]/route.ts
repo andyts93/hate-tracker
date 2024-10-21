@@ -1,15 +1,17 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { getTranslations } from "next-intl/server";
 
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } },
 ) {
   const body = await request.json();
+  const t = await getTranslations("API");
 
   try {
-    if (!body.password) throw new Error("Password is required");
+    if (!body.password) throw new Error(t("Person.passwordRequired"));
 
     const password = await bcrypt.hash(body.password, 10);
 
@@ -21,7 +23,7 @@ export async function PUT(
     console.error(error);
 
     return NextResponse.json(
-      { error: "Error while creating the person, please try again" },
+      { error: t("Person.errorPassword") },
       { status: 500 },
     );
   }

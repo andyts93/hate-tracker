@@ -1,4 +1,5 @@
 import { sql } from "@vercel/postgres";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,9 +16,10 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // eslint-disable-next-line no-console
     console.error(error);
+    const t = await getTranslations("API");
 
     return NextResponse.json(
-      { error: "Error while creating the person, please try again" },
+      { error: t("Person.errorCreate") },
       { status: 500 },
     );
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import "flag-icons/css/flag-icons.min.css";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -10,40 +11,27 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 
 import { siteConfig } from "@/config/site";
-import { HeartFilledIcon, SearchIcon, Logo } from "@/components/icons";
+import { HeartFilledIcon, Logo } from "@/components/icons";
+import { setUserLocale } from "@/services/locale";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
+  const t = useTranslations("Menu");
+  const locale = useLocale();
 
   return (
     <NextUINavbar
@@ -70,7 +58,7 @@ export const Navbar = () => {
                 color="foreground"
                 href={item.href}
               >
-                {item.label}
+                {t(item.label)}
               </NextLink>
             </NavbarItem>
           ))}
@@ -106,6 +94,21 @@ export const Navbar = () => {
             Sponsor
           </Button>
         </NavbarItem>
+        <Dropdown>
+            <NavbarItem className="flex items-center">
+              <DropdownTrigger>
+                <span className={`fi fi-${locale === "en" ? "gb" : locale}`} />
+              </DropdownTrigger>
+            </NavbarItem>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setUserLocale("en")}>
+                <span className="fi fi-gb mr-2" /> English
+              </DropdownItem>
+              <DropdownItem onClick={() => setUserLocale("it")}>
+                <span className="fi fi-it mr-2" /> Italiano
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -141,12 +144,27 @@ export const Navbar = () => {
                 }
                 href={item.href}
                 size="lg"
-                onClick={(e) => setIsMenuOpen(false)}
+                onClick={() => setIsMenuOpen(false)}
               >
-                {item.label}
+                {t(item.label)}
               </Link>
             </NavbarMenuItem>
           ))}
+          <Dropdown>
+            <NavbarItem className="flex items-center">
+              <DropdownTrigger>
+                <span className={`fi fi-${locale === "en" ? "gb" : locale}`} />
+              </DropdownTrigger>
+            </NavbarItem>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setUserLocale("en")}>
+                <span className="fi fi-gb mr-2" /> English
+              </DropdownItem>
+              <DropdownItem onClick={() => setUserLocale("it")}>
+                <span className="fi fi-it mr-2" /> Italiano
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </NavbarMenu>
     </NextUINavbar>

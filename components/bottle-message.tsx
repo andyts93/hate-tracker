@@ -8,6 +8,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 import { FullPageLoader } from "./full-page-loader";
 
@@ -21,6 +22,7 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
   const [message, setMessage] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState<boolean>(false);
+  const t = useTranslations("Page.bottleMessage");
 
   const saveMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
 
       if (res.ok) {
         setMessage("");
-        toast.success("Message sent!");
+        toast.success(t("sent"));
       } else {
         const json = await res.json();
 
@@ -53,11 +55,10 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
       {loading && <FullPageLoader />}
       <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
         <ModalContent>
-          <ModalHeader>Leave a message</ModalHeader>
+          <ModalHeader>{t("modal.title")}</ModalHeader>
           <ModalBody>
             <p className="mb-2">
-              You can leave a message here for {person?.name}. You can leave one
-              message a time and it lasts for 24 hours only.
+              {t("modal.description", { name: person?.name })}
             </p>
           </ModalBody>
         </ModalContent>
@@ -89,7 +90,7 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
               </g>{" "}
             </g>
           </svg>{" "}
-          <span>Leave a message to {person?.name}</span>
+          <span>{t("title", { name: person?.name })}</span>
           <button onClick={onOpen}>
             <LuInfo className="ml-1" />
           </button>
@@ -97,12 +98,12 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
         <form className="flex flex-col" onSubmit={saveMessage}>
           <textarea
             className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm h-24 resize-none"
-            placeholder="Message"
+            placeholder={t("messagePlaceholder")}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <button className="px-2 py-1 rounded bg-purple-600 mt-2 text-sm">
-            Throw bottle
+            {t("send")}
           </button>
         </form>
       </div>

@@ -1,0 +1,73 @@
+{
+    "Home": {
+        "title": "It would be fun to track your beloved love/hate feeling over time, right? Now you can",
+        "subtitle": "Create a page for the person you want to track the mood of, and share the link with them!",
+        "disclaimer": "No registration required, don't lose your link!"
+    },
+    "Forms": {
+        "name": "Name",
+        "namePlaceholder": "Insert name here",
+        "create": "Create",
+        "save": "Save",
+        "uploadImage": "Upload image",
+        "addLocation": "Add location",
+        "editLocation": "Edit location",
+        "showOnDescription": "When you want the note to be visible",
+        "showOnLabel": "Show on"
+    },
+    "LastViewed": {
+        "title": "Last viewed pages"
+    },
+    "Page": {
+        "title": "Hey {name}!",
+        "subtitle": "Someone thinks you hate them (or not?). Well, good for you! Track it here.",
+        "wantTrack": "Want to track someone's mood? Click ",
+        "shareLink": "Share link",
+        "showQr": "Show QR code",
+        "setPassword": {
+            "start": "To start tracking, {name} must set a password. This will permit just them to update their scores and see their notes.",
+            "send": "Send this link to them and let them set their password by themselves, don't be a dick!",
+            "set": "Password set!",
+            "insert": "Please insert your password to vote"
+        },
+        "bottleMessage": {
+            "message": "Someone left a message for you, check it out!",
+            "sent": "Message sent!",
+            "modal": {
+                "title": "Leave a message",
+                "description": "You can leave a message here for {name}. You can leave one message a time and it lasts for 24 hours only."
+            },
+            "title": "Leave a message for {name}",
+            "messagePlaceholder": "Message",
+            "send": "Throw bottle"
+        },
+        "hateLabel": "Hate level",
+        "noteLabel": "Note",
+        "notePlaceholder": "Write an optional note",
+        "showNote": "Show?",
+        "spotifyLogin": "Want some music suggestions based on your mood? Login with your Spotify account below",
+        "average": "Average",
+        "hatePeak": "Hate peak",
+        "lovePeak": "Love peak",
+        "hateHits": "Hate hits",
+        "loveHits": "Love hits",
+        "mostHatedHour": "Most hated hour",
+        "mostLovedHour": "Most loved hour",
+        "lastRecord": "Last record"
+    },
+    "Common": {
+        "here": "here"
+    },
+    "API": {
+        "Person": {
+            "errorCreate": "Error while creating the person, please try again",
+            "passwordRequired": "Password is required",
+            "errorPassword": "Error while setting the password, please try again",
+            "incorrectPassword": "Incorrect password"
+        }
+    },
+    "Menu": {
+        "home": "Home",
+        "lastViewed": "Last viewed"
+    }
+}

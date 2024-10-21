@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Person } from "@/types";
 
 export default function LastViewed() {
   const [list, setList] = useState<Person[]>([]);
+  const t = useTranslations("LastViewed");
 
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem("last-viewed") || "[]");
@@ -17,7 +19,7 @@ export default function LastViewed() {
   return (
     <>
       <h1 className="text-3xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
-        Last viewed pages
+        {t("title")}
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 mt-4 gap-4">
         {list.map((l) => (
