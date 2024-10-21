@@ -1,5 +1,4 @@
 import { sql } from "@vercel/postgres";
-import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

@@ -14,11 +14,10 @@ import {
 } from "@nextui-org/modal";
 import { useState } from "react";
 import GifPicker, { TenorImage, Theme } from "gif-picker-react";
+import { RiSearchLine } from "react-icons/ri";
 
 import AudioPlayer from "./audio-player";
 import { reactions } from "./reactions";
-import { RiSearchLine } from "react-icons/ri";
-
 
 import { Vote } from "@/types";
 

@@ -97,25 +97,8 @@ export default function Passes({
             </button>
           )}
         </p>
-        <div className="flex flex-col gap-2">
-          {passes.map((p: Pass) => (
-            <div key={p.id} className="bg-gray-900 rounded-md p-2">
-              <h3 className="font-bold flex gap-2 items-center">
-                <span>{p.icon}</span>
-                <span>{p.title}</span>
-                <span className="flex-1 text-right text-xs font-light">
-                  {p.expires_at ? `Expiration: ${dayjs(p.expires_at).format("DD MMM")}` : null}
-                </span>
-              </h3>
-              <p className="text-sm">{p.conditions}</p>
-              <p className="text-right font-bold text-lg">
-                {p.uses_left}/{p.uses_max}
-              </p>
-            </div>
-          ))}
-        </div>
         {!authenticated && showCreateForm && (
-          <form className="flex flex-col gap-1" onSubmit={savePass}>
+          <form className="flex flex-col gap-1 my-2" onSubmit={savePass}>
             <div className="flex gap-2">
               <button
                 className="w-8 bg-default-100 rounded-lg text-center"
@@ -174,6 +157,26 @@ export default function Passes({
             </button>
           </form>
         )}
+        <div className="flex flex-col gap-2">
+          {passes.map((p: Pass) => (
+            <div key={p.id} className="bg-gray-900 rounded-md p-2">
+              <h3 className="font-bold flex gap-2 items-center">
+                <span>{p.icon}</span>
+                <span>{p.title}</span>
+                <span className="flex-1 text-right text-xs font-light">
+                  {p.expires_at
+                    ? `Expiration: ${dayjs(p.expires_at).format("DD MMM")}`
+                    : null}
+                </span>
+              </h3>
+              <p className="text-sm">{p.conditions}</p>
+              <p className="text-right font-bold text-lg">
+                {p.uses_left}/{p.uses_max}
+              </p>
+            </div>
+          ))}
+        </div>
+        
       </div>
     </>
   );

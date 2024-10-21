@@ -10,7 +10,10 @@ interface VoiceRecorderProps {
   onRecorded: (audioUrl: string | undefined) => void;
 }
 
-export default function VoiceRecorder({ className, onRecorded }: VoiceRecorderProps) {
+export default function VoiceRecorder({
+  className,
+  onRecorded,
+}: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioUrl, setAudioUrl] = useState<string | undefined>();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
