@@ -39,7 +39,8 @@
             },
             "title": "Leave a message for {name}",
             "messagePlaceholder": "Message",
-            "send": "Throw bottle"
+            "send": "Throw bottle",
+            "button": "Bottle message"
         },
         "hateLabel": "Hate level",
         "noteLabel": "Note",
@@ -53,7 +54,10 @@
         "loveHits": "Love hits",
         "mostHatedHour": "Most hated hour",
         "mostLovedHour": "Most loved hour",
-        "lastRecord": "Last record"
+        "lastRecord": "Last record",
+        "passes": {
+            "button": "Passes"
+        }
     },
     "Common": {
         "here": "here"

@@ -48,3 +48,16 @@ export type BottleMessage = {
   person_id: string;
   created_at: string;
 };
+
+export type Pass = {
+  id?: number;
+  person_id: string;
+  title: string;
+  icon?: string;
+  description?: string;
+  conditions?: string;
+  uses_max: number;
+  uses_left: number;
+  created_at: string;
+  expires_at: string;
+};

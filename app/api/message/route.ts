@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  console.log(body);
 
   try {
     if (!body.message) throw new Error("Message is required");

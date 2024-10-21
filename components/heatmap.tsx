@@ -8,8 +8,6 @@ export default function Heatmap({ coords }: { coords: LatLngTuple[] }) {
     coords.reduce((acc, cur) => acc + cur[1], 0) / coords.length,
   ];
 
-  console.log(centerPosition);
-
   const HeatmapLayer = () => {
     const map = useMap();
 

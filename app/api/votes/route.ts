@@ -81,6 +81,8 @@ export async function GET(request: NextRequest) {
     await sql`SELECT * FROM people WHERE id = ${searchParams.get("person_id")}`;
   const { rows: messages } =
     await sql`SELECT * FROM messages WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
+  const { rows: passes } =
+    await sql`SELECT * FROM passes WHERE person_id = ${searchParams.get("person_id")}`;
 
   return NextResponse.json(
     {
@@ -94,6 +96,7 @@ export async function GET(request: NextRequest) {
       hateHour: hours[hours.length - 1],
       person: people[0],
       message: messages[0],
+      passes,
     },
     { status: 200 },
   );

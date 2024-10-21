@@ -95,20 +95,20 @@ export const Navbar = () => {
           </Button>
         </NavbarItem>
         <Dropdown>
-            <NavbarItem className="flex items-center">
-              <DropdownTrigger>
-                <span className={`fi fi-${locale === "en" ? "gb" : locale}`} />
-              </DropdownTrigger>
-            </NavbarItem>
-            <DropdownMenu>
-              <DropdownItem onClick={() => setUserLocale("en")}>
-                <span className="fi fi-gb mr-2" /> English
-              </DropdownItem>
-              <DropdownItem onClick={() => setUserLocale("it")}>
-                <span className="fi fi-it mr-2" /> Italiano
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          <NavbarItem className="flex items-center">
+            <DropdownTrigger>
+              <span className={`fi fi-${locale === "en" ? "gb" : locale}`} />
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu>
+            <DropdownItem onClick={() => setUserLocale("en")}>
+              <span className="fi fi-gb mr-2" /> English
+            </DropdownItem>
+            <DropdownItem onClick={() => setUserLocale("it")}>
+              <span className="fi fi-it mr-2" /> Italiano
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">

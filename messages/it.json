@@ -39,7 +39,8 @@
             },
             "title": "Lascia un messaggio per {name}",
             "messagePlaceholder": "Messaggio",
-            "send": "Lancia la bottiglia"
+            "send": "Lancia la bottiglia",
+            "button": "Messaggio in bottiglia"
         },
         "hateLabel": "Livello di odio",
         "noteLabel": "Nota",
@@ -53,7 +54,10 @@
         "loveHits": "Voti amore",
         "mostHatedHour": "Ora più odiata",
         "mostLovedHour": "Ora più amata",
-        "lastRecord": "Ultimo aggiornamento: {hour}"
+        "lastRecord": "Ultimo aggiornamento: {hour}",
+        "passes": {
+            "button": "Pass"
+        }
     },
     "Common": {
         "here": "qui"

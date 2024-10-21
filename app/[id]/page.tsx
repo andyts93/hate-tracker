@@ -46,7 +46,7 @@ import { BsCloudUploadFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 
 import { StatPanel } from "@/components/stat-panel";
-import { BottleMessage, GraphPoint, Person, Stats, Vote } from "@/types";
+import { BottleMessage, GraphPoint, Pass, Person, Stats, Vote } from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
@@ -54,6 +54,7 @@ import Heatmap from "@/components/heatmap";
 import { reactions } from "@/components/reactions";
 import Post from "@/components/post";
 import BottleMessageForm from "@/components/bottle-message";
+import Passes from "@/components/passes";
 
 ChartJS.register(
   CategoryScale,
@@ -109,6 +110,10 @@ export default function Home({ params }: { params: { id: string } }) {
   >();
   const t = useTranslations();
   const [fileName, setFileName] = useState<string>(t("Forms.uploadImage"));
+  const [actionPanelShown, setActionPanelShown] = useState<
+    "login" | "bottleMessage" | "passes" | undefined
+  >();
+  const [passes, setPasses] = useState<Pass[]>([]);
 
   const { Canvas } = useQRCode();
 
@@ -202,6 +207,7 @@ export default function Home({ params }: { params: { id: string } }) {
     );
 
     setBottleMessage(json.message);
+    setPasses(json.passes);
   };
 
   const save = async () => {
@@ -570,27 +576,60 @@ export default function Home({ params }: { params: { id: string } }) {
                 </p>
               </div>
             )}
-            {!authenticated ? (
-              <>
-                <div className="bg-blue-400 py-2 px-4 rounded shadow-brutal shadow-blue-600 mt-4 w-full">
-                  <p className="mb-2 text-sm">{t("Page.setPassword.insert")}</p>
-                  <form className="flex gap-2" onSubmit={login}>
-                    <input
-                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm flex-1"
-                      id="password"
-                      placeholder="Password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button className="px-6 py-1 rounded bg-blue-600 text-sm">
-                      Login
-                    </button>
-                  </form>
-                </div>
-                <BottleMessageForm person={person} />
-              </>
-            ) : (
+            <div className="flex justify-between mt-4 gap-2">
+              {!authenticated && (
+                <button
+                  className="text-sm px-2 py-1 bg-blue-500 rounded flex items-center gap-2 hover:bg-blue-700"
+                  onClick={() => setActionPanelShown("login")}
+                >
+                  Login
+                </button>
+              )}
+              {!authenticated && (
+                <button
+                  className="text-sm px-2 py-1 bg-purple-400 rounded flex items-center gap-2 hover:bg-purple-700"
+                  onClick={() => setActionPanelShown("bottleMessage")}
+                >
+                  {t("Page.bottleMessage.button")}
+                </button>
+              )}
+              <button
+                className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
+                onClick={() => setActionPanelShown("passes")}
+              >
+                {t("Page.passes.button")}
+              </button>
+            </div>
+            {actionPanelShown === "login" && (
+              <div className="bg-blue-500 py-2 px-4 rounded shadow-brutal shadow-blue-700 mt-4 w-full">
+                <p className="mb-2 text-sm">{t("Page.setPassword.insert")}</p>
+                <form className="flex gap-2" onSubmit={login}>
+                  <input
+                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm flex-1"
+                    id="password"
+                    placeholder="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button className="px-6 py-1 rounded bg-blue-600 text-sm">
+                    Login
+                  </button>
+                </form>
+              </div>
+            )}
+            {actionPanelShown === "bottleMessage" && (
+              <BottleMessageForm person={person} />
+            )}
+            {actionPanelShown === "passes" && (
+              <Passes
+                authenticated={authenticated}
+                passes={passes}
+                person={person}
+                onSaved={reload}
+              />
+            )}
+            {authenticated && (
               <>
                 <Slider
                   className="max-w-md mt-4"
