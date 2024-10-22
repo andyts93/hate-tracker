@@ -34,7 +34,7 @@ export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
   };
 
   return (
-    <div className="relative bg-gray-300 rounded-md flex overflow-hidden max-w-96">
+    <div className="relative bg-gray-300 rounded-md flex overflow-hidden max-w-96 h-full">
       <div className="flex flex-col w-full">
         <h2 className="text-lg font-semibold px-3 h-10 bg-rose-600 flex items-center">
           {pass.title}

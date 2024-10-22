@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
   const { rows: messages } =
     await sql`SELECT * FROM messages WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
   const { rows: passes } =
-    await sql`SELECT * FROM passes WHERE person_id = ${searchParams.get("person_id")} AND uses_left > 0 AND (expires_at > NOW() OR expires_at IS NULL) ORDER BY created_at DESC`;
+    await sql`SELECT * FROM passes WHERE person_id = ${searchParams.get("person_id")} AND uses_left > 0 AND (expires_at > NOW() OR expires_at IS NULL) ORDER BY expires_at ASC`;
 
   return NextResponse.json(
     {
