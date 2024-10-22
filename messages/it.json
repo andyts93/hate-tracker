@@ -13,7 +13,12 @@
         "addLocation": "Aggiungi posizione",
         "editLocation": "Modifica posizione",
         "showOnDescription": "Quando vuoi rendere visibile la nota",
-        "showOnLabel": "Mostra il"
+        "showOnLabel": "Mostra il",
+        "passName": "Nome pass",
+        "passIcon": "Imposta un'icona per il pass",
+        "passConditions": "Imposta le condizioni del pass",
+        "passUses": "Utilizzi massimi",
+        "passExpiration": "Data di scadenza"
     },
     "LastViewed": {
         "title": "Ultime pagine viste"
@@ -56,7 +61,10 @@
         "mostLovedHour": "Ora più amata",
         "lastRecord": "Ultimo aggiornamento: {hour}",
         "passes": {
-            "button": "Pass"
+            "button": "Pass",
+            "title": "{name} ha {num} pass.",
+            "create": "Crea nuovo",
+            "expiration": "Scadenza"
         }
     },
     "Common": {
@@ -73,5 +81,13 @@
     "Menu": {
         "home": "Home",
         "lastViewed": "Ultimi visti"
+    },
+    "PassCard": {
+        "expiration": "Scadenza",
+        "conditions": "Condizioni",
+        "uses_max": "Utilizzi massimi",
+        "uses_left": "Rimasti",
+        "use": "Usa",
+        "used": "Pass usato!"
     }
 }

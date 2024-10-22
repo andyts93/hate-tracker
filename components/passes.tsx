@@ -1,14 +1,14 @@
+import type { Pass, Person } from "@/types";
+
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { useState } from "react";
 import { DatePicker } from "@nextui-org/date-picker";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
-import dayjs from "dayjs";
 
 import { FullPageLoader } from "./full-page-loader";
-
-import { Pass, Person } from "@/types";
+import PassCard from "./pass-card";
 
 interface PassesProps {
   passes: Pass[];
@@ -85,20 +85,23 @@ export default function Passes({
   return (
     <>
       {loading && <FullPageLoader />}
-      <div className="bg-teal-500 py-2 px-4 rounded shadow-brutal shadow-teal-700 mt-4 w-full">
+      <div className="bg-teal-600 py-2 px-4 rounded shadow-brutal shadow-teal-800 mt-4 w-full">
         <p className="text-sm mb-2">
-          {person?.name} has {passes.length} passes.{" "}
+          {t("Page.passes.title", { name: person?.name, num: passes.length })}{" "}
           {!authenticated && (
             <button
               className="underline font-semibold"
               onClick={() => setShowCreateForm(true)}
             >
-              Create new
+              {t("Page.passes.create")}
             </button>
           )}
         </p>
         {!authenticated && showCreateForm && (
-          <form className="flex flex-col gap-1 my-2" onSubmit={savePass}>
+          <form
+            className="flex flex-col gap-1 my-2 bg-black p-2 rounded-md"
+            onSubmit={savePass}
+          >
             <div className="flex gap-2">
               <button
                 className="w-8 bg-default-100 rounded-lg text-center"
@@ -109,7 +112,7 @@ export default function Passes({
               </button>
               <input
                 className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
-                placeholder="Pass name"
+                placeholder={t("Forms.passName")}
                 type="text"
                 value={formData.title}
                 onChange={(e) =>
@@ -120,13 +123,13 @@ export default function Passes({
             <EmojiPicker
               lazyLoadEmojis={true}
               open={emojiOpen}
-              previewConfig={{ defaultCaption: "Set an icon for the pass" }}
+              previewConfig={{ defaultCaption: t("Forms.passIcon") }}
               theme={Theme.DARK}
               onEmojiClick={pickEmoji}
             />
             <textarea
               className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full resize-none text-sm"
-              placeholder="Set the pass conditions"
+              placeholder={t("Forms.passConditions")}
               rows={3}
               value={formData.conditions}
               onChange={(e) =>
@@ -135,7 +138,7 @@ export default function Passes({
             />
             <input
               className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
-              placeholder="Max uses"
+              placeholder={t("Forms.passUses")}
               type="number"
               value={formData.uses_max}
               onChange={(e) =>
@@ -143,7 +146,7 @@ export default function Passes({
               }
             />
             <DatePicker
-              label="Expiration"
+              label={t("Forms.passExpiration")}
               minValue={today(getLocalTimeZone())}
               onChange={(value: any) => {
                 setFormData({ ...formData, expiration: value });
@@ -157,26 +160,11 @@ export default function Passes({
             </button>
           </form>
         )}
-        <div className="flex flex-col gap-2">
+        <div className="grid md:grid-cols-3 gap-4">
           {passes.map((p: Pass) => (
-            <div key={p.id} className="bg-gray-900 rounded-md p-2">
-              <h3 className="font-bold flex gap-2 items-center">
-                <span>{p.icon}</span>
-                <span>{p.title}</span>
-                <span className="flex-1 text-right text-xs font-light">
-                  {p.expires_at
-                    ? `Expiration: ${dayjs(p.expires_at).format("DD MMM")}`
-                    : null}
-                </span>
-              </h3>
-              <p className="text-sm">{p.conditions}</p>
-              <p className="text-right font-bold text-lg">
-                {p.uses_left}/{p.uses_max}
-              </p>
-            </div>
+            <PassCard key={p.id} authenticated={authenticated} pass={p} />
           ))}
         </div>
-        
       </div>
     </>
   );

@@ -13,7 +13,12 @@
         "addLocation": "Add location",
         "editLocation": "Edit location",
         "showOnDescription": "When you want the note to be visible",
-        "showOnLabel": "Show on"
+        "showOnLabel": "Show on",
+        "passName": "Pass name",
+        "passIcon": "Set an icon for the pass",
+        "passConditions": "Set the pass conditions",
+        "passUses": "Max uses",
+        "passExpiration": "Expiration date"
     },
     "LastViewed": {
         "title": "Last viewed pages"
@@ -54,9 +59,11 @@
         "loveHits": "Love hits",
         "mostHatedHour": "Most hated hour",
         "mostLovedHour": "Most loved hour",
-        "lastRecord": "Last record",
+        "lastRecord": "Last record {hour}",
         "passes": {
-            "button": "Passes"
+            "button": "Passes",
+            "title": "{name} has {num} passes.",
+            "create": "Create new"
         }
     },
     "Common": {
@@ -73,5 +80,13 @@
     "Menu": {
         "home": "Home",
         "lastViewed": "Last viewed"
+    },
+    "PassCard": {
+        "expiration": "Expiration",
+        "conditions": "Conditions",
+        "uses_max": "Max uses",
+        "uses_left": "Left",
+        "use": "Use",
+        "used": "Pass used!"
     }
 }

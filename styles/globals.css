@@ -35,3 +35,19 @@ animation: l5 3s infinite;
 .reactions-container > div {
     box-shadow: none!important;
 }
+.pass-right::before, .pass-right::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: .9em;
+    height: .9em;
+    background: #fff;
+    border-radius: 50%;
+    left: -.5em;
+}
+.pass-right::before {
+    top: -.4em;
+}
+.pass-right::after {
+    bottom: -.4em;
+}
