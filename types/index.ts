@@ -51,13 +51,13 @@ export type BottleMessage = {
 
 export type Pass = {
   id?: number;
-  person_id: string;
-  title: string;
+  person_id?: string;
+  title?: string;
   icon?: string;
   description?: string;
   conditions?: string;
-  uses_max: number;
-  uses_left: number;
-  created_at: string;
-  expires_at: string;
+  uses_max?: number | string;
+  uses_left?: number;
+  created_at?: string;
+  expires_at?: string;
 };

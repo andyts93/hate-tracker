@@ -18,7 +18,8 @@
         "passIcon": "Set an icon for the pass",
         "passConditions": "Set the pass conditions",
         "passUses": "Max uses",
-        "passExpiration": "Expiration date"
+        "passExpiration": "Expiration date",
+        "cancel": "Cancel"
     },
     "LastViewed": {
         "title": "Last viewed pages"

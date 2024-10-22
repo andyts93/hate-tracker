@@ -18,12 +18,12 @@ interface PassesProps {
   onSaved: () => void;
 }
 
-const defaultFormData = {
+const defaultFormData: Pass = {
   icon: "😀",
   title: "",
   conditions: "",
   uses_max: undefined,
-  expiration: "",
+  expires_at: "",
 };
 
 export default function Passes({
@@ -36,13 +36,7 @@ export default function Passes({
   const [loading, setLoading] = useState<boolean>(false);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   const [emojiOpen, setEmojiOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<{
-    icon?: string;
-    title?: string;
-    conditions?: string;
-    uses_max?: number | string;
-    expiration?: any;
-  }>(defaultFormData);
+  const [formData, setFormData] = useState<Pass>(defaultFormData);
   const [emblaRef] = useEmblaCarousel({ loop: true });
 
   const pickEmoji = (emoji: EmojiClickData) => {
@@ -59,8 +53,8 @@ export default function Passes({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          expires: formData.expiration
-            ? formData.expiration.toDate(getLocalTimeZone())
+          expires: formData.expires_at
+            ? (formData.expires_at as any).toDate(getLocalTimeZone())
             : null,
           person_id: person?.id,
         }),
@@ -84,6 +78,11 @@ export default function Passes({
     }
   };
 
+  const reset = () => {
+    setFormData(defaultFormData);
+    setShowCreateForm(false);
+  };
+
   return (
     <>
       {loading && <FullPageLoader />}
@@ -100,91 +99,108 @@ export default function Passes({
           )}
         </p>
         {!authenticated && showCreateForm && (
-          <form
-            className="flex flex-col gap-1 my-2 bg-black p-2 rounded-md"
-            onSubmit={savePass}
-          >
-            <div className="flex gap-2">
-              <button
-                className="w-8 bg-default-100 rounded-lg text-center"
-                type="button"
-                onClick={() => setEmojiOpen(!emojiOpen)}
-              >
-                {formData.icon}
-              </button>
-              <input
-                className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
-                placeholder={t("Forms.passName")}
-                type="text"
-                value={formData.title}
+          <>
+            <form
+              className="flex flex-col gap-1 my-2 bg-black p-2 rounded-md"
+              onSubmit={savePass}
+            >
+              <div className="flex gap-2">
+                <button
+                  className="w-8 bg-default-100 rounded-lg text-center"
+                  type="button"
+                  onClick={() => setEmojiOpen(!emojiOpen)}
+                >
+                  {formData.icon}
+                </button>
+                <input
+                  className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
+                  maxLength={23}
+                  placeholder={t("Forms.passName")}
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                />
+              </div>
+              <EmojiPicker
+                lazyLoadEmojis={true}
+                open={emojiOpen}
+                previewConfig={{ defaultCaption: t("Forms.passIcon") }}
+                theme={Theme.DARK}
+                onEmojiClick={pickEmoji}
+              />
+              <textarea
+                className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full resize-none text-sm"
+                placeholder={t("Forms.passConditions")}
+                rows={3}
+                value={formData.conditions}
                 onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
+                  setFormData({ ...formData, conditions: e.target.value })
                 }
               />
-            </div>
-            <EmojiPicker
-              lazyLoadEmojis={true}
-              open={emojiOpen}
-              previewConfig={{ defaultCaption: t("Forms.passIcon") }}
-              theme={Theme.DARK}
-              onEmojiClick={pickEmoji}
-            />
-            <textarea
-              className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full resize-none text-sm"
-              placeholder={t("Forms.passConditions")}
-              rows={3}
-              value={formData.conditions}
-              onChange={(e) =>
-                setFormData({ ...formData, conditions: e.target.value })
-              }
-            />
-            <input
-              className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
-              placeholder={t("Forms.passUses")}
-              type="number"
-              value={formData.uses_max}
-              onChange={(e) =>
-                setFormData({ ...formData, uses_max: e.target.value ?? "" })
-              }
-            />
-            <DatePicker
-              label={t("Forms.passExpiration")}
-              minValue={today(getLocalTimeZone())}
-              onChange={(value: any) => {
-                setFormData({ ...formData, expiration: value });
-              }}
-            />
-            <button
-              className="px-2 py-1 rounded-lg bg-teal-700 mt-2 text-sm"
-              type="submit"
-            >
-              {t("Forms.save")}
-            </button>
-          </form>
+              <input
+                className="bg-default-100 px-2 py-1 focus:outline-none rounded-lg w-full text-sm"
+                placeholder={t("Forms.passUses")}
+                type="number"
+                value={formData.uses_max}
+                onChange={(e) =>
+                  setFormData({ ...formData, uses_max: e.target.value ?? "" })
+                }
+              />
+              <DatePicker
+                label={t("Forms.passExpiration")}
+                minValue={today(getLocalTimeZone())}
+                onChange={(value: any) => {
+                  setFormData({ ...formData, expires_at: value });
+                }}
+              />
+              <div className="flex">
+                <button
+                  className="px-2 py-1 rounded-l-lg bg-red-500 mt-2 text-sm flex-1"
+                  type="button"
+                  onClick={reset}
+                >
+                  {t("Forms.cancel")}
+                </button>
+                <button
+                  className="px-2 py-1 rounded-r-lg bg-teal-700 mt-2 text-sm flex-1"
+                  type="submit"
+                >
+                  {t("Forms.save")}
+                </button>
+              </div>
+            </form>
+            <PassCard authenticated={false} pass={formData} />
+          </>
         )}
-        <div className="md:grid grid-cols-3 hidden gap-4">
-          {passes.map((p: Pass) => (
-            <PassCard
-              key={p.id}
-              authenticated={authenticated}
-              pass={p}
-              onUsed={onSaved}
-            />
-          ))}
-        </div>
-        <div ref={emblaRef} className="embla md:hidden">
-          <div className="embla__container">
-            {passes.map((p: Pass) => (
-              <div key={p.id} className="embla__slide">
+        {!showCreateForm && (
+          <>
+            <div className="md:grid grid-cols-3 hidden gap-4">
+              {passes.map((p: Pass) => (
                 <PassCard
+                  key={p.id}
                   authenticated={authenticated}
                   pass={p}
                   onUsed={onSaved}
                 />
+              ))}
+            </div>
+            <div ref={emblaRef} className="embla md:hidden">
+              <div className="embla__container">
+                {passes.map((p: Pass) => (
+                  <div key={p.id} className="embla__slide">
+                    <PassCard
+                      authenticated={authenticated}
+                      pass={p}
+                      onUsed={onSaved}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

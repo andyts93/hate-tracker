@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 interface PassProps {
   pass: Pass;
   authenticated: boolean;
-  onUsed: () => void;
+  onUsed?: () => void;
 }
 
 export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
@@ -22,7 +22,7 @@ export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
 
       if (res.ok) {
         toast.success(t("used"));
-        onUsed();
+        onUsed?.();
       } else {
         const json = await res.json();
 
@@ -73,7 +73,9 @@ export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
           {pass.icon}
         </div>
         <div className="flex flex-col justify-center items-center h-full">
-          <p className="text-2xl font-bold text-rose-600">{pass.uses_left}</p>
+          <p className="text-2xl font-bold text-rose-600">
+            {pass.uses_left || pass.uses_max}
+          </p>
           <p className="text-gray-600 uppercase text-sm">{t("uses_left")}</p>
           {authenticated && (
             <button

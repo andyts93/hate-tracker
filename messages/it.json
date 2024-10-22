@@ -18,7 +18,8 @@
         "passIcon": "Imposta un'icona per il pass",
         "passConditions": "Imposta le condizioni del pass",
         "passUses": "Utilizzi massimi",
-        "passExpiration": "Data di scadenza"
+        "passExpiration": "Data di scadenza",
+        "cancel": "Annulla"
     },
     "LastViewed": {
         "title": "Ultime pagine viste"
