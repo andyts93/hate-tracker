@@ -597,7 +597,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
                 onClick={() => setActionPanelShown("passes")}
               >
-                {t("Page.passes.button")}
+                {t("Page.passes.button", { num: passes.length })}
               </button>
             </div>
             {actionPanelShown === "login" && (

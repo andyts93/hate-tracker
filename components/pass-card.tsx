@@ -7,9 +7,10 @@ import toast from "react-hot-toast";
 interface PassProps {
   pass: Pass;
   authenticated: boolean;
+  onUsed: () => void;
 }
 
-export default function PassCard({ pass, authenticated }: PassProps) {
+export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
   const t = useTranslations("PassCard");
 
   const use = async () => {
@@ -21,6 +22,7 @@ export default function PassCard({ pass, authenticated }: PassProps) {
 
       if (res.ok) {
         toast.success(t("used"));
+        onUsed();
       } else {
         const json = await res.json();
 
@@ -74,7 +76,10 @@ export default function PassCard({ pass, authenticated }: PassProps) {
           <p className="text-2xl font-bold text-rose-600">{pass.uses_left}</p>
           <p className="text-gray-600 uppercase text-sm">{t("uses_left")}</p>
           {authenticated && (
-            <button className="text-xs text-white bg-rose-600 px-2 py-1 rounded-md mt-2" onClick={use}>
+            <button
+              className="text-xs text-white bg-rose-600 px-2 py-1 rounded-md mt-2"
+              onClick={use}
+            >
               {t("use")}
             </button>
           )}

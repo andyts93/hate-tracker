@@ -61,7 +61,7 @@
         "mostLovedHour": "Most loved hour",
         "lastRecord": "Last record {hour}",
         "passes": {
-            "button": "Passes",
+            "button": "Passes ({num})",
             "title": "{name} has {num} passes.",
             "create": "Create new"
         }

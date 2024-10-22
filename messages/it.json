@@ -61,7 +61,7 @@
         "mostLovedHour": "Ora più amata",
         "lastRecord": "Ultimo aggiornamento: {hour}",
         "passes": {
-            "button": "Pass",
+            "button": "Pass ({num})",
             "title": "{name} ha {num} pass.",
             "create": "Crea nuovo",
             "expiration": "Scadenza"

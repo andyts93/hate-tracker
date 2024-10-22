@@ -6,6 +6,7 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
+import useEmblaCarousel from "embla-carousel-react";
 
 import { FullPageLoader } from "./full-page-loader";
 import PassCard from "./pass-card";
@@ -42,6 +43,7 @@ export default function Passes({
     uses_max?: number | string;
     expiration?: any;
   }>(defaultFormData);
+  const [emblaRef] = useEmblaCarousel({ loop: true });
 
   const pickEmoji = (emoji: EmojiClickData) => {
     setFormData({ ...formData, icon: emoji.emoji });
@@ -85,7 +87,7 @@ export default function Passes({
   return (
     <>
       {loading && <FullPageLoader />}
-      <div className="bg-teal-600 py-2 px-4 rounded shadow-brutal shadow-teal-800 mt-4 w-full">
+      <div className="bg-teal-600 py-2 px-4 rounded shadow-brutal shadow-teal-800 mt-4 w-full overflow-x-hidden">
         <p className="text-sm mb-2">
           {t("Page.passes.title", { name: person?.name, num: passes.length })}{" "}
           {!authenticated && (
@@ -160,10 +162,28 @@ export default function Passes({
             </button>
           </form>
         )}
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="md:grid grid-cols-3 hidden gap-4">
           {passes.map((p: Pass) => (
-            <PassCard key={p.id} authenticated={authenticated} pass={p} />
+            <PassCard
+              key={p.id}
+              authenticated={authenticated}
+              pass={p}
+              onUsed={onSaved}
+            />
           ))}
+        </div>
+        <div ref={emblaRef} className="embla md:hidden">
+          <div className="embla__container">
+            {passes.map((p: Pass) => (
+              <div key={p.id} className="embla__slide">
+                <PassCard
+                  authenticated={authenticated}
+                  pass={p}
+                  onUsed={onSaved}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
