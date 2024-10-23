@@ -17,7 +17,7 @@ export default function LastViewed() {
   }, []);
 
   return (
-    <>
+    <main className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
       <h1 className="text-3xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
         {t("title")}
       </h1>
@@ -32,6 +32,6 @@ export default function LastViewed() {
           </Link>
         ))}
       </div>
-    </>
+    </main>
   );
 }

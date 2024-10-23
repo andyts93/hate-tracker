@@ -16,9 +16,10 @@ import { Person } from "@/types";
 
 interface BottleMessageProps {
   person?: Person;
+  onSaved?: () => void;
 }
 
-export default function BottleMessageForm({ person }: BottleMessageProps) {
+export default function BottleMessageForm({ person, onSaved }: BottleMessageProps) {
   const [message, setMessage] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,6 +40,7 @@ export default function BottleMessageForm({ person }: BottleMessageProps) {
       if (res.ok) {
         setMessage("");
         toast.success(t("sent"));
+        onSaved?.();
       } else {
         const json = await res.json();
 

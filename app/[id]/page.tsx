@@ -399,416 +399,423 @@ export default function Home({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="flex justify-center min-h-screen">
-      <Modal
-        hideCloseButton={true}
-        isOpen={isMapModalOpen}
-        placement="center"
-        size="full"
-        onOpenChange={onMapModalOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Set location</ModalHeader>
-              <ModalBody>
-                <LocationPicker onLocationSelect={handleLocationSelect} />
-              </ModalBody>
-              <ModalFooter>
-                <button
-                  className="px-4 py-1 rounded-2xl bg-red-600"
-                  onClick={() => {
-                    setLocation(null);
-                    onClose();
-                  }}
-                >
-                  Reset & Close
-                </button>
-                <button
-                  className="px-4 py-1 rounded-2xl bg-green-600"
-                  onClick={onClose}
-                >
-                  Save position
-                </button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
-        <ModalContent>
-          <ModalBody>
-            <h3 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent flex items-center gap-2 justify-center">
-              <PiConfettiDuotone className="text-pink-400" /> Congrats!
-            </h3>
-            <p className="mb-2">
-              You have just expressed your feelings, it feels much better now,
-              right?
-            </p>
-            <div className="bg-gray-800 p-4 mb-2 rounded shadow-brutal-sm shadow-gray-700">
-              <p
-                className="text-7xl text-center font-black mb-2"
-                style={{
-                  color:
-                    currentVote.current < 0
-                      ? "rgb(132, 204, 22)"
-                      : "rgb(239, 68, 68)",
-                }}
-              >
-                {currentVote.current > 0 && <span>+</span>}
-                {currentVote.current}
-              </p>
-              <p className="text-center italic text-sm">{randomSentence}</p>
-            </div>
-            {spotifyTracks.length > 0 && (
-              <div className="grid grid-cols-3 md:grid-col-6 gap-2">
-                {spotifyTracks.map((track: any) => (
-                  <Link
-                    key={track.id}
-                    className="bg-gray-800 rounded-md mt-2 overflow-hidden"
-                    href={track.external_urls.spotify}
-                    target="_blank"
-                  >
-                    <img
-                      alt={track.album.name}
-                      src={track.album.images[0].url}
-                    />
-                    <div className="px-2 py-1">
-                      <h3 className="text-sm font-bold mb-1">{track.name}</h3>
-                      <p className="text-xs">
-                        {track.artists.map((a: any) => a.name).join(", ")}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      {isQrOpen && (
+    <main className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
+      <div className="flex justify-center min-h-screen">
         <Modal
-          isOpen={isQrOpen}
+          hideCloseButton={true}
+          isOpen={isMapModalOpen}
           placement="center"
-          onOpenChange={onQrOpenChange}
+          size="full"
+          onOpenChange={onMapModalOpenChange}
         >
           <ModalContent>
-            <ModalHeader>Share QR code</ModalHeader>
-            <ModalBody className="flex items-center pb-4">
-              <Canvas
-                options={{ margin: 2, scale: 10 }}
-                text={window.location.href}
-              />
+            {(onClose) => (
+              <>
+                <ModalHeader>Set location</ModalHeader>
+                <ModalBody>
+                  <LocationPicker onLocationSelect={handleLocationSelect} />
+                </ModalBody>
+                <ModalFooter>
+                  <button
+                    className="px-4 py-1 rounded-2xl bg-red-600"
+                    onClick={() => {
+                      setLocation(null);
+                      onClose();
+                    }}
+                  >
+                    Reset & Close
+                  </button>
+                  <button
+                    className="px-4 py-1 rounded-2xl bg-green-600"
+                    onClick={onClose}
+                  >
+                    Save position
+                  </button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
+          <ModalContent>
+            <ModalBody>
+              <h3 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent flex items-center gap-2 justify-center">
+                <PiConfettiDuotone className="text-pink-400" /> Congrats!
+              </h3>
+              <p className="mb-2">
+                You have just expressed your feelings, it feels much better now,
+                right?
+              </p>
+              <div className="bg-gray-800 p-4 mb-2 rounded shadow-brutal-sm shadow-gray-700">
+                <p
+                  className="text-7xl text-center font-black mb-2"
+                  style={{
+                    color:
+                      currentVote.current < 0
+                        ? "rgb(132, 204, 22)"
+                        : "rgb(239, 68, 68)",
+                  }}
+                >
+                  {currentVote.current > 0 && <span>+</span>}
+                  {currentVote.current}
+                </p>
+                <p className="text-center italic text-sm">{randomSentence}</p>
+              </div>
+              {spotifyTracks.length > 0 && (
+                <div className="grid grid-cols-3 md:grid-col-6 gap-2">
+                  {spotifyTracks.map((track: any) => (
+                    <Link
+                      key={track.id}
+                      className="bg-gray-800 rounded-md mt-2 overflow-hidden"
+                      href={track.external_urls.spotify}
+                      target="_blank"
+                    >
+                      <img
+                        alt={track.album.name}
+                        src={track.album.images[0].url}
+                      />
+                      <div className="px-2 py-1">
+                        <h3 className="text-sm font-bold mb-1">{track.name}</h3>
+                        <p className="text-xs">
+                          {track.artists.map((a: any) => a.name).join(", ")}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </ModalBody>
           </ModalContent>
         </Modal>
-      )}
-      {loading && <FullPageLoader />}
-      <div className="flex flex-col items-center">
-        <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
-          {t("Page.title", { name: person?.name || "friend" })}
-          <br />
-          {t("Page.subtitle")}
-        </h1>
-        <p className="text-sm text-gray-400 mt-1">
-          {t("Page.wantTrack")}
-          <Link className="text-orange-500 hover:underline" href={"/"}>
-            {t("Common.here")}
-          </Link>
-          .
-        </p>
-        <div className="flex justify-center gap-4 mt-2">
-          <button
-            className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
-            onClick={copyUrl}
+        {isQrOpen && (
+          <Modal
+            isOpen={isQrOpen}
+            placement="center"
+            onOpenChange={onQrOpenChange}
           >
-            <IoShareOutline />
-            <span>{t("Page.shareLink")}</span>
-          </button>
-          <button
-            className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
-            onClick={onQrOpen}
-          >
-            <IoQrCodeOutline />
-            <span>{t("Page.showQr")}</span>
-          </button>
-        </div>
-        {!hasPassword && !loading ? (
-          <>
-            <div className="mt-6 bg-orange-500 p-2 rounded shadow-brutal shadow-orange-700">
-              <RiAlarmWarningLine className="mx-auto text-6xl mb-2" />
-              <p className="mb-2">
-                {t("Page.setPassword.start", {
-                  name: person?.name || "friend",
-                })}
-              </p>
-              <p>{t("Page.setPassword.send")}</p>
-            </div>
-            <form className="flex flex-col mt-4" onSubmit={savePassword}>
-              <label className="text-sm text-gray-400 mb-1" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
-                {t("Forms.save")}
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            {bottleMessage && (
-              <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
-                <p className="mb-2 text-sm">
-                  {t("Page.bottleMessage.message")}
+            <ModalContent>
+              <ModalHeader>Share QR code</ModalHeader>
+              <ModalBody className="flex items-center pb-4">
+                <Canvas
+                  options={{ margin: 2, scale: 10 }}
+                  text={window.location.href}
+                />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        )}
+        {loading && <FullPageLoader />}
+        <div className="flex flex-col items-center">
+          <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
+            {t("Page.title", { name: person?.name || "friend" })}
+            <br />
+            {t("Page.subtitle")}
+          </h1>
+          <p className="text-sm text-gray-400 mt-1">
+            {t("Page.wantTrack")}
+            <Link className="text-orange-500 hover:underline" href={"/"}>
+              {t("Common.here")}
+            </Link>
+            .
+          </p>
+          <div className="flex justify-center gap-4 mt-2">
+            <button
+              className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
+              onClick={copyUrl}
+            >
+              <IoShareOutline />
+              <span>{t("Page.shareLink")}</span>
+            </button>
+            <button
+              className="text-sm px-2 py-1 bg-gray-800 rounded flex items-center gap-2 hover:bg-gray-700"
+              onClick={onQrOpen}
+            >
+              <IoQrCodeOutline />
+              <span>{t("Page.showQr")}</span>
+            </button>
+          </div>
+          {!hasPassword && !loading ? (
+            <>
+              <div className="mt-6 bg-orange-500 p-2 rounded shadow-brutal shadow-orange-700">
+                <RiAlarmWarningLine className="mx-auto text-6xl mb-2" />
+                <p className="mb-2">
+                  {t("Page.setPassword.start", {
+                    name: person?.name || "friend",
+                  })}
                 </p>
-                <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
-                  &ldquo;{bottleMessage.text}&ldquo;
-                </p>
-                <p className="text-xs text-gray-700 text-right">
-                  {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
-                </p>
+                <p>{t("Page.setPassword.send")}</p>
               </div>
-            )}
-            <div className="flex justify-between mt-4 gap-2">
-              {!authenticated && (
-                <button
-                  className="text-sm px-2 py-1 bg-blue-500 rounded flex items-center gap-2 hover:bg-blue-700"
-                  onClick={() => setActionPanelShown("login")}
+              <form className="flex flex-col mt-4" onSubmit={savePassword}>
+                <label
+                  className="text-sm text-gray-400 mb-1"
+                  htmlFor="password"
                 >
-                  Login
+                  Password
+                </label>
+                <input
+                  className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
+                  {t("Forms.save")}
                 </button>
+              </form>
+            </>
+          ) : (
+            <>
+              {bottleMessage && (
+                <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
+                  <p className="mb-2 text-sm">
+                    {t("Page.bottleMessage.message")}
+                  </p>
+                  <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
+                    &ldquo;{bottleMessage.text}&ldquo;
+                  </p>
+                  <p className="text-xs text-gray-700 text-right">
+                    {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
+                  </p>
+                </div>
               )}
-              {!authenticated && (
-                <button
-                  className="text-sm px-2 py-1 bg-purple-400 rounded flex items-center gap-2 hover:bg-purple-700"
-                  onClick={() => setActionPanelShown("bottleMessage")}
-                >
-                  {t("Page.bottleMessage.button")}
-                </button>
-              )}
-              <button
-                className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
-                onClick={() => setActionPanelShown("passes")}
-              >
-                {t("Page.passes.button", { num: passes.length })}
-              </button>
-            </div>
-            {actionPanelShown === "login" && (
-              <div className="bg-blue-500 py-2 px-4 rounded shadow-brutal shadow-blue-700 mt-4 w-full">
-                <p className="mb-2 text-sm">{t("Page.setPassword.insert")}</p>
-                <form className="flex gap-2" onSubmit={login}>
-                  <input
-                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm flex-1"
-                    id="password"
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button className="px-6 py-1 rounded bg-blue-600 text-sm">
+              <div className="flex justify-between mt-4 gap-2">
+                {!authenticated && (
+                  <button
+                    className="text-sm px-2 py-1 bg-blue-500 rounded flex items-center gap-2 hover:bg-blue-700"
+                    onClick={() => setActionPanelShown("login")}
+                  >
                     Login
                   </button>
-                </form>
+                )}
+                {!authenticated && (
+                  <button
+                    className="text-sm px-2 py-1 bg-purple-400 rounded flex items-center gap-2 hover:bg-purple-700"
+                    onClick={() => setActionPanelShown("bottleMessage")}
+                  >
+                    {t("Page.bottleMessage.button")}
+                  </button>
+                )}
+                <button
+                  className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
+                  onClick={() => setActionPanelShown("passes")}
+                >
+                  {t("Page.passes.button", { num: passes.length })}
+                </button>
               </div>
-            )}
-            {actionPanelShown === "bottleMessage" && (
-              <BottleMessageForm person={person} />
-            )}
-            {actionPanelShown === "passes" && (
-              <Passes
-                authenticated={authenticated}
-                passes={passes}
-                person={person}
-                onSaved={reload}
-              />
-            )}
-            {authenticated && (
-              <>
-                <Slider
-                  className="max-w-md mt-4"
-                  color="warning"
-                  defaultValue={0}
-                  endContent={
-                    <FaRegAngry className="text-2xl text-orange-400" />
-                  }
-                  fillOffset={0}
-                  formatOptions={{ signDisplay: "always" }}
-                  label={t("Page.hateLabel")}
-                  maxValue={10}
-                  minValue={-10}
-                  size="lg"
-                  startContent={
-                    <TiHeartFullOutline className="text-2xl text-red-500" />
-                  }
-                  step={0.5}
-                  value={vote}
-                  onChange={(e) => setVote(e)}
+              {actionPanelShown === "login" && (
+                <div className="bg-blue-500 py-2 px-4 rounded shadow-brutal shadow-blue-700 mt-4 w-full">
+                  <p className="mb-2 text-sm">{t("Page.setPassword.insert")}</p>
+                  <form className="flex gap-2" onSubmit={login}>
+                    <input
+                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm flex-1"
+                      id="password"
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button className="px-6 py-1 rounded bg-blue-600 text-sm">
+                      Login
+                    </button>
+                  </form>
+                </div>
+              )}
+              {actionPanelShown === "bottleMessage" && (
+                <BottleMessageForm person={person} onSaved={reload} />
+              )}
+              {actionPanelShown === "passes" && (
+                <Passes
+                  authenticated={authenticated}
+                  passes={passes}
+                  person={person}
+                  onSaved={reload}
                 />
-                <div className="bg-gray-900 w-full p-2 mt-2 rounded-md">
-                  <h3 className="font-semibold mb-2">{t("Page.noteLabel")}</h3>
-                  <textarea
-                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm disabed:opacity-70"
-                    disabled={!authenticated}
-                    placeholder={t("Page.notePlaceholder")}
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
+              )}
+              {authenticated && (
+                <>
+                  <Slider
+                    className="max-w-md mt-4"
+                    color="warning"
+                    defaultValue={0}
+                    endContent={
+                      <FaRegAngry className="text-2xl text-orange-400" />
+                    }
+                    fillOffset={0}
+                    formatOptions={{ signDisplay: "always" }}
+                    label={t("Page.hateLabel")}
+                    maxValue={10}
+                    minValue={-10}
+                    size="lg"
+                    startContent={
+                      <TiHeartFullOutline className="text-2xl text-red-500" />
+                    }
+                    step={0.5}
+                    value={vote}
+                    onChange={(e) => setVote(e)}
                   />
-                  {/* <VoiceRecorder
+                  <div className="bg-gray-900 w-full p-2 mt-2 rounded-md">
+                    <h3 className="font-semibold mb-2">
+                      {t("Page.noteLabel")}
+                    </h3>
+                    <textarea
+                      className="bg-gray-700 px-2 py-1 focus:outline-none rounded resize-none w-full text-white h-32 text-sm disabed:opacity-70"
+                      disabled={!authenticated}
+                      placeholder={t("Page.notePlaceholder")}
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                    />
+                    {/* <VoiceRecorder
                     className="bg-gray-800 rounded p-2"
                     onRecorded={(audioUrl: string | undefined) => {
                       setAudioUrl(audioUrl);
                     }}
                   /> */}
-                  <div className="flex justify-between w-full mt-2 items-center gap-4">
-                    <input
-                      key={voteImageKey}
-                      ref={voteImagesRef}
-                      accept="image/*"
-                      className="hidden"
-                      id="note-image"
-                      multiple={false}
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-                    <label
-                      className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
-                      htmlFor="note-image"
-                    >
-                      <BsCloudUploadFill />
-                      <span>{fileName}</span>
-                    </label>
-                    <button
-                      className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
-                      onClick={onMapModalOpen}
-                    >
-                      <RiMapPin5Fill />
-                      <span>
-                        {location
-                          ? t("Forms.editLocation")
-                          : t("Forms.addLocation")}
-                      </span>
-                    </button>
+                    <div className="flex justify-between w-full mt-2 items-center gap-4">
+                      <input
+                        key={voteImageKey}
+                        ref={voteImagesRef}
+                        accept="image/*"
+                        className="hidden"
+                        id="note-image"
+                        multiple={false}
+                        type="file"
+                        onChange={handleFileChange}
+                      />
+                      <label
+                        className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
+                        htmlFor="note-image"
+                      >
+                        <BsCloudUploadFill />
+                        <span>{fileName}</span>
+                      </label>
+                      <button
+                        className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
+                        onClick={onMapModalOpen}
+                      >
+                        <RiMapPin5Fill />
+                        <span>
+                          {location
+                            ? t("Forms.editLocation")
+                            : t("Forms.addLocation")}
+                        </span>
+                      </button>
+                    </div>
+                    <div className="flex w-full mt-4 justify-between gap-4 items-center">
+                      <Switch
+                        disabled={!authenticated}
+                        isSelected={showNote}
+                        thumbIcon={({ isSelected, className }) =>
+                          isSelected ? (
+                            <IoMdEye className={className} />
+                          ) : (
+                            <BsIncognito className={className} />
+                          )
+                        }
+                        onValueChange={(value) => setShowNote(value)}
+                      >
+                        {t("Page.showNote")}
+                      </Switch>
+                      <DatePicker
+                        hideTimeZone
+                        description={t("Forms.showOnDescription")}
+                        isDisabled={!showNote}
+                        label={t("Forms.showOnLabel")}
+                        maxValue={today(getLocalTimeZone()).add({ months: 1 })}
+                        minValue={today(getLocalTimeZone())}
+                        value={showOn}
+                        variant="flat"
+                        onChange={(value: any) => setShowOn(value)}
+                      />
+                    </div>
                   </div>
-                  <div className="flex w-full mt-4 justify-between gap-4 items-center">
-                    <Switch
-                      disabled={!authenticated}
-                      isSelected={showNote}
-                      thumbIcon={({ isSelected, className }) =>
-                        isSelected ? (
-                          <IoMdEye className={className} />
-                        ) : (
-                          <BsIncognito className={className} />
-                        )
-                      }
-                      onValueChange={(value) => setShowNote(value)}
-                    >
-                      {t("Page.showNote")}
-                    </Switch>
-                    <DatePicker
-                      hideTimeZone
-                      description={t("Forms.showOnDescription")}
-                      isDisabled={!showNote}
-                      label={t("Forms.showOnLabel")}
-                      maxValue={today(getLocalTimeZone()).add({ months: 1 })}
-                      minValue={today(getLocalTimeZone())}
-                      value={showOn}
-                      variant="flat"
-                      onChange={(value: any) => setShowOn(value)}
-                    />
-                  </div>
-                </div>
-                <button
-                  className="px-4 py-1 rounded-2xl bg-green-600 mt-4 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
-                  disabled={!authenticated}
-                  onClick={() => save()}
-                >
-                  {!authenticated && <IoLockClosed />}
-                  {t("Forms.save")}
-                </button>
-                {!spotifyToken && (
-                  <div className="bg-gray-900 rounded-md p-2 w-full mt-4">
-                    <p className="text-sm">
-                      <PiMusicNotesFill className="inline" />{" "}
-                      {t("Page.spotifyLogin")}
-                    </p>
-                    <button
-                      className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
-                      onClick={spotifyLogin}
-                    >
-                      Spotify login
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-            <p className="text-center text-3xl font-black mt-6">
-              {t("Page.average")}
-              <br />
-              {average || "-"}
-            </p>
-            <div className="mt-6 overflow-x-auto">
-              <Line data={graphData} options={options} />
-            </div>
-            {lastRecord && (
-              <p className="text-center">
-                {t("Page.lastRecord", {
-                  hour: dayjs(lastRecord).format("DD MMM HH:mm"),
-                })}
+                  <button
+                    className="px-4 py-1 rounded-2xl bg-green-600 mt-4 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
+                    disabled={!authenticated}
+                    onClick={() => save()}
+                  >
+                    {!authenticated && <IoLockClosed />}
+                    {t("Forms.save")}
+                  </button>
+                  {!spotifyToken && (
+                    <div className="bg-gray-900 rounded-md p-2 w-full mt-4">
+                      <p className="text-sm">
+                        <PiMusicNotesFill className="inline" />{" "}
+                        {t("Page.spotifyLogin")}
+                      </p>
+                      <button
+                        className="mx-auto px-4 py-1 rounded-2xl bg-green-600 mt-2 disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
+                        onClick={spotifyLogin}
+                      >
+                        Spotify login
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+              <p className="text-center text-3xl font-black mt-6">
+                {t("Page.average")}
+                <br />
+                {average || "-"}
               </p>
-            )}
-            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-              <StatPanel
-                stat={stats?.hatePeak}
-                statColor="#ef4444"
-                title={t("Page.hatePeak")}
-              />
-              <StatPanel
-                stat={stats?.lovePeak}
-                statColor="#84cc16"
-                title={t("Page.lovePeak")}
-              />
-              <StatPanel
-                stat={stats?.hateHits}
-                statColor=""
-                title={t("Page.hateHits")}
-              />
-              <StatPanel
-                stat={stats?.loveHits}
-                statColor=""
-                title={t("Page.loveHits")}
-              />
-              <StatPanel
-                stat={stats?.hateHour}
-                statColor=""
-                title={t("Page.mostHatedHour")}
-              />
-              <StatPanel
-                stat={stats?.loveHour}
-                statColor=""
-                title={t("Page.mostLovedHour")}
-              />
-            </div>
-            {positions.length > 0 && <Heatmap coords={positions} />}
-            <div className="flex flex-col w-full mt-4 divide-y divide-gray-800">
-              {records.map((r: Vote) => (
-                <Post
-                  key={r.id}
-                  authenticated={authenticated}
-                  r={r}
-                  onReact={() => reload()}
+              <div className="mt-6 overflow-x-auto">
+                <Line data={graphData} options={options} />
+              </div>
+              {lastRecord && (
+                <p className="text-center">
+                  {t("Page.lastRecord", {
+                    hour: dayjs(lastRecord).format("DD MMM HH:mm"),
+                  })}
+                </p>
+              )}
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+                <StatPanel
+                  stat={stats?.hatePeak}
+                  statColor="#ef4444"
+                  title={t("Page.hatePeak")}
                 />
-              ))}
-            </div>
-          </>
-        )}
+                <StatPanel
+                  stat={stats?.lovePeak}
+                  statColor="#84cc16"
+                  title={t("Page.lovePeak")}
+                />
+                <StatPanel
+                  stat={stats?.hateHits}
+                  statColor=""
+                  title={t("Page.hateHits")}
+                />
+                <StatPanel
+                  stat={stats?.loveHits}
+                  statColor=""
+                  title={t("Page.loveHits")}
+                />
+                <StatPanel
+                  stat={stats?.hateHour}
+                  statColor=""
+                  title={t("Page.mostHatedHour")}
+                />
+                <StatPanel
+                  stat={stats?.loveHour}
+                  statColor=""
+                  title={t("Page.mostLovedHour")}
+                />
+              </div>
+              {positions.length > 0 && <Heatmap coords={positions} />}
+              <div className="flex flex-col w-full mt-4 divide-y divide-gray-800">
+                {records.map((r: Vote) => (
+                  <Post
+                    key={r.id}
+                    authenticated={authenticated}
+                    r={r}
+                    onReact={() => reload()}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
