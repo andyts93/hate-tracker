@@ -575,6 +575,13 @@ export default function Home({ params }: { params: { id: string } }) {
                   <p className="text-sm italic border-l-4 border-amber-500 pl-1 mb-2">
                     &ldquo;{bottleMessage.text}&ldquo;
                   </p>
+                  {bottleMessage.image && (
+                    <img
+                      alt={bottleMessage.text}
+                      className="max-w-72 rounded-md mx-auto w-full mb-2"
+                      src={bottleMessage.image}
+                    />
+                  )}
                   <p className="text-xs text-gray-700 text-right">
                     {dayjs(bottleMessage.created_at).format("DD MMM HH:mm")}
                   </p>

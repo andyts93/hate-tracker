@@ -1,8 +1,19 @@
 {
     "Home": {
-        "title": "Sarebbe divertente tracciare l'amore/odio dei tuoi cari, vero? Ora puoi",
+        "title": "Traccia il sentimento di amore/odio dei tuoi cari",
         "subtitle": "Crea una pagina per la persona di cui vuoi tracciare lo stato d'animo, e condividi il link con loro!",
-        "disclaimer": "Nessuna registrazione richiesta, non perdere il tuo link!"
+        "disclaimer": "Nessuna registrazione richiesta, non perdere il tuo link!",
+        "features": "Funzioni",
+        "vote": "Vota",
+        "voteDescription": "Vota da -10 to +10 il tuo livello di odio e traccia il tuo stato d'animo nel tempo",
+        "notesPhotos": "Note & foto",
+        "notesPhotosDescription": "Aggiungi note e foto al tuo voto. Puoi decidere se renderlo pubblico o no e quando",
+        "bottleMessages": "Messaggi in bottiglia",
+        "bottleMessagesDescription": "Lascia un messaggio in bottiglia ai tuoi haters sulla loro pagina. Sarà visibile per sole 24 ore",
+        "passes": "Pass",
+        "passesDescription": "Crea pass per i tuoi haters. Vuoi creare un pass gratuito per una cena fuori? Puoi farlo qui",
+        "startJourney": "Comincia ora il tuo viaggio!",
+        "startJourneyDescription": "Usa il form sottostante per creare la pagina del tuo hater o la tua."
     },
     "Forms": {
         "name": "Nome",

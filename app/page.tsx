@@ -72,31 +72,31 @@ export default function Home() {
 
       <section className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
         <h3 className="text-center text-purple-400 uppercase text-xl font-semibold mb-6">
-          Features
+          {t("Home.features")}
         </h3>
         <div className="grid md:grid-cols-4 gap-6">
           <HomeBox
-            description="Vote from -10 to +10 your hate level and get a graph of your mood over time"
+            description={t("Home.voteDescription")}
             icon={<BiSliderAlt className="text-4xl text-purple-400" />}
-            title="Vote"
+            title={t("Home.vote")}
           />
 
           <HomeBox
-            description="Add notes and photos to your mood. You can decide to make it public or not and when"
+            description={t("Home.notesPhotosDescription")}
             icon={<IoEyeOffSharp className="text-4xl text-red-400" />}
-            title="Notes & photos"
+            title={t("Home.notesPhotos")}
           />
 
           <HomeBox
-            description="Leave a message to your haters on their page. It will be visible for 24 hours only"
+            description={t("Home.bottleMessagesDescription")}
             icon={<PiBeerBottleFill className="text-4xl text-purple-400" />}
-            title="Bottle messages"
+            title={t("Home.bottleMessages")}
           />
 
           <HomeBox
-            description="Create passes for your haters. Want to create a free pass for a dinner out? You can do it here"
+            description={t("Home.passesDescription")}
             icon={<IoTicketSharp className="text-4xl text-red-400" />}
-            title="Passes"
+            title={t("Home.passes")}
           />
         </div>
       </section>
@@ -106,10 +106,10 @@ export default function Home() {
           <div className="grid md:grid-cols-2 mt-8">
             <div>
               <h3 className="mb-6 md:text-3xl text-2xl md:leading-normal leading-normal font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-red-500">
-                Start your journey now!
+                {t("Home.startJourney")}
               </h3>
               <p className="text-slate-300 text-md font-light mb-2">
-                Use the form below to create your hater&apos;s or yours page.
+                {t("Home.startJourneyDescription")}
               </p>
               <p className="text-slate-300 text-md font-light underline">
                 {t("Home.disclaimer")}

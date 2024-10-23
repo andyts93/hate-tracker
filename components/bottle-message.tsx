@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LuInfo } from "react-icons/lu";
 import {
   Modal,
@@ -9,6 +9,8 @@ import {
 } from "@nextui-org/modal";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { v4 as uuid4 } from "uuid";
+import { BsCloudUploadFill } from "react-icons/bs";
 
 import { FullPageLoader } from "./full-page-loader";
 
@@ -19,27 +21,42 @@ interface BottleMessageProps {
   onSaved?: () => void;
 }
 
-export default function BottleMessageForm({ person, onSaved }: BottleMessageProps) {
+export default function BottleMessageForm({
+  person,
+  onSaved,
+}: BottleMessageProps) {
   const [message, setMessage] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState<boolean>(false);
-  const t = useTranslations("Page.bottleMessage");
+  const t = useTranslations();
+  const voteImagesRef = useRef<HTMLInputElement>(null);
+  const [voteImageKey, setVoteImageKey] = useState<string>(uuid4());
+  const [fileName, setFileName] = useState<string>(t("Forms.uploadImage"));
 
   const saveMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    const formData = new FormData();
+
+    formData.append("message", message);
+    formData.append("person_id", String(person?.id));
+
+    if (voteImagesRef.current?.files && voteImagesRef.current.files[0]) {
+      formData.append("image", voteImagesRef.current.files[0]);
+    }
     try {
       const res = await fetch("/api/message", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, person_id: person?.id }),
+        body: formData,
       });
 
       setLoading(false);
 
       if (res.ok) {
         setMessage("");
-        toast.success(t("sent"));
+        setVoteImageKey(uuid4());
+        toast.success(t("Page.bottleMessage.sent"));
         onSaved?.();
       } else {
         const json = await res.json();
@@ -52,15 +69,29 @@ export default function BottleMessageForm({ person, onSaved }: BottleMessageProp
     }
   };
 
+  const handleFileChange = () => {
+    const file = voteImagesRef.current?.files
+      ? voteImagesRef.current?.files[0]
+      : null;
+
+    if (file) {
+      setFileName(file.name);
+    } else {
+      setFileName("Upload image");
+    }
+  };
+
   return (
     <>
       {loading && <FullPageLoader />}
       <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
         <ModalContent>
-          <ModalHeader>{t("modal.title")}</ModalHeader>
+          <ModalHeader>{t("Page.bottleMessage.modal.title")}</ModalHeader>
           <ModalBody>
             <p className="mb-2">
-              {t("modal.description", { name: person?.name })}
+              {t("Page.bottleMessage.modal.description", {
+                name: person?.name,
+              })}
             </p>
           </ModalBody>
         </ModalContent>
@@ -92,20 +123,37 @@ export default function BottleMessageForm({ person, onSaved }: BottleMessageProp
               </g>{" "}
             </g>
           </svg>{" "}
-          <span>{t("title", { name: person?.name })}</span>
+          <span>{t("Page.bottleMessage.title", { name: person?.name })}</span>
           <button onClick={onOpen}>
             <LuInfo className="ml-1" />
           </button>
         </p>
         <form className="flex flex-col" onSubmit={saveMessage}>
           <textarea
-            className="bg-gray-700 px-2 py-1 focus:outline-none rounded text-sm h-24 resize-none"
-            placeholder={t("messagePlaceholder")}
+            className="bg-gray-800 px-2 py-1 focus:outline-none rounded text-sm h-24 resize-none mb-2"
+            placeholder={t("Page.bottleMessage.messagePlaceholder")}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
+          <input
+            key={voteImageKey}
+            ref={voteImagesRef}
+            accept="image/*"
+            className="hidden"
+            id="note-image"
+            multiple={false}
+            type="file"
+            onChange={handleFileChange}
+          />
+          <label
+            className="flex gap-2 items-center text-xs bg-gray-800 rounded px-2 py-1"
+            htmlFor="note-image"
+          >
+            <BsCloudUploadFill className="w-6" />
+            <span>{fileName}</span>
+          </label>
           <button className="px-2 py-1 rounded bg-purple-600 mt-2 text-sm">
-            {t("send")}
+            {t("Page.bottleMessage.send")}
           </button>
         </form>
       </div>

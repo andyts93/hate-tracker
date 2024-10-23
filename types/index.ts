@@ -43,10 +43,11 @@ export type Person = {
 };
 
 export type BottleMessage = {
-  id: number;
+  id?: number;
   text: string;
   person_id: string;
-  created_at: string;
+  image?: string;
+  created_at?: string;
 };
 
 export type Pass = {

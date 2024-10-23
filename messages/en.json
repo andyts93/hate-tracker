@@ -2,7 +2,18 @@
     "Home": {
         "title": "Track your beloved love/hate feeling over time",
         "subtitle": "Create a page for the person you want to track the mood of, and share the link with them!",
-        "disclaimer": "No registration required, don't lose your link!"
+        "disclaimer": "No registration required, don't lose your link!",
+        "features": "Features",
+        "vote": "Vote",
+        "voteDescription": "Vote from -10 to +10 your hate level and get a graph of your mood over time",
+        "notesPhotos": "Notes & photos",
+        "notesPhotosDescription": "Add notes and photos to your mood. You can decide to make it public or not and when",
+        "bottleMessages": "Bottle messages",
+        "bottleMessagesDescription": "Leave a message to your haters on their page. It will be visible for 24 hours only",
+        "passes": "Passes",
+        "passesDescription": "Create passes for your haters. Want to create a free pass for a dinner out? You can do it here",
+        "startJourney": "Start your journey now!",
+        "startJourneyDescription": "Use the form below to create your hater's or yours page."
     },
     "Forms": {
         "name": "Name",
