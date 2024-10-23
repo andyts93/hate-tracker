@@ -55,6 +55,7 @@ import { reactions } from "@/components/reactions";
 import Post from "@/components/post";
 import BottleMessageForm from "@/components/bottle-message";
 import Passes from "@/components/passes";
+import ProfileBox from "@/components/profile-box";
 
 ChartJS.register(
   CategoryScale,
@@ -111,7 +112,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const t = useTranslations();
   const [fileName, setFileName] = useState<string>(t("Forms.uploadImage"));
   const [actionPanelShown, setActionPanelShown] = useState<
-    "login" | "bottleMessage" | "passes" | undefined
+    "login" | "bottleMessage" | "passes" | "profile" | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
 
@@ -610,6 +611,14 @@ export default function Home({ params }: { params: { id: string } }) {
                 >
                   {t("Page.passes.button", { num: passes.length })}
                 </button>
+                {authenticated && (
+                  <button
+                    className="text-sm px-2 py-1 bg-purple-500 rounded flex items-center gap-2 hover:bg-teal-700"
+                    onClick={() => setActionPanelShown("profile")}
+                  >
+                    {t("Page.profile.button")}
+                  </button>
+                )}
               </div>
               {actionPanelShown === "login" && (
                 <div className="bg-blue-500 py-2 px-4 rounded shadow-brutal shadow-blue-700 mt-4 w-full">
@@ -638,6 +647,15 @@ export default function Home({ params }: { params: { id: string } }) {
                   passes={passes}
                   person={person}
                   onSaved={reload}
+                />
+              )}
+              {actionPanelShown === "profile" && person && (
+                <ProfileBox
+                  person={person}
+                  onSaved={async () => {
+                    await reload();
+                    setActionPanelShown(undefined);
+                  }}
                 />
               )}
               {authenticated && (

@@ -24,3 +24,19 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  let { rows: people } = await sql`SELECT * FROM people`;
+
+  people = people.filter((p) => {
+    if (searchParams.has("ids")) {
+      return searchParams.get("ids")?.split(",").includes(p.id);
+    }
+
+    return true;
+  });
+
+  return NextResponse.json(people);
+}

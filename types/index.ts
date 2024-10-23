@@ -40,6 +40,7 @@ export type Stats = {
 export type Person = {
   id: string;
   name: string;
+  avatar?: string;
 };
 
 export type BottleMessage = {

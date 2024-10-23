@@ -41,10 +41,18 @@ export default function Home() {
         <div className="container mx-auto px-[2rem] md:px-[4rem] lg:px-[8rem]">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center mt-6 gap-[30px]">
             <div className="md:me-6">
-              <h1 className="font-bold lg:leading-normal leading-normal text-[42px] lg:text-[54px] mb-5 text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-red-500">
+              <h1 className="font-bold lg:leading-normal leading-tight text-[42px] lg:text-[54px] mb-5 text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-red-500">
                 {t("Home.title")}
               </h1>
-              <p className="text-slate-400 text-lg">{t("Home.subtitle")}</p>
+              <p className="text-slate-400 text-lg mb-6">
+                {t("Home.subtitle")}
+              </p>
+              <a
+                className="rounded-full px-4 py-4 bg-purple-500 transition-all duration-300 shadow-brutal-sm shadow-white border border-white hover:shadow-none hover:bg-purple-600"
+                href="#start"
+              >
+                {t("Home.startJourney")}
+              </a>
             </div>
             <div className="relative mt-12 md:mt-0">
               <svg
@@ -101,7 +109,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-slate-900/40">
+      <section className="bg-slate-900/40" id="start">
         <div className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
           <div className="grid md:grid-cols-2 mt-8">
             <div>

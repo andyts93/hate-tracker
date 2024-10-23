@@ -77,6 +77,10 @@
             "title": "{name} ha {num} pass.",
             "create": "Crea nuovo",
             "expiration": "Scadenza"
+        },
+        "profile": {
+            "button": "Modifica profilo",
+            "set": "Profilo aggiornato"
         }
     },
     "Common": {

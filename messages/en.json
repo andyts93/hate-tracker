@@ -76,6 +76,10 @@
             "button": "Passes ({num})",
             "title": "{name} has {num} passes.",
             "create": "Create new"
+        },
+        "profile": {
+            "button": "Edit profile",
+            "set": "Profile updated"
         }
     },
     "Common": {
