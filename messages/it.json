@@ -81,6 +81,16 @@
         "profile": {
             "button": "Modifica profilo",
             "set": "Profilo aggiornato"
+        },
+        "rocketMessage": {
+            "button": "Messaggio razzo",
+            "title": "Invia un razzo",
+            "modal": {
+                "title": "Invia un razzo",
+                "description": "Hai mai desiderato dire qualcosa a {name}, ma non te la sei sentita? Invia un razzo con il tuo messaggio, {name} non saprà mai che l'hai fatto o quale sia il messaggio, ma ti sentirai meglio!"
+            },
+            "send": "Invia razzo",
+            "sent": "Razzo inviato!"
         }
     },
     "Common": {

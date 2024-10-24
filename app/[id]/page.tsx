@@ -44,6 +44,7 @@ import { LatLngTuple } from "leaflet";
 import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
+import { Avatar } from "@nextui-org/avatar";
 
 import { StatPanel } from "@/components/stat-panel";
 import { BottleMessage, GraphPoint, Pass, Person, Stats, Vote } from "@/types";
@@ -56,6 +57,7 @@ import Post from "@/components/post";
 import BottleMessageForm from "@/components/bottle-message";
 import Passes from "@/components/passes";
 import ProfileBox from "@/components/profile-box";
+import RocketMessage from "@/components/rocket-message";
 
 ChartJS.register(
   CategoryScale,
@@ -112,7 +114,12 @@ export default function Home({ params }: { params: { id: string } }) {
   const t = useTranslations();
   const [fileName, setFileName] = useState<string>(t("Forms.uploadImage"));
   const [actionPanelShown, setActionPanelShown] = useState<
-    "login" | "bottleMessage" | "passes" | "profile" | undefined
+    | "login"
+    | "bottleMessage"
+    | "passes"
+    | "profile"
+    | "rocketMessage"
+    | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
 
@@ -400,7 +407,7 @@ export default function Home({ params }: { params: { id: string } }) {
   };
 
   return (
-    <main className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
+    <main className="container mx-auto max-w-7xl py-4 md:py-16 px-4 flex-grow">
       <div className="flex justify-center min-h-screen">
         <Modal
           hideCloseButton={true}
@@ -508,7 +515,13 @@ export default function Home({ params }: { params: { id: string } }) {
         )}
         {loading && <FullPageLoader />}
         <div className="flex flex-col items-center">
-          <h1 className="text-2xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
+          <Avatar
+            className="mb-2"
+            name={person?.name}
+            size="lg"
+            src={person?.avatar}
+          />
+          <h1 className="text-xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
             {t("Page.title", { name: person?.name || "friend" })}
             <br />
             {t("Page.subtitle")}
@@ -588,22 +601,28 @@ export default function Home({ params }: { params: { id: string } }) {
                   </p>
                 </div>
               )}
-              <div className="flex justify-between mt-4 gap-2">
+              <div className="flex flex-wrap justify-center mt-4 gap-2">
                 {!authenticated && (
-                  <button
-                    className="text-sm px-2 py-1 bg-blue-500 rounded flex items-center gap-2 hover:bg-blue-700"
-                    onClick={() => setActionPanelShown("login")}
-                  >
-                    Login
-                  </button>
-                )}
-                {!authenticated && (
-                  <button
-                    className="text-sm px-2 py-1 bg-purple-400 rounded flex items-center gap-2 hover:bg-purple-700"
-                    onClick={() => setActionPanelShown("bottleMessage")}
-                  >
-                    {t("Page.bottleMessage.button")}
-                  </button>
+                  <>
+                    <button
+                      className="text-sm px-2 py-1 bg-blue-500 rounded flex items-center gap-2 hover:bg-blue-700"
+                      onClick={() => setActionPanelShown("login")}
+                    >
+                      Login
+                    </button>
+                    <button
+                      className="text-sm px-2 py-1 bg-purple-400 rounded flex items-center gap-2 hover:bg-purple-700"
+                      onClick={() => setActionPanelShown("bottleMessage")}
+                    >
+                      {t("Page.bottleMessage.button")}
+                    </button>
+                    <button
+                      className="text-sm px-2 py-1 bg-indigo-400 rounded flex items-center gap-2 hover:bg-indigo-700"
+                      onClick={() => setActionPanelShown("rocketMessage")}
+                    >
+                      {t("Page.rocketMessage.button")}
+                    </button>
+                  </>
                 )}
                 <button
                   className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
@@ -613,7 +632,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 </button>
                 {authenticated && (
                   <button
-                    className="text-sm px-2 py-1 bg-purple-500 rounded flex items-center gap-2 hover:bg-teal-700"
+                    className="text-sm px-2 py-1 bg-purple-500 rounded flex items-center gap-2 hover:bg-purple-700"
                     onClick={() => setActionPanelShown("profile")}
                   >
                     {t("Page.profile.button")}
@@ -657,6 +676,9 @@ export default function Home({ params }: { params: { id: string } }) {
                     setActionPanelShown(undefined);
                   }}
                 />
+              )}
+              {actionPanelShown === "rocketMessage" && (
+                <RocketMessage person={person} onFinished={() => setActionPanelShown(undefined)}/>
               )}
               {authenticated && (
                 <>

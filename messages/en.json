@@ -80,6 +80,16 @@
         "profile": {
             "button": "Edit profile",
             "set": "Profile updated"
+        },
+        "rocketMessage": {
+            "button": "Rocket message",
+            "title": "Send a rocket",
+            "modal": {
+                "title": "Send a rocket message",
+                "description": "Have you ever wanted to say something to {name} but you didn't feel like doing it? Send a rocket message, {name} will never know you did it or what the message is about, but you'll feel better!"
+            },
+            "send": "Send rocket",
+            "sent": "Rocket sent!"
         }
     },
     "Common": {

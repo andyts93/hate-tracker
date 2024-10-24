@@ -63,3 +63,10 @@ export type Pass = {
   created_at?: string;
   expires_at?: string;
 };
+
+export type RocketMessage = {
+  id?: number;
+  person_id?: string;
+  message?: string;
+  created_at?: string;
+};
