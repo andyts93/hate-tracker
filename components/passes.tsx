@@ -88,7 +88,7 @@ export default function Passes({
       {loading && <FullPageLoader />}
       <div className="bg-teal-600 py-2 px-4 rounded shadow-brutal shadow-teal-800 mt-4 w-full overflow-x-hidden">
         <p className="text-sm mb-2">
-          {t("Page.passes.title", { name: person?.name, num: passes.length })}{" "}
+          {t("Page.passes.title", { name: person?.name, num: passes.filter(p => !p.expired).length })}{" "}
           {!authenticated && (
             <button
               className="underline font-semibold"

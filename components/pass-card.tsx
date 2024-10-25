@@ -34,7 +34,14 @@ export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
   };
 
   return (
-    <div className="relative bg-gray-300 rounded-md flex overflow-hidden max-w-96 h-full">
+    <div className="relative bg-gray-300 rounded-md flex overflow-hidden max-w-96 h-full max-h-72">
+      {pass.expired ? (
+        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-20 flex items-center justify-center">
+          <span className="-rotate-12 text-5xl font-semibold text-red-500 uppercase">
+            {t("expired")}
+          </span>
+        </div>
+      ) : null}
       <div className="flex flex-col w-full">
         <h2 className="text-lg font-semibold px-3 h-10 bg-rose-600 flex items-center">
           {pass.title}
@@ -74,10 +81,10 @@ export default function PassCard({ pass, authenticated, onUsed }: PassProps) {
         </div>
         <div className="flex flex-col justify-center items-center h-full">
           <p className="text-2xl font-bold text-rose-600">
-            {pass.uses_left || pass.uses_max}
+            {Number(pass.uses_left) >= 0 ? pass.uses_left : pass.uses_max}
           </p>
           <p className="text-gray-600 uppercase text-sm">{t("uses_left")}</p>
-          {authenticated && (
+          {authenticated && !pass.expired && (
             <button
               className="text-xs text-white bg-rose-600 px-2 py-1 rounded-md mt-2"
               onClick={use}

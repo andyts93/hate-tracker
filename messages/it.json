@@ -91,7 +91,8 @@
             },
             "send": "Invia razzo",
             "sent": "Razzo inviato!"
-        }
+        },
+        "compare": "Compara"
     },
     "Common": {
         "here": "qui"
@@ -114,6 +115,7 @@
         "uses_max": "Utilizzi massimi",
         "uses_left": "Rimasti",
         "use": "Usa",
-        "used": "Pass usato!"
+        "used": "Pass usato!",
+        "expired": "Scaduto"
     }
 }

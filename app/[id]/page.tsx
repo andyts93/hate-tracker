@@ -47,7 +47,15 @@ import { useTranslations } from "next-intl";
 import { Avatar } from "@nextui-org/avatar";
 
 import { StatPanel } from "@/components/stat-panel";
-import { BottleMessage, GraphPoint, Pass, Person, Stats, Vote } from "@/types";
+import {
+  BottleMessage,
+  GraphPoint,
+  Pass,
+  Person,
+  Stats,
+  Vote,
+  VoteResponse,
+} from "@/types";
 import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
@@ -58,6 +66,7 @@ import BottleMessageForm from "@/components/bottle-message";
 import Passes from "@/components/passes";
 import ProfileBox from "@/components/profile-box";
 import RocketMessage from "@/components/rocket-message";
+import { adjustCompareData } from "@/services/graph";
 
 ChartJS.register(
   CategoryScale,
@@ -122,6 +131,8 @@ export default function Home({ params }: { params: { id: string } }) {
     | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
+  const [account, setAccount] = useState<string | undefined>("");
+  const [updateChart, setUpdateChart] = useState<boolean>(false);
 
   const { Canvas } = useQRCode();
 
@@ -314,6 +325,7 @@ export default function Home({ params }: { params: { id: string } }) {
       if (!response.ok) return toast.error(json.error);
       setPassword("");
       setAuthenticated(true);
+      setActionPanelShown(undefined);
       setCookie("auth", params.id, { maxAge: 30 * 24 * 60 * 60 });
       toast.success("Login successful!");
     } catch (err: any) {
@@ -379,6 +391,7 @@ export default function Home({ params }: { params: { id: string } }) {
   useEffect(() => {
     reload().then();
     setAuthenticated(getCookie("auth") === params.id);
+    setAccount(getCookie("auth"));
     setSpotifyToken(getCookie("spotify_token"));
     fetch(`/api/visit`, {
       method: "POST",
@@ -403,6 +416,28 @@ export default function Home({ params }: { params: { id: string } }) {
       setFileName(file.name);
     } else {
       setFileName("Upload image");
+    }
+  };
+
+  const compare = async () => {
+    if (!account) return;
+
+    try {
+      const response = await fetch(
+        `/api/votes?person_id=${account}&modules=graph`,
+      );
+      const json: VoteResponse = await response.json();
+
+      if (json.graph) {
+        const comparedData = adjustCompareData(records, json.graph);
+
+        if (comparedData) {
+          setGraphData(comparedData);
+          setUpdateChart(true);
+        }
+      }
+    } catch (err: any) {
+      toast.error(err.message);
     }
   };
 
@@ -628,7 +663,9 @@ export default function Home({ params }: { params: { id: string } }) {
                   className="text-sm px-2 py-1 bg-teal-500 rounded flex items-center gap-2 hover:bg-teal-700"
                   onClick={() => setActionPanelShown("passes")}
                 >
-                  {t("Page.passes.button", { num: passes.length })}
+                  {t("Page.passes.button", {
+                    num: passes.filter((p) => !p.expired).length,
+                  })}
                 </button>
                 {authenticated && (
                   <button
@@ -678,7 +715,10 @@ export default function Home({ params }: { params: { id: string } }) {
                 />
               )}
               {actionPanelShown === "rocketMessage" && (
-                <RocketMessage person={person} onFinished={() => setActionPanelShown(undefined)}/>
+                <RocketMessage
+                  person={person}
+                  onFinished={() => setActionPanelShown(undefined)}
+                />
               )}
               {authenticated && (
                 <>
@@ -807,7 +847,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 {average || "-"}
               </p>
               <div className="mt-6 overflow-x-auto">
-                <Line data={graphData} options={options} />
+                <Line data={graphData} options={options} redraw={true} />
               </div>
               {lastRecord && (
                 <p className="text-center">
@@ -815,6 +855,14 @@ export default function Home({ params }: { params: { id: string } }) {
                     hour: dayjs(lastRecord).format("DD MMM HH:mm"),
                   })}
                 </p>
+              )}
+              {!authenticated && account && (
+                <button
+                  className="mt-2 px-6 py-1 rounded bg-blue-600 text-sm"
+                  onClick={compare}
+                >
+                  {t("Page.compare")}
+                </button>
               )}
               <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
                 <StatPanel

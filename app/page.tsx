@@ -44,7 +44,7 @@ export default function Home() {
               <h1 className="font-bold lg:leading-normal leading-tight text-[42px] lg:text-[54px] mb-5 text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-red-500">
                 {t("Home.title")}
               </h1>
-              <p className="text-slate-400 text-lg mb-6">
+              <p className="text-slate-400 text-lg mb-8">
                 {t("Home.subtitle")}
               </p>
               <a
@@ -70,7 +70,7 @@ export default function Home() {
               </svg>
               <img
                 alt="mockup"
-                className="mx-auto w-72 rotate-12 relative z-2"
+                className="mx-auto w-60 md:w-72 rotate-12 relative z-2"
                 src="/mockup.png"
               />
             </div>
@@ -157,7 +157,7 @@ export default function Home() {
               </svg>
               <img
                 alt="Signup"
-                className="w-80 z-10 relative mx-auto rotate-12"
+                className="w-60 md:w-80 z-10 relative mx-auto rotate-12"
                 src="/mockup-2.png"
               />
             </div>

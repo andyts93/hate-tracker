@@ -75,7 +75,8 @@
         "passes": {
             "button": "Passes ({num})",
             "title": "{name} has {num} passes.",
-            "create": "Create new"
+            "create": "Create new",
+            "expiration": "Scadenza"
         },
         "profile": {
             "button": "Edit profile",
@@ -90,7 +91,8 @@
             },
             "send": "Send rocket",
             "sent": "Rocket sent!"
-        }
+        },
+        "compare": "Compare"
     },
     "Common": {
         "here": "here"
@@ -113,6 +115,7 @@
         "uses_max": "Max uses",
         "uses_left": "Left",
         "use": "Use",
-        "used": "Pass used!"
+        "used": "Pass used!",
+        "expired": "Expired"
     }
 }

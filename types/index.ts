@@ -1,4 +1,5 @@
 import { ReactionCounterObject } from "@charkour/react-reactions";
+import { QueryResultRow } from "@vercel/postgres";
 import { SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
@@ -62,6 +63,7 @@ export type Pass = {
   uses_left?: number;
   created_at?: string;
   expires_at?: string;
+  expired?: boolean;
 };
 
 export type RocketMessage = {
@@ -69,4 +71,18 @@ export type RocketMessage = {
   person_id?: string;
   message?: string;
   created_at?: string;
+};
+
+export type VoteResponse = {
+  avg?: number;
+  graph?: Vote[];
+  hatePeak?: GraphPoint | QueryResultRow;
+  lovePeak?: GraphPoint | QueryResultRow;
+  hateHits?: number | QueryResultRow;
+  loveHits?: number | QueryResultRow;
+  loveHour?: string;
+  hateHour?: string;
+  person?: Person;
+  message?: BottleMessage;
+  passes?: Pass[];
 };
