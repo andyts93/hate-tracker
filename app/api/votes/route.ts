@@ -63,7 +63,15 @@ export async function POST(request: Request) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
-  const MODULES = ["avg", "graph", "stats", "person", "message", "passes"];
+  const MODULES = [
+    "avg",
+    "graph",
+    "stats",
+    "person",
+    "message",
+    "passes",
+    "quickThoughts",
+  ];
 
   const requestModules = searchParams.get("modules")?.split(",") || MODULES;
   let response: VoteResponse = {};
@@ -138,6 +146,15 @@ export async function GET(request: NextRequest) {
       await sql`SELECT *, CASE WHEN uses_left <= 0 OR expires_at < NOW() THEN 1 ELSE 0 END AS expired FROM passes WHERE person_id = ${searchParams.get("person_id")} ORDER BY expired ASC, expires_at ASC`;
 
     response.passes = passes as Pass[];
+  }
+
+  if (requestModules.includes("quickThoughts")) {
+    const {
+      rows: [quickThought],
+    } =
+      await sql`SELECT * FROM quick_thoughts WHERE person_id = ${searchParams.get("person_id")} ORDER BY created_at DESC LIMIT 1`;
+
+    response.quickThought = quickThought;
   }
 
   return NextResponse.json(response, { status: 200 });

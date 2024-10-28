@@ -92,7 +92,12 @@
             "send": "Send rocket",
             "sent": "Rocket sent!"
         },
-        "compare": "Compare"
+        "compare": "Compare",
+        "quickThought": {
+            "button": "Quick thought",
+            "title": "Leave a quick thought to {name}",
+            "message": "Someone was thinking about you on {time}"
+        }
     },
     "Common": {
         "here": "here"

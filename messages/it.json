@@ -92,7 +92,12 @@
             "send": "Invia razzo",
             "sent": "Razzo inviato!"
         },
-        "compare": "Compara"
+        "compare": "Compara",
+        "quickThought": {
+            "button": "Quick thought",
+            "title": "Lascia un pensiero a {name}",
+            "message": "Qualcuno ti stava pensando il {time}"
+        }
     },
     "Common": {
         "here": "qui"

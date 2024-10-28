@@ -73,6 +73,13 @@ export type RocketMessage = {
   created_at?: string;
 };
 
+export type QuickThought = {
+  id?: number;
+  person_id?: string;
+  reaction?: string;
+  created_at?: string;
+}
+
 export type VoteResponse = {
   avg?: number;
   graph?: Vote[];
@@ -85,4 +92,5 @@ export type VoteResponse = {
   person?: Person;
   message?: BottleMessage;
   passes?: Pass[];
+  quickThought?: QuickThought;
 };

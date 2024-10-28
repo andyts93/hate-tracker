@@ -52,6 +52,7 @@ import {
   GraphPoint,
   Pass,
   Person,
+  QuickThought,
   Stats,
   Vote,
   VoteResponse,
@@ -60,13 +61,14 @@ import { FullPageLoader } from "@/components/full-page-loader";
 import { sentences } from "@/config/sentences";
 import { LocationPicker } from "@/components/location-picker";
 import Heatmap from "@/components/heatmap";
-import { reactions } from "@/components/reactions";
+import { quickThoughtReaction, reactions } from "@/components/reactions";
 import Post from "@/components/post";
 import BottleMessageForm from "@/components/bottle-message";
 import Passes from "@/components/passes";
 import ProfileBox from "@/components/profile-box";
 import RocketMessage from "@/components/rocket-message";
 import { adjustCompareData } from "@/services/graph";
+import QuickThoughtBox from "@/components/quick-thought";
 
 ChartJS.register(
   CategoryScale,
@@ -128,11 +130,13 @@ export default function Home({ params }: { params: { id: string } }) {
     | "passes"
     | "profile"
     | "rocketMessage"
+    | "quickThought"
     | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
   const [account, setAccount] = useState<string | undefined>("");
   const [updateChart, setUpdateChart] = useState<boolean>(false);
+  const [quickThougth, setQuickThougth] = useState<QuickThought>();
 
   const { Canvas } = useQRCode();
 
@@ -227,6 +231,7 @@ export default function Home({ params }: { params: { id: string } }) {
 
     setBottleMessage(json.message);
     setPasses(json.passes);
+    setQuickThougth(json.quickThought);
   };
 
   const save = async () => {
@@ -657,6 +662,12 @@ export default function Home({ params }: { params: { id: string } }) {
                     >
                       {t("Page.rocketMessage.button")}
                     </button>
+                    <button
+                      className="text-sm px-2 py-1 bg-sky-500 rounded flex items-center gap-2 hover:bg-sky-700"
+                      onClick={() => setActionPanelShown("quickThought")}
+                    >
+                      {t("Page.quickThought.button")}
+                    </button>
                   </>
                 )}
                 <button
@@ -719,6 +730,17 @@ export default function Home({ params }: { params: { id: string } }) {
                   person={person}
                   onFinished={() => setActionPanelShown(undefined)}
                 />
+              )}
+              {actionPanelShown === "quickThought" && (
+                <QuickThoughtBox person={person} onReact={reload} />
+              )}
+              {quickThougth && (
+                <>
+                <p className="text-sm mt-4 mb-2">
+                  {t("Page.quickThought.message", { time: dayjs(quickThougth.created_at).format("DD MMM HH:mm") })}
+                </p>
+                <p className="text-4xl px-4 py-2 bg-gray-800 rounded-md">{quickThoughtReaction.find(r => r.key === quickThougth.reaction)?.node}</p>
+                </>
               )}
               {authenticated && (
                 <>
@@ -847,7 +869,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 {average || "-"}
               </p>
               <div className="mt-6 overflow-x-auto">
-                <Line data={graphData} options={options} redraw={true} />
+                <Line data={graphData} options={options} redraw={updateChart} />
               </div>
               {lastRecord && (
                 <p className="text-center">
