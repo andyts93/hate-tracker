@@ -1,7 +1,8 @@
-import { sql } from "@vercel/postgres";
 import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+
+import { sql } from "@/sql";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  let { rows: people } = await sql`SELECT * FROM people`;
+  let people = await sql`SELECT * FROM people`;
 
   people = people.filter((p) => {
     if (searchParams.has("ids")) {

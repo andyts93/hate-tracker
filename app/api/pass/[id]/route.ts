@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/sql";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -6,9 +6,7 @@ export async function PUT(
   { params }: { params: { id: string } },
 ) {
   try {
-    const {
-      rows: [pass],
-    } = await sql`SELECT * FROM passes WHERE id = ${params.id}`;
+    const [pass] = await sql`SELECT * FROM passes WHERE id = ${params.id}`;
 
     if (pass.uses_left <= 0) throw new Error("No uses left");
     await sql`UPDATE passes SET uses_left = uses_left - 1 WHERE id = ${params.id}`;

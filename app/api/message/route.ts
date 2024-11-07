@@ -1,7 +1,7 @@
 import { extname } from "path";
 
 import { put } from "@vercel/blob";
-import { sql } from "@vercel/postgres";
+import { sql } from "@/sql";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 

@@ -1,6 +1,6 @@
 import { extname } from "path";
 
-import { sql } from "@vercel/postgres";
+import { sql } from "@/sql";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { NextRequest, NextResponse } from "next/server";
@@ -78,39 +78,29 @@ export async function GET(request: NextRequest) {
   let response: VoteResponse = {};
 
   if (requestModules.includes("avg")) {
-    const {
-      rows: [avg],
-    } =
+    const [avg] =
       await sql`SELECT ROUND(AVG(vote), 2) avg FROM records WHERE person_id = ${searchParams.get("person_id")}`;
 
     response.avg = avg.avg;
   }
 
   if (requestModules.includes("graph")) {
-    const { rows: graph } =
+    const graph =
       await sql`SELECT * FROM records WHERE person_id = ${searchParams.get("person_id")} ORDER BY created_at ASC`;
 
     response.graph = graph as Vote[];
   }
 
   if (requestModules.includes("stats")) {
-    const {
-      rows: [hatePeak],
-    } =
+    const [hatePeak] =
       await sql`SELECT created_at, vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote > 0 ORDER BY vote DESC LIMIT 1`;
-    const {
-      rows: [lovePeak],
-    } =
+    const [lovePeak] =
       await sql`SELECT created_at, vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote < 0 ORDER BY vote ASC LIMIT 1`;
-    const {
-      rows: [hateHits],
-    } =
+    const [hateHits] =
       await sql`SELECT COUNT(id) vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote > 0;`;
-    const {
-      rows: [loveHits],
-    } =
+    const [loveHits] =
       await sql`SELECT COUNT(id) vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote < 0;`;
-    const { rows: hours } =
+    const hours =
       await sql`SELECT CONCAT(TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24'), ':00') AS vote FROM records WHERE person_id = ${searchParams.get("person_id")} GROUP BY TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24') ORDER BY AVG(vote)`;
 
     response = {
@@ -125,43 +115,35 @@ export async function GET(request: NextRequest) {
   }
 
   if (requestModules.includes("person")) {
-    const {
-      rows: [people],
-    } =
+    const [people] =
       await sql`SELECT * FROM people WHERE id = ${searchParams.get("person_id")}`;
 
     response.person = people as Person;
   }
 
   if (requestModules.includes("message")) {
-    const {
-      rows: [messages],
-    } =
+    const [messages] =
       await sql`SELECT * FROM messages WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
 
     response.message = messages as BottleMessage;
   }
 
   if (requestModules.includes("passes")) {
-    const { rows: passes } =
+    const passes =
       await sql`SELECT *, CASE WHEN uses_left <= 0 OR expires_at < NOW() THEN 1 ELSE 0 END AS expired FROM passes WHERE person_id = ${searchParams.get("person_id")} ORDER BY expired ASC, expires_at ASC`;
 
     response.passes = passes as Pass[];
   }
 
   if (requestModules.includes("quickThoughts")) {
-    const {
-      rows: [quickThought],
-    } =
+    const [quickThought] =
       await sql`SELECT * FROM quick_thoughts WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
 
     response.quickThought = quickThought;
   }
 
   if (requestModules.includes("gift")) {
-    const {
-      rows: [gift],
-    } =
+    const [gift] =
       await sql`SELECT B.*, A.created_at gifted_at FROM gift_person A JOIN gifts B ON A.gift_id = B.id WHERE A.person_id = ${searchParams.get("person_id")} AND A.created_at > NOW() - INTERVAL '24 hours' ORDER BY gifted_at DESC LIMIT 1`;
 
     response.gift = gift;

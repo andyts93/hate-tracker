@@ -1,11 +1,11 @@
-import { sql } from "@vercel/postgres";
+import { sql } from "@/sql";
 import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  const { rows } =
+  const rows =
     await sql`SELECT B.*, A.created_at gifted_at FROM gift_person A JOIN gifts B ON A.gift_id = B.id WHERE A.person_id = ${params.id}`;
 
   return NextResponse.json(rows);
