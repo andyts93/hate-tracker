@@ -97,6 +97,13 @@
             "button": "Quick thought",
             "title": "Lascia un pensiero a {name}",
             "message": "Qualcuno ti stava pensando il {time}"
+        },
+        "gifts": {
+            "button": "Regali",
+            "title": "Compra un regalo per {name}",
+            "title-auth": "I tuoi regali",
+            "buy": "Compra",
+            "message": "Hai ricevuto un regalo nelle ultime 24 ore"
         }
     },
     "Common": {

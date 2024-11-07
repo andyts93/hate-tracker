@@ -78,7 +78,7 @@ export type QuickThought = {
   person_id?: string;
   reaction?: string;
   created_at?: string;
-}
+};
 
 export type VoteResponse = {
   avg?: number;
@@ -93,4 +93,13 @@ export type VoteResponse = {
   message?: BottleMessage;
   passes?: Pass[];
   quickThought?: QuickThought;
+  gift?: Gift | QueryResultRow;
+};
+
+export type Gift = {
+  id: string;
+  name: string;
+  svg: string;
+  price: number;
+  gifted_at?: string;
 };

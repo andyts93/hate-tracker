@@ -97,6 +97,13 @@
             "button": "Quick thought",
             "title": "Leave a quick thought to {name}",
             "message": "Someone was thinking about you on {time}"
+        },
+        "gifts": {
+            "button": "Gifts",
+            "title": "Buy a gift for {name}",
+            "title-auth": "Your gifts",
+            "buy": "Buy",
+            "message": "You received a gift in the last 24 hours"
         }
     },
     "Common": {

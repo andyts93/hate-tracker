@@ -71,6 +71,7 @@ export async function GET(request: NextRequest) {
     "message",
     "passes",
     "quickThoughts",
+    "gift",
   ];
 
   const requestModules = searchParams.get("modules")?.split(",") || MODULES;
@@ -152,9 +153,18 @@ export async function GET(request: NextRequest) {
     const {
       rows: [quickThought],
     } =
-      await sql`SELECT * FROM quick_thoughts WHERE person_id = ${searchParams.get("person_id")} ORDER BY created_at DESC LIMIT 1`;
+      await sql`SELECT * FROM quick_thoughts WHERE person_id = ${searchParams.get("person_id")} AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`;
 
     response.quickThought = quickThought;
+  }
+
+  if (requestModules.includes("gift")) {
+    const {
+      rows: [gift],
+    } =
+      await sql`SELECT B.*, A.created_at gifted_at FROM gift_person A JOIN gifts B ON A.gift_id = B.id WHERE A.person_id = ${searchParams.get("person_id")} AND A.created_at > NOW() - INTERVAL '24 hours' ORDER BY gifted_at DESC LIMIT 1`;
+
+    response.gift = gift;
   }
 
   return NextResponse.json(response, { status: 200 });
