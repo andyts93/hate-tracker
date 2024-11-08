@@ -104,7 +104,8 @@
             "title-auth": "I tuoi regali",
             "buy": "Compra",
             "message": "Hai ricevuto un regalo nelle ultime 24 ore"
-        }
+        },
+        "showMore": "Mostra altri"
     },
     "Common": {
         "here": "qui"

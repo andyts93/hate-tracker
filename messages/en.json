@@ -104,7 +104,8 @@
             "title-auth": "Your gifts",
             "buy": "Buy",
             "message": "You received a gift in the last 24 hours"
-        }
+        },
+        "showMore": "Show more"
     },
     "Common": {
         "here": "here"

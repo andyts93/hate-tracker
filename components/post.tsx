@@ -15,11 +15,13 @@ import {
 import { useState } from "react";
 import GifPicker, { TenorImage, Theme } from "gif-picker-react";
 import { RiSearchLine } from "react-icons/ri";
+import CryptoJS from "crypto-js";
 
 import AudioPlayer from "./audio-player";
 import { reactions } from "./reactions";
 
 import { Vote } from "@/types";
+import { siteConfig } from "@/config/site";
 
 interface PostProps {
   r: Vote;
@@ -69,6 +71,10 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
       toast.error(err.message);
     }
     onReact?.(vote);
+  };
+
+  const encryptString = (text: string) => {
+    return CryptoJS.AES.encrypt(text, siteConfig.cryptoKey).toString();
   };
 
   return (
@@ -137,7 +143,9 @@ export default function Post({ r, authenticated, onReact }: PostProps) {
             </div>
           ) : (
             <div className="relative">
-              <p className="text-sm blur-sm">{r.note}</p>
+              <p className="text-sm blur-sm break-all">
+                {encryptString(r.note).substring(0, 40)}
+              </p>
               <BsIncognito className="absolute top-[50%] left-[50%] -mt-5 -ml-5 w-10 h-10 text-white" />
             </div>
           )}
