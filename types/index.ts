@@ -87,8 +87,8 @@ export type VoteResponse = {
   lovePeak?: GraphPoint | QueryResultRow;
   hateHits?: number | QueryResultRow;
   loveHits?: number | QueryResultRow;
-  loveHour?: string;
-  hateHour?: string;
+  loveHour?: object;
+  hateHour?: object;
   person?: Person;
   message?: BottleMessage;
   passes?: Pass[];

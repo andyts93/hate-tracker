@@ -1,5 +1,7 @@
-import { sql } from "@/sql";
 import { NextResponse } from "next/server";
+
+import { sql } from "@/sql";
+import { cache } from "@/cache";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -13,6 +15,8 @@ export async function POST(request: Request) {
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+
+  await cache.del(`passes-${body.person_id}`);
 
   return NextResponse.json({}, { status: 201 });
 }

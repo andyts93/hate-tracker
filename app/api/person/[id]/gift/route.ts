@@ -1,5 +1,7 @@
-import { sql } from "@/sql";
 import { NextResponse } from "next/server";
+
+import { cache } from "@/cache";
+import { sql } from "@/sql";
 
 export async function GET(
   request: Request,
@@ -24,6 +26,8 @@ export async function POST(
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+
+  await cache.del(`gift-${params.id}`);
 
   return NextResponse.json({}, { status: 201 });
 }
