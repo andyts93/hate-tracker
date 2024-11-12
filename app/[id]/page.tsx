@@ -49,6 +49,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { StatPanel } from "@/components/stat-panel";
 import {
   BottleMessage,
+  Gift,
   GraphPoint,
   Pass,
   Person,
@@ -69,6 +70,8 @@ import ProfileBox from "@/components/profile-box";
 import RocketMessage from "@/components/rocket-message";
 import { adjustCompareData } from "@/services/graph";
 import QuickThoughtBox from "@/components/quick-thought";
+import Gifts from "@/components/gifts";
+import GiftBox from "@/components/gift-box";
 
 ChartJS.register(
   CategoryScale,
@@ -131,12 +134,15 @@ export default function Home({ params }: { params: { id: string } }) {
     | "profile"
     | "rocketMessage"
     | "quickThought"
+    | "gift"
     | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
   const [account, setAccount] = useState<string | undefined>("");
   const [updateChart, setUpdateChart] = useState<boolean>(false);
   const [quickThougth, setQuickThougth] = useState<QuickThought>();
+  const [lastGift, setLastGift] = useState<Gift>();
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   const { Canvas } = useQRCode();
 
@@ -232,6 +238,7 @@ export default function Home({ params }: { params: { id: string } }) {
     setBottleMessage(json.message);
     setPasses(json.passes);
     setQuickThougth(json.quickThought);
+    setLastGift(json.gift);
   };
 
   const save = async () => {
@@ -678,6 +685,12 @@ export default function Home({ params }: { params: { id: string } }) {
                     num: passes.filter((p) => !p.expired).length,
                   })}
                 </button>
+                <button
+                  className="text-sm px-2 py-1 bg-amber-600 rounded flex items-center gap-2 hover:bg-amber-800"
+                  onClick={() => setActionPanelShown("gift")}
+                >
+                  {t("Page.gifts.button")}
+                </button>
                 {authenticated && (
                   <button
                     className="text-sm px-2 py-1 bg-purple-500 rounded flex items-center gap-2 hover:bg-purple-700"
@@ -734,13 +747,34 @@ export default function Home({ params }: { params: { id: string } }) {
               {actionPanelShown === "quickThought" && (
                 <QuickThoughtBox person={person} onReact={reload} />
               )}
+              {actionPanelShown === "gift" && (
+                <Gifts authenticated={authenticated} person={person} />
+              )}
               {quickThougth && (
                 <>
-                <p className="text-sm mt-4 mb-2">
-                  {t("Page.quickThought.message", { time: dayjs(quickThougth.created_at).format("DD MMM HH:mm") })}
-                </p>
-                <p className="text-4xl px-4 py-2 bg-gray-800 rounded-md">{quickThoughtReaction.find(r => r.key === quickThougth.reaction)?.node}</p>
+                  <p className="text-sm mt-4 mb-2">
+                    {t("Page.quickThought.message", {
+                      time: dayjs(quickThougth.created_at).format(
+                        "DD MMM HH:mm",
+                      ),
+                    })}
+                  </p>
+                  <p className="text-4xl px-4 py-2 bg-gray-800 rounded-md">
+                    {
+                      quickThoughtReaction.find(
+                        (r) => r.key === quickThougth.reaction,
+                      )?.node
+                    }
+                  </p>
                 </>
+              )}
+              {lastGift && (
+                <div className="bg-gray-700 py-2 px-4 rounded shadow-brutal shadow-gray-600 mt-4 max-w-48">
+                  <p className="mb-1 text-xs font-semibold text-center">
+                    {t("Page.gifts.message")}
+                  </p>
+                  <GiftBox authenticated={authenticated} gift={lastGift} />
+                </div>
               )}
               {authenticated && (
                 <>
@@ -920,7 +954,7 @@ export default function Home({ params }: { params: { id: string } }) {
               </div>
               {positions.length > 0 && <Heatmap coords={positions} />}
               <div className="flex flex-col w-full mt-4 divide-y divide-gray-800">
-                {records.map((r: Vote) => (
+                {records.slice(0, 5).map((r: Vote) => (
                   <Post
                     key={r.id}
                     authenticated={authenticated}
@@ -928,6 +962,22 @@ export default function Home({ params }: { params: { id: string } }) {
                     onReact={() => reload()}
                   />
                 ))}
+                {!showMore && (
+                  <button className="py-2" onClick={() => setShowMore(true)}>
+                    {t("Page.showMore")}
+                  </button>
+                )}
+                {showMore &&
+                  records
+                    .slice(5)
+                    .map((r: Vote) => (
+                      <Post
+                        key={r.id}
+                        authenticated={authenticated}
+                        r={r}
+                        onReact={() => reload()}
+                      />
+                    ))}
               </div>
             </>
           )}

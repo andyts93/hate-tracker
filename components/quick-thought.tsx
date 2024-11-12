@@ -2,18 +2,25 @@ import { useState } from "react";
 import { ReactionBarSelector } from "@charkour/react-reactions";
 import { TfiThought } from "react-icons/tfi";
 import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 import { quickThoughtReaction } from "./reactions";
 import { FullPageLoader } from "./full-page-loader";
 
 import { Person } from "@/types";
-import toast from "react-hot-toast";
 
-export default function QuickThoughtBox({ person, onReact }: { person?: Person, onReact?: () => void }) {
+export default function QuickThoughtBox({
+  person,
+  onReact,
+}: {
+  person?: Person;
+  onReact?: () => void;
+}) {
   const [loading, setLoading] = useState<boolean>(false);
   const t = useTranslations("Page.quickThought");
 
   const react = async (key: string) => {
+    setLoading(true);
     try {
       await fetch(`/api/quick-thought`, {
         method: "POST",

@@ -70,4 +70,5 @@ export const siteConfig = {
     discord: "https://discord.gg/9b6yyZKmH4",
     sponsor: "https://buymeacoffee.com/andreacastk",
   },
+  cryptoKey: "klsd839sklmff93829",
 };

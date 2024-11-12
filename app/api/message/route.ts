@@ -1,11 +1,13 @@
 import { extname } from "path";
 
 import { put } from "@vercel/blob";
-import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import sharp from "sharp";
 
+import { sql } from "@/sql";
 import { BottleMessage } from "@/types";
+import { cache } from "@/cache";
 
 export async function POST(request: Request) {
   const body = await request.formData();
@@ -18,9 +20,20 @@ export async function POST(request: Request) {
 
   if (body.get("image")) {
     const file = body.get("image") as File;
-    const blob = await put(`${uuidv4()}.${extname(file.name)}`, file, {
-      access: "public",
-    });
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Usa Sharp per ottimizzare l'immagine
+    const optimizedBuffer = await sharp(buffer)
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    const blob = await put(
+      `${uuidv4()}.${extname(file.name)}`,
+      optimizedBuffer,
+      {
+        access: "public",
+      },
+    );
 
     data.image = blob.url;
   }
@@ -33,6 +46,8 @@ export async function POST(request: Request) {
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+
+  await cache.del(`message-${data.person_id}`);
 
   return NextResponse.json({}, { status: 201 });
 }

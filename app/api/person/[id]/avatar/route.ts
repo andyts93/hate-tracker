@@ -1,9 +1,11 @@
 import { extname } from "path";
 
 import { put } from "@vercel/blob";
-import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+
+import { sql } from "@/sql";
+import { cache } from "@/cache";
 
 export async function PUT(
   request: Request,
@@ -28,6 +30,8 @@ export async function PUT(
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+
+  await cache.del("people");
 
   return NextResponse.json({}, { status: 201 });
 }
