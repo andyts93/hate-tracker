@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import { SessionProvider } from "next-auth/react";
 
 import { Providers } from "./providers";
 
@@ -55,20 +56,24 @@ export default async function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <NextIntlClientProvider messages={messages}>
-            <div className="relative flex flex-col h-screen">
-              <Navbar />
-              <Toaster position="top-center" />
-              {children}
-              <footer className="bg-black">
-                <div className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
-                  <Logo fill="#ec4899" />
-                  <p className="font-bold text-inherit uppercase">Heartwave</p>
-                  <p className="text-xs">&copy; 2024</p>
-                </div>
-              </footer>
-            </div>
-          </NextIntlClientProvider>
+          <SessionProvider>
+            <NextIntlClientProvider messages={messages}>
+              <div className="relative flex flex-col h-screen">
+                <Navbar />
+                <Toaster position="top-center" />
+                {children}
+                <footer className="bg-black">
+                  <div className="container mx-auto max-w-7xl py-6 md:py-16 px-4 flex-grow">
+                    <Logo fill="#ec4899" />
+                    <p className="font-bold text-inherit uppercase">
+                      Heartwave
+                    </p>
+                    <p className="text-xs">&copy; 2024</p>
+                  </div>
+                </footer>
+              </div>
+            </NextIntlClientProvider>
+          </SessionProvider>
         </Providers>
       </body>
     </html>

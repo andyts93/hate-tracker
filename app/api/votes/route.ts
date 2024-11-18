@@ -33,6 +33,11 @@ export async function POST(request: Request) {
     audio_file: "",
   };
 
+  if (data.latitude === 0 && data.longitude === 0) {
+    data.latitude = null;
+    data.longitude = null;
+  }
+
   if (body.get("image")) {
     const file = body.get("image") as File;
     const buffer = Buffer.from(await file.arrayBuffer());

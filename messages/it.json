@@ -120,7 +120,9 @@
     },
     "Menu": {
         "home": "Home",
-        "lastViewed": "Ultimi visti"
+        "lastViewed": "Ultimi visti",
+        "profile": "Profilo",
+        "logout": "Esci"
     },
     "PassCard": {
         "expiration": "Scadenza",

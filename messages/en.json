@@ -120,7 +120,9 @@
     },
     "Menu": {
         "home": "Home",
-        "lastViewed": "Last viewed"
+        "lastViewed": "Last viewed",
+        "profile": "Profile",
+        "logout": "Logout"
     },
     "PassCard": {
         "expiration": "Expiration",

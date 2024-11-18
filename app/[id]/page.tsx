@@ -278,6 +278,7 @@ export default function Home({ params }: { params: { id: string } }) {
       method: "POST",
       body: formData,
     });
+    await getSpotifySuggestions();
     currentVote.current = vote as number;
     setVote(0);
     setNote("");
@@ -412,7 +413,6 @@ export default function Home({ params }: { params: { id: string } }) {
         auth_cookie: getCookie("auth"),
       }),
     }).then();
-    getSpotifySuggestions().then();
   }, []);
 
   const handleLocationSelect = (lat: number, long: number) => {

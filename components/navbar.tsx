@@ -23,6 +23,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/dropdown";
+import { signOut, useSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { HeartFilledIcon, Logo } from "@/components/icons";
@@ -32,6 +33,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const t = useTranslations("Menu");
   const locale = useLocale();
+  const { data: session } = useSession();
 
   return (
     <NextUINavbar
@@ -132,6 +134,25 @@ export const Navbar = () => {
       <NavbarMenu>
         {/* {searchInput} */}
         <div className="mx-4 mt-2 flex flex-col gap-2">
+          {session && (
+            <>
+              <NavbarMenuItem>
+                <Link
+                  color="foreground"
+                  href={"/profile"}
+                  size="lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {t("profile")}
+                </Link>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Link color="foreground" size="lg" onClick={() => signOut()}>
+                  {t("logout")}
+                </Link>
+              </NavbarMenuItem>
+            </>
+          )}
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link

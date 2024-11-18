@@ -1,9 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import { BiSliderAlt } from "react-icons/bi";
 import { IoEyeOffSharp, IoTicketSharp } from "react-icons/io5";
 import { PiBeerBottleFill } from "react-icons/pi";
@@ -12,28 +10,7 @@ import HomeBox from "@/components/home-box";
 
 export default function Home() {
   const [name, setName] = useState<string>("");
-  const router = useRouter();
   const t = useTranslations();
-
-  const createNew = async (e: FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/person", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name }),
-      });
-      const json = await response.json();
-
-      if (!response.ok) return toast.error(json.error);
-
-      router.push(`/${json.id}`);
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
 
   return (
     <>
@@ -122,24 +99,6 @@ export default function Home() {
               <p className="text-slate-300 text-md font-light underline">
                 {t("Home.disclaimer")}
               </p>
-              <form className="mt-4" onSubmit={createNew}>
-                <div className="flex flex-col border border-gray-900 p-4 rounded">
-                  <label className="text-sm text-gray-400 mb-1" htmlFor="name">
-                    {t("Forms.name")}
-                  </label>
-                  <input
-                    className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
-                    id="name"
-                    placeholder={t("Forms.namePlaceholder")}
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <button className="px-2 py-1 rounded bg-green-600 mt-2 text-sm">
-                    {t("Forms.create")}
-                  </button>
-                </div>
-              </form>
             </div>
             <div className="relative mt-16 md:mt-0">
               <svg

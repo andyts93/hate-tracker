@@ -15,8 +15,8 @@ export type Vote = {
   ttv?: string | null;
   image?: string | null;
   person_id?: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: number | null;
+  longitude?: number | null;
   show_note?: boolean;
   reaction?: string;
   reactionObject?: ReactionCounterObject;
