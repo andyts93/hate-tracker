@@ -42,10 +42,12 @@
         "shareLink": "Share link",
         "showQr": "Show QR code",
         "setPassword": {
-            "start": "To start tracking, {name} must set a password. This will permit just them to update their scores and see their notes.",
-            "send": "Send this link to them and let them set their password by themselves, don't be a dick!",
+            "start": "This page is brand new and not linked to any account yet.",
+            "send": "If you are not the person designed to track the mood of, please send the link to the person you want to track the mood of.",
+            "signup": "If this page is meant to you, please signup or login to link it to your account.",
             "set": "Password set!",
-            "insert": "Please insert your password to vote"
+            "insert": "Please insert your password to vote",
+            "link": "Link to your account"
         },
         "bottleMessage": {
             "message": "Someone left a message for you, check it out!",

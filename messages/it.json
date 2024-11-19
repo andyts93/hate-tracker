@@ -42,10 +42,12 @@
         "shareLink": "Condividi link",
         "showQr": "Mostra QR code",
         "setPassword": {
-            "start": "Per iniziare, {name} deve impostare una password. Questo gli permetterà di aggiornare il suo punteggio e gestire le proprie note.",
-            "send": "Invia questo link e permettigli di impostare la loro password in autonomia, non fare il coglione!",
+            "start": "Questa pagina è appena stata creata o non è collegata a nessun account ancora.",
+            "send": "Se non sei la persona designata a tracciare lo stato d'animo, per favore invia il link alla persona di cui vuoi tracciare lo stato d'animo.",
+            "signup": "Se questa pagina è destinata a te, per favore registrati o accedi per collegarla al tuo account.",
             "set": "Password impostata!",
-            "insert": "Inserisci la tua password per votare"
+            "insert": "Inserisci la tua password per votare",
+            "link": "Collega al tuo account"
         },
         "bottleMessage": {
             "message": "Qualcuno ti ha lasciato un messaggio!",

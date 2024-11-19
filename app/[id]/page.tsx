@@ -45,6 +45,7 @@ import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import { Avatar } from "@nextui-org/avatar";
+import { useSession } from "next-auth/react";
 
 import { StatPanel } from "@/components/stat-panel";
 import {
@@ -84,6 +85,7 @@ ChartJS.register(
 );
 
 export default function Home({ params }: { params: { id: string } }) {
+  const { data: session } = useSession();
   const [loading, setLoading] = useState<boolean>(true);
   const [vote, setVote] = useState<number | number[]>(0);
   const [note, setNote] = useState<string>("");
@@ -220,7 +222,7 @@ export default function Home({ params }: { params: { id: string } }) {
       hateHour: json.hateHour,
     });
     setPerson(json.person);
-    setHasPassword(Boolean(json.person.password));
+    setHasPassword(Boolean(json.person.user_id));
     setLoading(false);
     const list = JSON.parse(localStorage.getItem("last-viewed") || "[]");
 
@@ -337,7 +339,7 @@ export default function Home({ params }: { params: { id: string } }) {
 
       if (!response.ok) return toast.error(json.error);
       setPassword("");
-      setAuthenticated(true);
+      // setAuthenticated(true);
       setActionPanelShown(undefined);
       setCookie("auth", params.id, { maxAge: 30 * 24 * 60 * 60 });
       toast.success("Login successful!");
@@ -403,7 +405,7 @@ export default function Home({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     reload().then();
-    setAuthenticated(getCookie("auth") === params.id);
+    // setAuthenticated(getCookie("auth") === params.id);
     setAccount(getCookie("auth"));
     setSpotifyToken(getCookie("spotify_token"));
     fetch(`/api/visit`, {
@@ -414,6 +416,10 @@ export default function Home({ params }: { params: { id: string } }) {
       }),
     }).then();
   }, []);
+
+  useEffect(() => {
+    setAuthenticated(session ? true : false);
+  }, [session]);
 
   const handleLocationSelect = (lat: number, long: number) => {
     setLocation([lat, long]);
@@ -605,26 +611,10 @@ export default function Home({ params }: { params: { id: string } }) {
                     name: person?.name || "friend",
                   })}
                 </p>
-                <p>{t("Page.setPassword.send")}</p>
+                <p className="mb-2 font-bold">{t("Page.setPassword.send")}</p>
+                <p>{t("Page.setPassword.signup")}</p>
+                {authenticated ? <button>{t("Page.setPassword.link")}</button> : <Link href="/signup">{t("Page.setPassword.link")}</Link>}
               </div>
-              <form className="flex flex-col mt-4" onSubmit={savePassword}>
-                <label
-                  className="text-sm text-gray-400 mb-1"
-                  htmlFor="password"
-                >
-                  Password
-                </label>
-                <input
-                  className="bg-gray-700 px-2 py-1 focus:outline-none rounded"
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button className="px-2 py-1 rounded bg-green-500 mt-2 text-sm">
-                  {t("Forms.save")}
-                </button>
-              </form>
             </>
           ) : (
             <>
