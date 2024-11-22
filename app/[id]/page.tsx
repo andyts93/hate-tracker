@@ -73,6 +73,7 @@ import { adjustCompareData } from "@/services/graph";
 import QuickThoughtBox from "@/components/quick-thought";
 import Gifts from "@/components/gifts";
 import GiftBox from "@/components/gift-box";
+import LoginForm from "@/components/login-form";
 
 ChartJS.register(
   CategoryScale,
@@ -613,8 +614,9 @@ export default function Home({ params }: { params: { id: string } }) {
                 </p>
                 <p className="mb-2 font-bold">{t("Page.setPassword.send")}</p>
                 <p>{t("Page.setPassword.signup")}</p>
-                {authenticated ? <button>{t("Page.setPassword.link")}</button> : <Link href="/signup">{t("Page.setPassword.link")}</Link>}
+                {authenticated && <button>{t("Page.setPassword.link")}</button>}
               </div>
+              {!authenticated && (<LoginForm />)}
             </>
           ) : (
             <>
