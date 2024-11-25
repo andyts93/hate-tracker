@@ -748,7 +748,14 @@ export default function Home({ params }: { params: { id: string } }) {
                 <QuickThoughtBox person={person} onReact={reload} />
               )}
               {actionPanelShown === "gift" && (
-                <Gifts authenticated={authenticated} person={person} />
+                <Gifts
+                  authenticated={authenticated}
+                  person={person}
+                  onReact={async () => {
+                    setActionPanelShown(undefined);
+                    await reload();
+                  }}
+                />
               )}
               {quickThougth && (
                 <>
