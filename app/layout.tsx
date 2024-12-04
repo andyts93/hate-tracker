@@ -14,6 +14,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { Logo } from "@/components/icons";
+import SnowfallComponent from "@/components/snowfall";
 
 export const metadata: Metadata = {
   title: {
@@ -56,6 +57,8 @@ export default async function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <NextIntlClientProvider messages={messages}>
+
+          <SnowfallComponent />
             <div className="relative flex flex-col h-screen">
               <Navbar />
               <Toaster position="top-center" />
