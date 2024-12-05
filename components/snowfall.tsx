@@ -4,7 +4,7 @@ import Snowfall from "react-snowfall";
 export default function SnowfallComponent() {
   return (
     <Snowfall
-        snowflakeCount={100}
+      snowflakeCount={100}
       style={{
         position: "fixed",
         width: "100vw",

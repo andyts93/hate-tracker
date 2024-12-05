@@ -562,12 +562,102 @@ export default function Home({ params }: { params: { id: string } }) {
         )}
         {loading && <FullPageLoader />}
         <div className="flex flex-col items-center">
-          <Avatar
-            className="mb-2"
-            name={person?.name}
-            size="lg"
-            src={person?.avatar}
-          />
+          <div className="relative">
+            <Avatar
+              className="mb-2"
+              name={person?.name}
+              size="lg"
+              src={person?.avatar}
+            />
+            <svg
+              fill="#000000"
+              viewBox="0 -0.04 74.25 74.25"
+              xmlns="http://www.w3.org/2000/svg"
+              className="absolute -top-6 -right-6 w-12 h-12 rotate-45"
+            >
+              <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+              <g
+                id="SVGRepo_tracerCarrier"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <g id="SVGRepo_iconCarrier">
+                {" "}
+                <g
+                  data-name="6"
+                  id="_6"
+                  transform="translate(-562.336 -261.58)"
+                >
+                  {" "}
+                  <path
+                    d="M572.624,311.75l16.162-42.11a8.254,8.254,0,0,1,7.72-5.31h3.3c3.158,0,4.908,1.7,6.84,3.63l.01.02,14.99,16.28a4.154,4.154,0,0,1,.66,4.66l-.29.6-.45.89a4.139,4.139,0,0,1-4.11,2.29l-1.1-.1,7.361,19.151Z"
+                    data-name="Path 39"
+                    fill="#ee6159"
+                    id="Path_39"
+                  />{" "}
+                  <path
+                    d="M623.737,314.5a.118.118,0,0,1-.019,0H572.624a2.748,2.748,0,0,1-2.567-3.735l16.162-42.11a11.066,11.066,0,0,1,10.287-7.075h3.3c4.349,0,6.809,2.46,8.785,4.436a2.663,2.663,0,0,1,.2.223L623.67,282.4a6.951,6.951,0,0,1,1.1,7.753l-.744,1.5a6.919,6.919,0,0,1-3.781,3.39l5.931,15.429a2.753,2.753,0,0,1-2.434,4.033ZM576.625,309h43.09l-5.925-15.414a2.749,2.749,0,0,1,2.814-3.726l1.1.1a1.47,1.47,0,0,0,.158.009,1.4,1.4,0,0,0,1.239-.778l.729-1.469a1.408,1.408,0,0,0-.215-1.609l-14.982-16.271c-.019-.021-.038-.042-.056-.064-1.78-1.774-2.837-2.7-4.771-2.7h-3.3a5.538,5.538,0,0,0-5.151,3.54Z"
+                    data-name="Path 40"
+                    fill="#151515"
+                    id="Path_40"
+                  />{" "}
+                  <g data-name="Group 18" id="Group_18">
+                    {" "}
+                    <circle
+                      cx="12.012"
+                      cy="12.012"
+                      data-name="Ellipse 4"
+                      fill="#ffffff"
+                      id="Ellipse_4"
+                      r="12.012"
+                      transform="translate(609.811 277.524)"
+                    />{" "}
+                    <path
+                      d="M621.821,304.3a14.771,14.771,0,1,1,4.715-.776A14.752,14.752,0,0,1,621.821,304.3Zm0-24.03a9.264,9.264,0,1,0,8.776,6.307A9.252,9.252,0,0,0,621.824,280.271Z"
+                      data-name="Path 41"
+                      fill="#151515"
+                      id="Path_41"
+                    />{" "}
+                  </g>{" "}
+                  <g data-name="Group 19" id="Group_19">
+                    {" "}
+                    <line
+                      data-name="Line 12"
+                      fill="#ec534e"
+                      id="Line_12"
+                      transform="translate(602.454 291.312)"
+                      x2="7.627"
+                      y2="0.753"
+                    />{" "}
+                    <path
+                      d="M610.084,294.815c-.09,0-.182,0-.273-.013l-7.627-.753a2.75,2.75,0,0,1,.541-5.474l7.627.754a2.75,2.75,0,0,1-.268,5.486Z"
+                      data-name="Path 42"
+                      fill="#151515"
+                      id="Path_42"
+                    />{" "}
+                  </g>{" "}
+                  <g data-name="Group 20" id="Group_20">
+                    {" "}
+                    <rect
+                      data-name="Rectangle 4"
+                      fill="#ffffff"
+                      height="21.25"
+                      id="Rectangle_4"
+                      rx="5.53"
+                      transform="translate(565.086 311.75)"
+                      width="66.17"
+                    />{" "}
+                    <path
+                      d="M625.726,335.75h-55.11a8.29,8.29,0,0,1-8.28-8.28V317.28a8.29,8.29,0,0,1,8.28-8.28h55.11a8.29,8.29,0,0,1,8.28,8.28v10.19A8.29,8.29,0,0,1,625.726,335.75Zm-55.11-21.25a2.783,2.783,0,0,0-2.78,2.78v10.19a2.783,2.783,0,0,0,2.78,2.78h55.11a2.783,2.783,0,0,0,2.78-2.78V317.28a2.783,2.783,0,0,0-2.78-2.78Z"
+                      data-name="Path 43"
+                      fill="#151515"
+                      id="Path_43"
+                    />{" "}
+                  </g>{" "}
+                </g>{" "}
+              </g>
+            </svg>
+          </div>
           <h1 className="text-xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
             {t("Page.title", { name: person?.name || "friend" })}
             <br />
