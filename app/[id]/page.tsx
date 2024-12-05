@@ -561,7 +561,51 @@ export default function Home({ params }: { params: { id: string } }) {
           </Modal>
         )}
         {loading && <FullPageLoader />}
-        <div className="flex flex-col items-center">
+        <ul className="lightrope">
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+        <div className="flex flex-col items-center pt-14">
           <div className="relative">
             <Avatar
               className="mb-2"
@@ -570,10 +614,10 @@ export default function Home({ params }: { params: { id: string } }) {
               src={person?.avatar}
             />
             <svg
+              className="absolute -top-6 -right-6 w-12 h-12 rotate-45"
               fill="#000000"
               viewBox="0 -0.04 74.25 74.25"
               xmlns="http://www.w3.org/2000/svg"
-              className="absolute -top-6 -right-6 w-12 h-12 rotate-45"
             >
               <g id="SVGRepo_bgCarrier" strokeWidth="0" />
               <g
