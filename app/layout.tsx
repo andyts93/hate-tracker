@@ -57,8 +57,6 @@ export default async function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <NextIntlClientProvider messages={messages}>
-
-          <SnowfallComponent />
             <div className="relative flex flex-col h-screen">
               <Navbar />
               <Toaster position="top-center" />

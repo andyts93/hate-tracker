@@ -93,6 +93,7 @@ export async function GET(request: NextRequest) {
     "passes",
     "quickThoughts",
     "gift",
+    "missingMeter",
   ];
 
   const requestModules = searchParams.get("modules")?.split(",") || MODULES;
@@ -137,16 +138,6 @@ export async function GET(request: NextRequest) {
       `hours-${searchParams.get("person_id")}`,
       `SELECT CONCAT(TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24'), ':00') AS vote FROM records WHERE person_id = '${searchParams.get("person_id")}' GROUP BY TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24') ORDER BY AVG(vote)`,
     );
-    // const [hatePeak] =
-    //   await sql`SELECT created_at, vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote > 0 ORDER BY vote DESC LIMIT 1`;
-    // const [lovePeak] =
-    //   await sql`SELECT created_at, vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote < 0 ORDER BY vote ASC LIMIT 1`;
-    // const [hateHits] =
-    //   await sql`SELECT COUNT(id) vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote > 0;`;
-    // const [loveHits] =
-    //   await sql`SELECT COUNT(id) vote FROM records WHERE person_id = ${searchParams.get("person_id")} AND vote < 0;`;
-    // const hours =
-    //   await sql`SELECT CONCAT(TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24'), ':00') AS vote FROM records WHERE person_id = ${searchParams.get("person_id")} GROUP BY TO_CHAR(TIMEZONE('Europe/Rome', created_at), 'HH24') ORDER BY AVG(vote)`;
 
     response = {
       ...response,
@@ -212,6 +203,15 @@ export async function GET(request: NextRequest) {
     );
 
     response.gift = gift;
+  }
+
+  if (requestModules.includes("missingMeter")) {
+    const [missingMeter] = await sqlCache(
+      `missingmeter-${searchParams.get("person_id")}`,
+      `SELECT score, created_at FROM missing_meter WHERE person_id = '${searchParams.get("person_id")}' AND created_at > NOW() - INTERVAL '24 hours' ORDER BY created_at DESC LIMIT 1`,
+    );
+
+    response.missingMeter = missingMeter;
   }
 
   return NextResponse.json(response, { status: 200 });

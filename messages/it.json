@@ -105,7 +105,14 @@
             "buy": "Compra",
             "message": "Hai ricevuto un regalo nelle ultime 24 ore"
         },
-        "showMore": "Mostra altri"
+        "showMore": "Mostra altri",
+        "missingMeter": {
+            "button": "Mancometro",
+            "title": "Dì a {name} quanto ti manca",
+            "scoreLabel": "Punteggio",
+            "send": "Invia",
+            "sent": "Punteggio salvato!"
+        }
     },
     "Common": {
         "here": "qui"

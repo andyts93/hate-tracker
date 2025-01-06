@@ -80,6 +80,11 @@ export type QuickThought = {
   created_at?: string;
 };
 
+export type MissingMeterScore = {
+  score: number;
+  created_at: string;
+};
+
 export type VoteResponse = {
   avg?: number;
   graph?: Vote[];
@@ -94,6 +99,7 @@ export type VoteResponse = {
   passes?: Pass[];
   quickThought?: QuickThought;
   gift?: Gift | QueryResultRow;
+  missingMeter?: MissingMeterScore | QueryResultRow;
 };
 
 export type Gift = {
