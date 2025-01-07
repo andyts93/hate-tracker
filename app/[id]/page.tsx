@@ -642,6 +642,9 @@ export default function Home({ params }: { params: { id: string } }) {
                     <span>Someone is missing you this much</span>
                     <MissingMeterScoreDisplay score={missingScore.score} />
                   </p>
+                  <p className="text-xs text-white text-right">
+                    {dayjs(missingScore.created_at).format("DD MMM HH:mm")}
+                  </p>
                 </div>
               )}
               {bottleMessage && (
