@@ -52,6 +52,7 @@ import {
   BottleMessage,
   Gift,
   GraphPoint,
+  MissingMeterScore,
   Pass,
   Person,
   QuickThought,
@@ -74,6 +75,8 @@ import QuickThoughtBox from "@/components/quick-thought";
 import Gifts from "@/components/gifts";
 import GiftBox from "@/components/gift-box";
 import LoginForm from "@/components/login-form";
+import MissingMeterBox from "@/components/missing-meter-box";
+import MissingMeterScoreDisplay from "@/components/missing-meter-score";
 
 ChartJS.register(
   CategoryScale,
@@ -138,6 +141,7 @@ export default function Home({ params }: { params: { id: string } }) {
     | "rocketMessage"
     | "quickThought"
     | "gift"
+    | "missingMeter"
     | undefined
   >();
   const [passes, setPasses] = useState<Pass[]>([]);
@@ -146,6 +150,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const [quickThougth, setQuickThougth] = useState<QuickThought>();
   const [lastGift, setLastGift] = useState<Gift>();
   const [showMore, setShowMore] = useState<boolean>(false);
+  const [missingScore, setMissingScore] = useState<MissingMeterScore>();
 
   const { Canvas } = useQRCode();
 
@@ -242,6 +247,7 @@ export default function Home({ params }: { params: { id: string } }) {
     setPasses(json.passes);
     setQuickThougth(json.quickThought);
     setLastGift(json.gift);
+    setMissingScore(json.missingMeter);
   };
 
   const save = async () => {
@@ -305,20 +311,14 @@ export default function Home({ params }: { params: { id: string } }) {
     toast.success("Link copied!");
   };
 
-  const savePassword = async (e: FormEvent) => {
-    e.preventDefault();
+  const linkAccount = async () => {
     try {
-      const response = await fetch(`/api/person/${person?.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
+      const response = await fetch(`/api/person/${person?.id}/claim`, {
+        method: "POST",
       });
       const json = await response.json();
 
       if (!response.ok) return toast.error(json.error);
-      setPassword("");
       toast.success(t("Page.setPassword.set"));
       setHasPassword(true);
     } catch (err: any) {
@@ -569,12 +569,14 @@ export default function Home({ params }: { params: { id: string } }) {
         )}
         {loading && <FullPageLoader />}
         <div className="flex flex-col items-center">
-          <Avatar
-            className="mb-2"
-            name={person?.name}
-            size="lg"
-            src={person?.avatar}
-          />
+          <div className="relative">
+            <Avatar
+              className="mb-2"
+              name={person?.name}
+              size="lg"
+              src={person?.avatar}
+            />
+          </div>
           <h1 className="text-xl font-bold text-center uppercase bg-gradient-to-br from-purple-500 to-red-500 bg-clip-text text-transparent">
             {t("Page.title", { name: person?.name || "friend" })}
             <br />
@@ -614,12 +616,27 @@ export default function Home({ params }: { params: { id: string } }) {
                 </p>
                 <p className="mb-2 font-bold">{t("Page.setPassword.send")}</p>
                 <p>{t("Page.setPassword.signup")}</p>
-                {authenticated && <button>{t("Page.setPassword.link")}</button>}
+                {authenticated && (
+                  <button className="text-sm px-2 py-1 bg-gray-800 rounded mt-2"  onClick={linkAccount}>
+                    {t("Page.setPassword.link")}
+                  </button>
+                )}
               </div>
-              {!authenticated && (<LoginForm />)}
+              {!authenticated && <LoginForm />}
             </>
           ) : (
             <>
+              {missingScore !== undefined && (
+                <div className="bg-rose-400 py-2 px-4 rounded shadow-brutal shadow-rose-600 mt-4 w-full text-gray-800">
+                  <p className="text-sm flex items-center gap-1 text-white font-bold">
+                    <span>Someone is missing you this much</span>
+                    <MissingMeterScoreDisplay score={missingScore.score} />
+                  </p>
+                  <p className="text-xs text-white text-right">
+                    {dayjs(missingScore.created_at).format("DD MMM HH:mm")}
+                  </p>
+                </div>
+              )}
               {bottleMessage && (
                 <div className="bg-amber-400 py-2 px-4 rounded shadow-brutal shadow-amber-600 mt-4 w-full text-gray-800">
                   <p className="mb-2 text-sm">
@@ -666,6 +683,12 @@ export default function Home({ params }: { params: { id: string } }) {
                       onClick={() => setActionPanelShown("quickThought")}
                     >
                       {t("Page.quickThought.button")}
+                    </button>
+                    <button
+                      className="text-sm px-2 py-1 bg-slate-500 rounded flex items-center gap-2 hover:bg-slate-700"
+                      onClick={() => setActionPanelShown("missingMeter")}
+                    >
+                      {t("Page.missingMeter.button")}
                     </button>
                   </>
                 )}
@@ -740,7 +763,17 @@ export default function Home({ params }: { params: { id: string } }) {
                 <QuickThoughtBox person={person} onReact={reload} />
               )}
               {actionPanelShown === "gift" && (
-                <Gifts authenticated={authenticated} person={person} />
+                <Gifts
+                  authenticated={authenticated}
+                  person={person}
+                  onReact={async () => {
+                    setActionPanelShown(undefined);
+                    await reload();
+                  }}
+                />
+              )}
+              {actionPanelShown === "missingMeter" && (
+                <MissingMeterBox person={person} onSaved={reload} />
               )}
               {quickThougth && (
                 <>

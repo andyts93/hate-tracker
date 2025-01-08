@@ -1,13 +1,15 @@
 import { Avatar } from "@nextui-org/avatar";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 
-import { auth } from "@/auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
 import CreatePageForm from "@/components/create-page-form";
 import { sql } from "@/sql";
 
 export default async function ProfilePage() {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/signup");
@@ -15,8 +17,10 @@ export default async function ProfilePage() {
 
   let pages =
     await sql`SELECT * FROM people WHERE user_id = ${session?.user?.id}`;
-  const linkedPages =
-    await sql`SELECT * FROM people WHERE id IN (${pages.map((page) => page.linked_page).join()})`;
+  const linkedPages = await sql`SELECT * FROM people WHERE id IN (${pages
+    .map((page) => page.linked_page)
+    .filter((page) => page)
+    .join()})`;
 
   pages = pages.map((page) => {
     const linkedPage = linkedPages.find(
@@ -28,7 +32,6 @@ export default async function ProfilePage() {
       linkedPage: linkedPage || null,
     };
   });
-  console.log(pages);
 
   return (
     <main className="container max-w-7xl py-6 md:py-16 px-4 flex-growcontainer mx-auto">
@@ -40,7 +43,7 @@ export default async function ProfilePage() {
         />
         <h2>{session?.user?.name}</h2>
       </div>
-      <table className="table w-full my-4">
+      <table className="table w-full my-4 border-separate [border-spacing:0.5rem]">
         <thead>
           <tr>
             <th>Page</th>

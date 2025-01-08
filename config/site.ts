@@ -8,10 +8,10 @@ export const siteConfig = {
       label: "home",
       href: "/",
     },
-    {
-      label: "lastViewed",
-      href: "/last-viewed",
-    },
+    // {
+    //   label: "lastViewed",
+    //   href: "/last-viewed",
+    // },
     // {
     //   label: "Pricing",
     //   href: "/pricing",
@@ -30,10 +30,10 @@ export const siteConfig = {
       label: "home",
       href: "/",
     },
-    {
-      label: "lastViewed",
-      href: "/last-viewed",
-    },
+    // {
+    //   label: "lastViewed",
+    //   href: "/last-viewed",
+    // },
     // {
     //   label: "Dashboard",
     //   href: "/dashboard",

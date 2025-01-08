@@ -7,7 +7,6 @@ import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { SessionProvider } from "next-auth/react";
 
 import { Providers } from "./providers";
 
@@ -15,6 +14,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { Logo } from "@/components/icons";
+import SessionWrapper from "@/components/session-wrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +56,7 @@ export default async function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <SessionProvider>
+          <SessionWrapper>
             <NextIntlClientProvider messages={messages}>
               <div className="relative flex flex-col h-screen">
                 <Navbar />
@@ -73,7 +73,7 @@ export default async function RootLayout({
                 </footer>
               </div>
             </NextIntlClientProvider>
-          </SessionProvider>
+          </SessionWrapper>
         </Providers>
       </body>
     </html>
