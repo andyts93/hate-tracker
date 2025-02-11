@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { v4 as uuid4 } from "uuid";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
-import { Slider } from "@nextui-org/slider";
+import { Slider } from "@heroui/slider";
 
 import { FullPageLoader } from "./full-page-loader";
 

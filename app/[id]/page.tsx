@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@nextui-org/slider";
+import { Slider } from "@heroui/slider";
 import { TiHeartFullOutline } from "react-icons/ti";
 import { FaRegAngry } from "react-icons/fa";
 import { IoLockClosed, IoShareOutline, IoQrCodeOutline } from "react-icons/io5";
@@ -28,15 +28,15 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { PiConfettiDuotone } from "react-icons/pi";
 import { useQRCode } from "next-qrcode";
 import toast from "react-hot-toast";
 import { getCookie, setCookie } from "cookies-next";
-import { Switch } from "@nextui-org/switch";
+import { Switch } from "@heroui/switch";
 import { BsIncognito } from "react-icons/bs";
 import { IoMdEye } from "react-icons/io";
-import { DatePicker } from "@nextui-org/date-picker";
+import { DatePicker } from "@heroui/date-picker";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 import { PiMusicNotesFill } from "react-icons/pi";
 import { v4 as uuid4 } from "uuid";
@@ -44,7 +44,7 @@ import { LatLngTuple } from "leaflet";
 import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
-import { Avatar } from "@nextui-org/avatar";
+import { Avatar } from "@heroui/avatar";
 
 import { StatPanel } from "@/components/stat-panel";
 import {

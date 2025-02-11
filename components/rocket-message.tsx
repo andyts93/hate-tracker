@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { useTranslations } from "next-intl";
 import { LuInfo } from "react-icons/lu";
 import { BsRocketTakeoff } from "react-icons/bs";

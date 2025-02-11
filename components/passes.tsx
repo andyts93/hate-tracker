@@ -2,7 +2,7 @@ import type { Pass, Person } from "@/types";
 
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { useState } from "react";
-import { DatePicker } from "@nextui-org/date-picker";
+import { DatePicker } from "@heroui/date-picker";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";

@@ -1,4 +1,4 @@
-import { Avatar } from "@nextui-org/avatar";
+import { Avatar } from "@heroui/avatar";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { v4 as uuid4 } from "uuid";

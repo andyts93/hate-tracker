@@ -9,10 +9,10 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
-import { link as linkStyles } from "@nextui-org/theme";
+} from "@heroui/navbar";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
+import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { useRef, useState } from "react";
@@ -22,7 +22,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-} from "@nextui-org/dropdown";
+} from "@heroui/dropdown";
 
 import SnowfallComponent from "./snowfall";
 
@@ -30,7 +30,8 @@ import { siteConfig } from "@/config/site";
 import { HeartFilledIcon, Logo } from "@/components/icons";
 import { setUserLocale } from "@/services/locale";
 
-const heart1 = document.createElement("img");
+export const Navbar = () => {
+  const heart1 = document.createElement("img");
 
 heart1.src = "/heart-1.png";
 const heart2 = document.createElement("img");
@@ -72,8 +73,6 @@ const allImages = [
   [heart4, heart5, heart6],
   [heart7, heart8, heart9],
 ];
-
-export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const t = useTranslations("Menu");
   const locale = useLocale();
@@ -169,10 +168,10 @@ export const Navbar = () => {
               </DropdownTrigger>
             </NavbarItem>
             <DropdownMenu>
-              <DropdownItem onClick={() => setUserLocale("en")}>
+              <DropdownItem onClick={() => setUserLocale("en")} key={'english'}>
                 <span className="fi fi-gb mr-2" /> English
               </DropdownItem>
-              <DropdownItem onClick={() => setUserLocale("it")}>
+              <DropdownItem onClick={() => setUserLocale("it")} key={'italian'}>
                 <span className="fi fi-it mr-2" /> Italiano
               </DropdownItem>
             </DropdownMenu>
@@ -229,10 +228,10 @@ export const Navbar = () => {
                 </DropdownTrigger>
               </NavbarItem>
               <DropdownMenu>
-                <DropdownItem onClick={() => setUserLocale("en")}>
+                <DropdownItem onClick={() => setUserLocale("en")} key={'english'}>
                   <span className="fi fi-gb mr-2" /> English
                 </DropdownItem>
-                <DropdownItem onClick={() => setUserLocale("it")}>
+                <DropdownItem onClick={() => setUserLocale("it")} key={'italian'}>
                   <span className="fi fi-it mr-2" /> Italiano
                 </DropdownItem>
               </DropdownMenu>

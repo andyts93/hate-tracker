@@ -11,7 +11,7 @@ import {
   ModalBody,
   ModalContent,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { useState } from "react";
 import GifPicker, { TenorImage, Theme } from "gif-picker-react";
 import { RiSearchLine } from "react-icons/ri";
