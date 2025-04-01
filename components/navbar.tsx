@@ -15,7 +15,7 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Dropdown,
@@ -24,55 +24,53 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 
-import SnowfallComponent from "./snowfall";
-
 import { siteConfig } from "@/config/site";
 import { HeartFilledIcon, Logo } from "@/components/icons";
 import { setUserLocale } from "@/services/locale";
 
 export const Navbar = () => {
-//   const heart1 = document.createElement("img");
+  //   const heart1 = document.createElement("img");
 
-// heart1.src = "/heart-1.png";
-// const heart2 = document.createElement("img");
+  // heart1.src = "/heart-1.png";
+  // const heart2 = document.createElement("img");
 
-// heart2.src = "/heart-2.png";
-// const heart3 = document.createElement("img");
+  // heart2.src = "/heart-2.png";
+  // const heart3 = document.createElement("img");
 
-// heart3.src = "/heart-3.png";
-// const rose1 = document.createElement("img");
+  // heart3.src = "/heart-3.png";
+  // const rose1 = document.createElement("img");
 
-// rose1.src = "/rose-1.png";
-// const rose2 = document.createElement("img");
+  // rose1.src = "/rose-1.png";
+  // const rose2 = document.createElement("img");
 
-// rose2.src = "/rose-2.png";
+  // rose2.src = "/rose-2.png";
 
-// const heart4 = document.createElement("img");
+  // const heart4 = document.createElement("img");
 
-// heart4.src = "/choco-heart-1.png";
-// const heart5 = document.createElement("img");
+  // heart4.src = "/choco-heart-1.png";
+  // const heart5 = document.createElement("img");
 
-// heart5.src = "/choco-heart-2.png";
-// const heart6 = document.createElement("img");
+  // heart5.src = "/choco-heart-2.png";
+  // const heart6 = document.createElement("img");
 
-// heart6.src = "/choco-heart-3.png";
+  // heart6.src = "/choco-heart-3.png";
 
-// const heart7 = document.createElement("img");
+  // const heart7 = document.createElement("img");
 
-// heart7.src = "/balloon-heart-1.png";
-// const heart8 = document.createElement("img");
+  // heart7.src = "/balloon-heart-1.png";
+  // const heart8 = document.createElement("img");
 
-// heart8.src = "/balloon-heart-2.png";
-// const heart9 = document.createElement("img");
+  // heart8.src = "/balloon-heart-2.png";
+  // const heart9 = document.createElement("img");
 
-// heart9.src = "/balloon-heart-3.png";
+  // heart9.src = "/balloon-heart-3.png";
 
-// const allImages = [
-//   [heart1, heart2, heart3],
-//   [rose1, rose2],
-//   [heart4, heart5, heart6],
-//   [heart7, heart8, heart9],
-// ];
+  // const allImages = [
+  //   [heart1, heart2, heart3],
+  //   [rose1, rose2],
+  //   [heart4, heart5, heart6],
+  //   [heart7, heart8, heart9],
+  // ];
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const t = useTranslations("Menu");
   const locale = useLocale();
@@ -168,10 +166,10 @@ export const Navbar = () => {
               </DropdownTrigger>
             </NavbarItem>
             <DropdownMenu>
-              <DropdownItem onClick={() => setUserLocale("en")} key={'english'}>
+              <DropdownItem key={"english"} onClick={() => setUserLocale("en")}>
                 <span className="fi fi-gb mr-2" /> English
               </DropdownItem>
-              <DropdownItem onClick={() => setUserLocale("it")} key={'italian'}>
+              <DropdownItem key={"italian"} onClick={() => setUserLocale("it")}>
                 <span className="fi fi-it mr-2" /> Italiano
               </DropdownItem>
             </DropdownMenu>
@@ -228,10 +226,16 @@ export const Navbar = () => {
                 </DropdownTrigger>
               </NavbarItem>
               <DropdownMenu>
-                <DropdownItem onClick={() => setUserLocale("en")} key={'english'}>
+                <DropdownItem
+                  key={"english"}
+                  onClick={() => setUserLocale("en")}
+                >
                   <span className="fi fi-gb mr-2" /> English
                 </DropdownItem>
-                <DropdownItem onClick={() => setUserLocale("it")} key={'italian'}>
+                <DropdownItem
+                  key={"italian"}
+                  onClick={() => setUserLocale("it")}
+                >
                   <span className="fi fi-it mr-2" /> Italiano
                 </DropdownItem>
               </DropdownMenu>

@@ -14,7 +14,6 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import { Logo } from "@/components/icons";
-import SnowfallComponent from "@/components/snowfall";
 
 export const metadata: Metadata = {
   title: {

@@ -1,4 +1,4 @@
-import { RefCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -21,7 +21,10 @@ interface RocketMessageProps {
   onFinished?: () => void;
 }
 
-export default function RocketMessage({ person, onFinished }: RocketMessageProps) {
+export default function RocketMessage({
+  person,
+  onFinished,
+}: RocketMessageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

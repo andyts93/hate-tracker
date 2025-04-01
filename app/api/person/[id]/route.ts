@@ -1,7 +1,8 @@
-import { sql } from "@/sql";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { getTranslations } from "next-intl/server";
+
+import { sql } from "@/sql";
 
 export async function PUT(
   request: Request,

@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
+
 import { cache } from "@/cache";
 import { sql } from "@/sql";
-import { NextResponse } from "next/server";
 
 export async function PUT(
   request: Request,

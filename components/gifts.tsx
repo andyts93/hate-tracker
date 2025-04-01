@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { AiOutlineGift } from "react-icons/ai";
-import { BiCoinStack } from "react-icons/bi";
-import dayjs from "dayjs";
 
 import { FullPageLoader } from "./full-page-loader";
+import GiftBox from "./gift-box";
 
 import { Gift, Person } from "@/types";
-import { Coin } from "./icons";
-import GiftBox from "./gift-box";
 
 export default function Gifts({
   person,

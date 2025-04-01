@@ -6,7 +6,7 @@ export default function SnowfallComponent({
   snowflakeCount,
 }: {
   images: CanvasImageSource[];
-  snowflakeCount: number
+  snowflakeCount: number;
 }) {
   return (
     <Snowfall

@@ -6,12 +6,7 @@ import {
   ReactionCounter,
 } from "@charkour/react-reactions";
 import toast from "react-hot-toast";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  useDisclosure,
-} from "@heroui/modal";
+import { Modal, ModalBody, ModalContent, useDisclosure } from "@heroui/modal";
 import { useState } from "react";
 import GifPicker, { TenorImage, Theme } from "gif-picker-react";
 import { RiSearchLine } from "react-icons/ri";

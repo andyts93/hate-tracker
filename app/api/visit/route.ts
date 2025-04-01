@@ -1,5 +1,6 @@
-import { sql } from "@/sql";
 import { NextResponse } from "next/server";
+
+import { sql } from "@/sql";
 
 export async function POST(request: Request) {
   const body = await request.json();
