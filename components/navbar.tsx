@@ -31,73 +31,73 @@ import { HeartFilledIcon, Logo } from "@/components/icons";
 import { setUserLocale } from "@/services/locale";
 
 export const Navbar = () => {
-  const heart1 = document.createElement("img");
+//   const heart1 = document.createElement("img");
 
-heart1.src = "/heart-1.png";
-const heart2 = document.createElement("img");
+// heart1.src = "/heart-1.png";
+// const heart2 = document.createElement("img");
 
-heart2.src = "/heart-2.png";
-const heart3 = document.createElement("img");
+// heart2.src = "/heart-2.png";
+// const heart3 = document.createElement("img");
 
-heart3.src = "/heart-3.png";
-const rose1 = document.createElement("img");
+// heart3.src = "/heart-3.png";
+// const rose1 = document.createElement("img");
 
-rose1.src = "/rose-1.png";
-const rose2 = document.createElement("img");
+// rose1.src = "/rose-1.png";
+// const rose2 = document.createElement("img");
 
-rose2.src = "/rose-2.png";
+// rose2.src = "/rose-2.png";
 
-const heart4 = document.createElement("img");
+// const heart4 = document.createElement("img");
 
-heart4.src = "/choco-heart-1.png";
-const heart5 = document.createElement("img");
+// heart4.src = "/choco-heart-1.png";
+// const heart5 = document.createElement("img");
 
-heart5.src = "/choco-heart-2.png";
-const heart6 = document.createElement("img");
+// heart5.src = "/choco-heart-2.png";
+// const heart6 = document.createElement("img");
 
-heart6.src = "/choco-heart-3.png";
+// heart6.src = "/choco-heart-3.png";
 
-const heart7 = document.createElement("img");
+// const heart7 = document.createElement("img");
 
-heart7.src = "/balloon-heart-1.png";
-const heart8 = document.createElement("img");
+// heart7.src = "/balloon-heart-1.png";
+// const heart8 = document.createElement("img");
 
-heart8.src = "/balloon-heart-2.png";
-const heart9 = document.createElement("img");
+// heart8.src = "/balloon-heart-2.png";
+// const heart9 = document.createElement("img");
 
-heart9.src = "/balloon-heart-3.png";
+// heart9.src = "/balloon-heart-3.png";
 
-const allImages = [
-  [heart1, heart2, heart3],
-  [rose1, rose2],
-  [heart4, heart5, heart6],
-  [heart7, heart8, heart9],
-];
+// const allImages = [
+//   [heart1, heart2, heart3],
+//   [rose1, rose2],
+//   [heart4, heart5, heart6],
+//   [heart7, heart8, heart9],
+// ];
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const t = useTranslations("Menu");
   const locale = useLocale();
-  const [images, setImages] = useState<CanvasImageSource[]>(allImages[0]);
-  const [snowCount, setSnowCount] = useState<number>(80);
-  const lastIndex = useRef(0);
+  // const [images, setImages] = useState<CanvasImageSource[]>(allImages[0]);
+  // const [snowCount, setSnowCount] = useState<number>(80);
+  // const lastIndex = useRef(0);
 
-  const getRandomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
-  const getRandomNumber = (min: number, max: number) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
+  // const getRandomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
+  // const getRandomNumber = (min: number, max: number) =>
+  //   Math.floor(Math.random() * (max - min + 1)) + min;
 
-  const changeEffect = () => {
-    let newIndex = getRandomIndex(allImages);
+  // const changeEffect = () => {
+  //   let newIndex = getRandomIndex(allImages);
 
-    if (newIndex === lastIndex.current) {
-      newIndex = getRandomIndex(allImages);
-    }
-    lastIndex.current = newIndex;
-    setImages(allImages[lastIndex.current]);
-    setSnowCount(getRandomNumber(30, 100));
-  };
+  //   if (newIndex === lastIndex.current) {
+  //     newIndex = getRandomIndex(allImages);
+  //   }
+  //   lastIndex.current = newIndex;
+  //   setImages(allImages[lastIndex.current]);
+  //   setSnowCount(getRandomNumber(30, 100));
+  // };
 
   return (
     <>
-      <SnowfallComponent images={images} snowflakeCount={snowCount} />
+      {/* <SnowfallComponent images={images} snowflakeCount={snowCount} /> */}
       <NextUINavbar
         isMenuOpen={isMenuOpen}
         maxWidth="xl"
@@ -176,7 +176,7 @@ const allImages = [
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Button onClick={() => changeEffect()}>Click me</Button>
+          {/* <Button onClick={() => changeEffect()}>Click me</Button> */}
         </NavbarContent>
 
         <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -194,7 +194,7 @@ const allImages = [
           >
             Sponsor
           </Button> */}
-          <Button onClick={() => changeEffect()}>Click me</Button>
+          {/* <Button onClick={() => changeEffect()}>Click me</Button> */}
           <NavbarMenuToggle />
         </NavbarContent>
 

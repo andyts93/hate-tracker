@@ -932,6 +932,37 @@ export default function Home({ params }: { params: { id: string } }) {
                   )}
                 </>
               )}
+              <a
+                className="mt-4 px-4 py-1 bg-blue-400 rounded text-sm flex items-center gap-2"
+                href="https://andrea-castellini.travelmap.net"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <svg
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5"
+                >
+                  <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <g id="SVGRepo_iconCarrier">
+                    {" "}
+                    <path
+                      d="M12 6H12.01M9 20L3 17V4L5 5M9 20L15 17M9 20V14M15 17L21 20V7L19 6M15 17V14M15 6.2C15 7.96731 13.5 9.4 12 11C10.5 9.4 9 7.96731 9 6.2C9 4.43269 10.3431 3 12 3C13.6569 3 15 4.43269 15 6.2Z"
+                      stroke="#ffffff"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />{" "}
+                  </g>
+                </svg>
+                Our map
+              </a>
               <p className="text-center text-3xl font-black mt-6">
                 {t("Page.average")}
                 <br />
