@@ -45,6 +45,7 @@ import { RiMapPin5Fill } from "react-icons/ri";
 import { BsCloudUploadFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import { Avatar } from "@heroui/avatar";
+import Image from "next/image";
 
 import { StatPanel } from "@/components/stat-panel";
 import {
@@ -148,6 +149,9 @@ export default function Home({ params }: { params: { id: string } }) {
   const [lastGift, setLastGift] = useState<Gift>();
   const [showMore, setShowMore] = useState<boolean>(false);
   const [missingScore, setMissingScore] = useState<MissingMeterScore>();
+  const [characterSrc, setCharacterSrc] = useState<string>(
+    `/sprites/${params.id}.png`,
+  );
 
   const { Canvas } = useQRCode();
 
@@ -811,6 +815,21 @@ export default function Home({ params }: { params: { id: string } }) {
                   <GiftBox authenticated={authenticated} gift={lastGift} />
                 </div>
               )}
+              <div className="mt-4 bg-slate-800 w-full p-2 rounded-lg">
+                <p className="text-sm text-center">
+                  Meet your character! (might improve later)
+                </p>
+                <Image
+                  alt="Character"
+                  className="mx-auto w-[128px]"
+                  height={128}
+                  src={characterSrc}
+                  width={128}
+                  onError={() =>
+                    setCharacterSrc("/sprites/character-missing.png")
+                  }
+                />
+              </div>
               {authenticated && (
                 <>
                   <Slider
